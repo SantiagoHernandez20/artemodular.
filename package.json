@@ -3,15 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "dev": "vue-cli-service serve",
+    "build": "npm run tailwind:build && vue-cli-service build",
+    "dev:full": "concurrently \"npm run tailwind:watch\" \"vue-cli-service serve\"",
+    "tailwind:build": "tailwindcss -i ./src/assets/main.css -o ./src/output.css",
+    "tailwind:watch": "tailwindcss -i ./src/assets/main.css -o ./src/output.css --watch"
   },
   "dependencies": {
+    "@tailwindcss/cli": "^4.1.12",
     "core-js": "^3.8.3",
+    "tailwindcss": "^4.1.12",
     "vue": "^3.2.13"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-service": "~5.0.0"
+    "@vue/cli-service": "~5.0.0",
+    "concurrently": "^7.6.0"
   }
 }
