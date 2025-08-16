@@ -44,22 +44,10 @@
           </div>
         </div>
 
-        <!-- Imagen principal -->
+        <!-- Showcase 3D Completo -->
         <div class="relative">
-          <div style="background: linear-gradient(to bottom right, #8D5524, #6B3F1A); border-radius: 1rem; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-            <!-- Simulación de imagen - aquí irían las fotos reales -->
-            <div style="background-color: white; border-radius: 0.75rem; padding: 1.5rem; min-height: 400px; display: flex; align-items: center; justify-content: center;">
-              <div style="text-align: center;">
-                <svg style="width: 6rem; height: 6rem; color: #8D5524; margin: 0 auto 1rem;" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
-                  <path d="M3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z"/>
-                </svg>
-                <p style="color: #4B5563;">Muebles de alta calidad</p>
-                <p style="font-size: 0.875rem; color: #6B7280; margin-top: 0.5rem;">Diseñados especialmente para ti</p>
-              </div>
-            </div>
-          </div>
-
+          <ThreeDShowcase />
+          
           <!-- Elementos decorativos -->
           <div style="position: absolute; top: -1rem; right: -1rem; width: 2rem; height: 2rem; background-color: #8D5524; border-radius: 50%; opacity: 0.6;"></div>
           <div style="position: absolute; bottom: -1rem; left: -1rem; width: 3rem; height: 3rem; background-color: #6B3F1A; border-radius: 50%; opacity: 0.4;"></div>
@@ -70,7 +58,12 @@
 </template>
 
 <script>
+import ThreeDShowcase from './ThreeDShowcase.vue'
+
 export default {
-  name: 'HeroSection'
+  name: 'HeroSection',
+  components: {
+    ThreeDShowcase
+  }
 }
 </script>
