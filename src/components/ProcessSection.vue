@@ -35,7 +35,7 @@
             @click="togglePhase(index)"
           >
             <div class="flex-shrink-0">
-              <div class="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold">
+              <div class="w-10 h-10 text-white rounded-full flex items-center justify-center font-bold" style="background-color: #8D5524;">
                 {{ index + 1 }}
               </div>
             </div>
@@ -63,15 +63,15 @@
               >
                 <ul class="space-y-2">
                   <li v-for="detail in phase.details" :key="detail" class="flex items-start gap-2">
-                    <svg class="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style="color: #8D5524;">
                       <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                     </svg>
                     <span class="text-gray-700">{{ detail }}</span>
                   </li>
                 </ul>
                 
-                <div class="bg-amber-50 p-3 rounded-lg">
-                  <p class="text-sm text-amber-800">
+                <div class="p-3 rounded-lg" style="background-color: #F5E9DA;">
+                  <p class="text-sm" style="color: #8D5524;">
                     <strong>Duración:</strong> {{ phase.duration }}
                   </p>
                 </div>
@@ -184,7 +184,6 @@ export default {
         ]
       }
     ])
-
     const togglePhase = (index) => {
       const currentIndex = expandedPhases.value.indexOf(index)
       if (currentIndex > -1) {

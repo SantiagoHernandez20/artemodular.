@@ -1,12 +1,33 @@
 <template>
   <div 
-    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-amber-200 p-6"
+    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-opacity-50 p-6 service-card"
     @click="$emit('click')"
   >
     <div class="text-center">
       <!-- Icono -->
-      <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <component :is="getIcon(service.icon)" class="w-8 h-8 text-amber-600" />
+      <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: #F5E9DA;">
+        <!-- Icono de Carpintería de Obra -->
+        <svg v-if="service.icon === 'BuildingIcon'" class="w-8 h-8" style="color: #8D5524;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+        
+        <!-- Icono de Carpintería de Mobiliario -->
+        <svg v-else-if="service.icon === 'HomeIcon'" class="w-8 h-8" style="color: #8D5524;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 21l0-12"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 21l0-12"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21l0-12"/>
+        </svg>
+        
+        <!-- Icono de Carpintería Decorativa -->
+        <svg v-else-if="service.icon === 'SparklesIcon'" class="w-8 h-8" style="color: #8D5524;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+        </svg>
+        
+        <!-- Icono por defecto -->
+        <svg v-else class="w-8 h-8" style="color: #8D5524;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
       </div>
       
       <!-- Título -->
@@ -16,7 +37,7 @@
       <p class="text-gray-600 mb-4">{{ service.description }}</p>
       
       <!-- CTA -->
-      <div class="inline-flex items-center text-amber-600 font-medium hover:text-amber-700 transition-colors">
+      <div class="inline-flex items-center font-medium transition-colors" style="color: #8D5524;">
         Conocer más
         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -37,43 +58,14 @@ export default {
   },
   emits: ['click'],
   setup() {
-    const getIcon = (iconName) => {
-      const icons = {
-        'BuildingIcon': () => {
-          return {
-            template: `
-              <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-6a1 1 0 00-1-1H9a1 1 0 00-1 1v6a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 8a1 1 0 011-1h4a1 1 0 011 1v4H7v-4z" clip-rule="evenodd"/>
-              </svg>
-            `
-          }
-        },
-        'HomeIcon': () => {
-          return {
-            template: `
-              <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-              </svg>
-            `
-          }
-        },
-        'SparklesIcon': () => {
-          return {
-            template: `
-              <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0V6H3a1 1 0 110-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 8.134a1 1 0 010 1.732L14.146 10.8l-1.179 4.456a1 1 0 01-1.934 0L9.854 10.8 6.5 9.866a1 1 0 010-1.732L9.854 7.2l1.179-4.456A1 1 0 0112 2z" clip-rule="evenodd"/>
-              </svg>
-            `
-          }
-        }
-      }
-      
-      return icons[iconName] ? icons[iconName]() : icons['HomeIcon']()
-    }
-
-    return {
-      getIcon
-    }
+    // Los iconos se manejan directamente en el template
+    return {}
   }
 }
 </script>
+
+<style scoped>
+.service-card:hover {
+  border-color: #E6D4C1;
+}
+</style>

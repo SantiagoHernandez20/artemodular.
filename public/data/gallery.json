@@ -1,0 +1,96 @@
+{
+  "cocinas": [
+    {
+      "id": 1,
+      "title": "Cocina Integral Moderna",
+      "description": "Cocina minimalista con isla central",
+      "fullDescription": "Cocina integral de diseño contemporáneo que combina funcionalidad y estética. Fabricada con materiales de primera calidad, incluye isla central, electrodomésticos empotrados y sistema de iluminación LED.",
+      "images": [
+        "/images/cocinas/cocina1.jpg",
+        "/images/cocinas/cocina2.jpg",
+        "/images/cocinas/cocina3.jpg"
+       
+      ],
+      "features": ["Isla central", "Acabados premium", "Iluminación LED", "Electrodomésticos empotrados"]
+    }
+  ],
+  "closets": [
+    {
+      "id": 2,
+      "title": "Closet Contemporáneo",
+      "description": "Vestidor de lujo con iluminación perimetral integrada",
+      "fullDescription": "Walk-in closet contemporáneo que redefine el concepto de vestidor moderno. Diseñado con sistema modular personalizable, iluminación LED perimetral automática, espejos de cuerpo completo y acabados en melamina de alta resistencia. Incluye isla central con cajones organizadores para accesorios y joyería.",
+      "images": [
+        "/images/closets/closet_1.jpg",
+        "/images/closets/closet_6.jpg"
+   
+      ],
+      "features": ["Sistema modular personalizable", "Iluminación LED automática", "Espejos de cuerpo completo", "Isla organizadora central", "Acabados premium"]
+    },
+    {
+      "id": 6,
+      "title": "Closet Lineal de Alta Gama",
+      "description": "Máximo aprovechamiento con tecnología soft-close",
+      "fullDescription": "Closet lineal de diseño exclusivo que maximiza cada centímetro disponible. Construido con sistema de apertura soft-close en todos los cajones, barras extensibles de acero inoxidable, divisores internos ajustables y sistema de ventilación integrado. Ideal para espacios que requieren organización inteligente sin sacrificar estilo.",
+      "images": [
+        "/images/closets/closet_2.jpg",
+        "/images/closets/closet_3.jpg",
+        "/images/closets/closet_4.jpg",
+        "/images/closets/closet_5.jpg"
+      ],
+      "features": ["Sistema soft-close", "Barras de acero inoxidable", "Divisores ajustables", "Ventilación integrada", "Organización inteligente"]
+    },
+    {
+      "id": 7,
+      "title": "Closet Ejecutivo Minimalista",
+      "description": "Diseño discreto con tecnología push-to-open",
+      "fullDescription": "Closet ejecutivo de líneas puras y diseño minimalista. Fabricado con puertas sin tiradores y sistema push-to-open, paneles de madera con veta natural, compartimentos especializados para trajes y camisas, y zapatero deslizable con capacidad para 30 pares. Perfecto para profesionales que valoran la elegancia discreta.",
+      "images": [
+        "/images/closets/closet_7.jpg",
+        "/images/closets/closet_9.jpg"
+      ],
+      "features": ["Sistema push-to-open", "Paneles veta natural", "Compartimentos especializados", "Zapatero deslizable", "Diseño sin tiradores"]
+    }
+   
+  ],
+  "centros": [
+    {
+      "id": 3,
+      "title": "Centro de Entretenimiento Minimalista",
+      "description": "Diseño flotante con gestión de cables oculta",
+      "fullDescription": "Centro de entretenimiento de diseño minimalista que combina elegancia y funcionalidad. Fabricado con acabados de madera natural y sistema de gestión de cables integrado. Perfecto para televisores de 55\" a 75\", incluye compartimentos ocultos para equipos audiovisuales y sistema de ventilación pasiva.",
+      "images": [
+        "/images/centro_entretenimiento/centro_1.jpg",
+        "/images/centro_entretenimiento/centro_2.jpg"
+      ],
+      "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
+    },
+    {
+      "id": 4,
+      "title": "Centro Multimedia Premium",
+      "description": "Sistema modular con iluminación LED ambiental",
+      "fullDescription": "Centro de entretenimiento premium de diseño modular que se adapta a cualquier espacio. Cuenta con sistema de iluminación LED RGB programable, estantes ajustables, cajones con cierre suave y panel posterior con gestión completa de cables. Ideal para crear el ambiente perfecto en tu sala de estar.",
+      "images": [
+        "/images/centro_entretenimiento/centro_3.jpg",
+        "/images/centro_entretenimiento/centro_4.jpg",
+        "/images/centro_entretenimiento/centro_5.jpg"
+      ],
+      "features": ["Iluminación LED RGB", "Módulos ajustables", "Cajones soft-close", "Panel de cables trasero", "Acabado premium"]
+    }
+  ],
+  "decorativos": [
+    {
+      "id": 5,
+      "title": "Lámpara Lunar",
+      "description": "Lámpara decorativa con textura lunar",
+      "fullDescription": "Lámpara decorativa única con textura lunar realista. Fabricada con tecnología 3D y sistema de iluminación LED regulable que crea ambientes únicos.",
+      "images": [
+        "/images/luna1.jpeg",
+        "/images/luna2.jpeg",
+        "/images/Posteo_Instagram.png",
+        "/images/Post_instagram2.png"
+      ],
+      "features": ["Luz LED", "Textura 3D", "Diseño único", "Regulable"]
+    }
+  ]
+}
