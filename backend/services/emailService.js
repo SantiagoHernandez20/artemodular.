@@ -15,6 +15,20 @@ const PROJECT_TYPES = {
 
 // 🔧 Configuración del transporter de Nodemailer
 const createTransporter = () => {
+  // Debug: mostrar variables de entorno disponibles
+  /*
+  console.log('🔍 Variables de entorno disponibles en emailService:', {
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASS: process.env.EMAIL_PASS ? '***' : 'NO DEFINIDA',
+    BUSINESS_EMAIL: process.env.BUSINESS_EMAIL,
+    BUSINESS_NAME: process.env.BUSINESS_NAME,
+    NODE_ENV: process.env.NODE_ENV,
+    'Todas las variables': Object.keys(process.env).filter(key => 
+      key.includes('EMAIL') || key.includes('BUSINESS')
+    )
+  })
+  */
+
   // Validar variables de entorno requeridas
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     throw new Error('Variables de entorno EMAIL_USER y EMAIL_PASS son requeridas')
@@ -30,7 +44,7 @@ const createTransporter = () => {
       pass: process.env.EMAIL_PASS // Para Gmail usar App Password
     },
     tls: {
-      rejectUnauthorized: false // Para desarrollo, en producción usar true
+      rejectUnauthorized: process.env.NODE_ENV === 'production' // true en producción, false en desarrollo
     }
   })
 }
@@ -60,7 +74,7 @@ const generateBusinessEmailHTML = (contactData) => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>🏡 Nueva Solicitud - ArteModular</h1>
+          <h1>🏡 Nueva Solicitud - ${process.env.BUSINESS_NAME || 'ArteModular'}</h1>
           <p>Has recibido una nueva solicitud de presupuesto</p>
         </div>
         
@@ -137,7 +151,7 @@ const generateClientConfirmationHTML = (contactData) => {
       <div class="container">
         <div class="header">
           <div class="logo">🏡</div>
-          <h1>ArteModular</h1>
+          <h1>${process.env.BUSINESS_NAME || 'ArteModular'}</h1>
           <p>Carpintería a Medida</p>
         </div>
         
@@ -169,8 +183,8 @@ const generateClientConfirmationHTML = (contactData) => {
         </div>
         
         <div class="footer">
-          <p><strong>ArteModular</strong> - Transformamos tus ideas en realidad</p>
-          <p>📧 info@artemodular.com | 📱 313 358-9795 | 📍 Medellín, Colombia</p>
+          <p><strong>${process.env.BUSINESS_NAME || 'ArteModular'}</strong> - Transformamos tus ideas en realidad</p>
+          <p>📧 ${process.env.BUSINESS_EMAIL || 'info@artemodular.com'} | 📱 313 358-9795 | 📍 Medellín, Colombia</p>
         </div>
       </div>
     </body>
@@ -186,8 +200,8 @@ const sendContactEmail = async (contactData) => {
 
     // Email al negocio (principal)
     const businessMailOptions = {
-      from: `"${name} - ArteModular Web" <${process.env.EMAIL_USER}>`,
-      to: process.env.BUSINESS_EMAIL || 'aartemodular@gmail.com',
+      from: `"${name} - ${process.env.BUSINESS_NAME || 'ArteModular'} Web" <${process.env.EMAIL_USER}>`,
+      to: process.env.BUSINESS_EMAIL || 'jairsantiagomh@gmail.com',
       subject: `🏡 Nueva Solicitud: ${PROJECT_TYPES[projectType] || projectType} - ${name}`,
       html: generateBusinessEmailHTML(contactData),
       replyTo: email // Para que el negocio pueda responder directamente al cliente
@@ -195,9 +209,9 @@ const sendContactEmail = async (contactData) => {
 
     // Email de confirmación al cliente (opcional)
     const clientMailOptions = {
-      from: `"ArteModular" <${process.env.EMAIL_USER}>`,
+      from: `"${process.env.BUSINESS_NAME || 'ArteModular'}" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: '✅ Solicitud Recibida - ArteModular | Te contactaremos pronto',
+      subject: `✅ Solicitud Recibida - ${process.env.BUSINESS_NAME || 'ArteModular'} | Te contactaremos pronto`,
       html: generateClientConfirmationHTML(contactData)
     }
 
@@ -238,9 +252,11 @@ const testEmailConfiguration = async () => {
     return {
       status: 'success',
       message: 'Configuración de email verificada correctamente',
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
+      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port: process.env.EMAIL_PORT || 587,
       user: process.env.EMAIL_USER,
+      businessEmail: process.env.BUSINESS_EMAIL,
+      businessName: process.env.BUSINESS_NAME,
       timestamp: new Date().toISOString()
     }
   } catch (error) {
