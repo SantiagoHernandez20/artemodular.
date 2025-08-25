@@ -149,7 +149,7 @@ export default {
         }
 
         // URL del backend (configurable via variable de entorno)
-        const backendURL = 'http://localhost:3001'
+        const backendURL = 'http://localhost:3000'
 
 
 

@@ -31,7 +31,7 @@ NODE_ENV=development
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=tu_email@gmail.com
-EMAIL_PASS=abcd_efgh_ijkl_mnop  # ← App Password de 16 caracteres
+EMAIL_PASS=ftrt_cfeo_tyjt_vcxi  # ← App Password de 16 caracteres
 
 # Negocio
 BUSINESS_EMAIL=info@artemodular.com

@@ -187,7 +187,7 @@ const sendContactEmail = async (contactData) => {
     // Email al negocio (principal)
     const businessMailOptions = {
       from: `"${name} - ArteModular Web" <${process.env.EMAIL_USER}>`,
-      to: process.env.BUSINESS_EMAIL || 'info@artemodular.com',
+      to: process.env.BUSINESS_EMAIL || 'aartemodular@gmail.com',
       subject: `🏡 Nueva Solicitud: ${PROJECT_TYPES[projectType] || projectType} - ${name}`,
       html: generateBusinessEmailHTML(contactData),
       replyTo: email // Para que el negocio pueda responder directamente al cliente
