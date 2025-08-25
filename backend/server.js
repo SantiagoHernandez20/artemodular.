@@ -28,17 +28,37 @@ const PORT = process.env.PORT || 3001
 // 🛡️ Middlewares de seguridad
 app.use(helmet())
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:9001',
-    'https://artemodular.vercel.app',
-    'http://localhost:9001', // Desarrollo local
-    'http://localhost:9000', // Alternativo
-    'http://localhost:9002'  // Puerto alternativo
-  ],
-  credentials: true
+  origin: function (origin, callback) {
+    // Permitir requests sin origin (como Postman)
+    if (!origin) return callback(null, true)
+    
+    // Lista de orígenes permitidos
+    const allowedOrigins = [
+      'https://artemodular.vercel.app',
+      'https://artemodular.vercel.app/',
+      'http://localhost:9001',
+      'http://localhost:9000',
+      'http://localhost:9002'
+    ]
+    
+    // Verificar si el origen está permitido
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      console.log('🚫 Origen bloqueado por CORS:', origin)
+      callback(new Error('No permitido por CORS'))
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  optionsSuccessStatus: 200
 }))
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true }))
+
+// 🌐 Middleware para manejar preflight CORS
+app.options('*', cors())
 
 // 🚦 Rate limiting - máximo 5 emails por IP cada 15 minutos
 const emailLimiter = rateLimit({
@@ -95,19 +115,22 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     environment: process.env.NODE_ENV || 'development',
     port: PORT,
-    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:9001',
+    frontendUrl: process.env.FRONTEND_URL || 'https://artemodular.vercel.app',
+    cors: {
+      enabled: true,
+      allowedOrigins: [
+        'https://artemodular.vercel.app',
+        'https://artemodular.vercel.app/',
+        'http://localhost:9001',
+        'http://localhost:9000',
+        'http://localhost:9002'
+      ],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    },
     endpoints: {
       contact: 'POST /api/contact',
       health: 'GET /api/health',
       testEmail: 'GET /api/test-email'
-    },
-    cors: {
-      origins: [
-        process.env.FRONTEND_URL || 'http://localhost:9001',
-        'http://localhost:9001',
-        'http://localhost:9000',
-        'http://localhost:9002'
-      ]
     }
   })
 })
@@ -120,9 +143,21 @@ app.get('/api/health', (req, res) => {
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
     port: PORT,
-    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:9001',
+    frontendUrl: process.env.FRONTEND_URL || 'https://artemodular.vercel.app',
+    cors: {
+      enabled: true,
+      allowedOrigins: [
+        'https://artemodular.vercel.app',
+        'https://artemodular.vercel.app/',
+        'http://localhost:9001',
+        'http://localhost:9000',
+        'http://localhost:9002'
+      ],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      credentials: true
+    },
     backend: {
-      url: `http://localhost:${PORT}`,
+      url: `https://artemodular.onrender.com`,
       endpoints: {
         contact: `/api/contact`,
         health: `/api/health`,

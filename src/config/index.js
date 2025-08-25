@@ -8,7 +8,7 @@ const config = {
     url: process.env.VUE_APP_BACKEND_URL || 
       (process.env.NODE_ENV === 'development' 
         ? 'http://localhost:3001' 
-        : 'https://artemodular-backend.onrender.com'),
+        : 'https://artemodular.onrender.com'),
     
     // Endpoints del backend
     endpoints: {
@@ -118,7 +118,10 @@ const config = {
 
     // Obtener URL completa del backend
     getBackendUrl: (endpoint = '') => {
-      return `${config.backend.url}${endpoint}`
+      // Eliminar slash inicial del endpoint si existe
+      const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
+      // Construir URL sin doble slash
+      return `${config.backend.url}${cleanEndpoint ? '/' + cleanEndpoint : ''}`
     },
 
     // Obtener URL completa del frontend
