@@ -4,23 +4,26 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build": "npm run tailwind:build && vue-cli-service build",
+    "build": "vue-cli-service build",
     "dev:full": "concurrently \"npm run tailwind:watch\" \"vue-cli-service serve\"",
     "tailwind:build": "tailwindcss -i ./src/assets/main.css -o ./src/output.css",
     "tailwind:watch": "tailwindcss -i ./src/assets/main.css -o ./src/output.css --watch"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "core-js": "^3.8.3",
-    "emailjs-com": "^3.2.0",
-    "vue": "^3.2.13"
-  },
-  "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "autoprefixer": "^10.4.21",
-    "concurrently": "^7.6.0",
+    "core-js": "^3.8.3",
+    "emailjs-com": "^3.2.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "vue": "^3.2.13"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
