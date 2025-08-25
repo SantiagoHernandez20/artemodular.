@@ -120,6 +120,7 @@
 <script>
 import { ref, reactive } from 'vue'
 import ContactInfo from './ContactInfo.vue'
+import config from '../config/index.js'
 
 export default {
   name: 'ContactSection',
@@ -148,45 +149,75 @@ export default {
           return
         }
 
-        // URL del backend (configurable via variable de entorno)
-        const backendURL = import.meta.env.VITE_BACKEND_URL 
+        // Debug: Mostrar configuración centralizada
+        config.utils.debug()
 
+        // URL del backend desde la configuración centralizada
+        const backendURL = config.utils.getBackendUrl(config.backend.endpoints.contact)
+        console.log('🚀 Backend URL configurada:', backendURL)
 
+        // Crear AbortController para timeout
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), config.backend.request.timeout)
 
-        // Enviar al backend Express + Nodemailer
-        const response = await fetch(`${backendURL}/api/contact`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            name: form.name,
-            email: form.email,
-            phone: form.phone,
-            projectType: form.projectType,
-            message: form.message
+        try {
+          // Enviar al backend usando la configuración centralizada
+          const response = await fetch(backendURL, {
+            method: 'POST',
+            headers: config.backend.request.headers,
+            body: JSON.stringify({
+              name: form.name,
+              email: form.email,
+              phone: form.phone,
+              projectType: form.projectType,
+              message: form.message
+            }),
+            signal: controller.signal
           })
-        })
 
-        const result = await response.json()
-        if (!response.ok) {
-          if (result.errors) {
-            alert(result.errors.map(e => e.msg).join('\\n'))
+          clearTimeout(timeoutId)
+
+          console.log('📡 Respuesta del servidor:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries())
+          })
+
+          const result = await response.json()
+          console.log('📨 Resultado del servidor:', result)
+          
+          if (!response.ok) {
+            if (result.errors) {
+              alert(result.errors.map(e => e.msg).join('\n'))
+            }
+            throw new Error(result.message || 'Error al enviar el formulario')
           }
-          throw new Error(result.message || 'Error al enviar el formulario')
+
+          console.log('✅ Email enviado exitosamente:', result)
+
+          // Limpiar formulario
+          Object.keys(form).forEach(key => {
+            form[key] = ''
+          })
+
+          alert('¡Gracias por tu solicitud! Hemos enviado una confirmación a tu email. Te contactaremos en menos de 24 horas.')
+        } catch (fetchError) {
+          clearTimeout(timeoutId)
+          
+          if (fetchError.name === 'AbortError') {
+            throw new Error('La solicitud tardó demasiado tiempo. Verifica tu conexión a internet.')
+          }
+          
+          throw fetchError
         }
-
-        console.log('Email enviado exitosamente:', result)
-
-        // Limpiar formulario
-        Object.keys(form).forEach(key => {
-          form[key] = ''
-        })
-
-        alert('¡Gracias por tu solicitud! Hemos enviado una confirmación a tu email. Te contactaremos en menos de 24 horas.')
       } catch (error) {
-        console.error('Error al enviar email:', error)
+        console.error('❌ Error al enviar email:', error)
+        console.error('🔍 Detalles del error:', {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+          cause: error.cause
+        })
 
         // Mensaje de error específico
         let errorMessage = 'Hubo un error al enviar tu solicitud. '
@@ -195,11 +226,13 @@ export default {
           errorMessage += 'No pudimos conectar con el servidor. '
         } else if (error.message.includes('Demasiados emails')) {
           errorMessage += 'Has enviado demasiados emails recientemente. Espera un momento. '
+        } else if (error.message.includes('tardó demasiado tiempo')) {
+          errorMessage += 'La conexión al servidor tardó demasiado. '
         } else {
           errorMessage += 'Intenta de nuevo en unos minutos. '
         }
 
-        errorMessage += 'O contáctanos directamente al 313 358-9795.'
+        errorMessage += `O contáctanos directamente al ${config.email.contact.phone}.`
 
         alert(errorMessage)
       } finally {

@@ -6,7 +6,19 @@ const cors = require('cors')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const { body, validationResult } = require('express-validator')
-require('dotenv').config()
+const path = require('path')
+
+// Cargar variables de entorno desde la raíz del proyecto
+require('dotenv').config({ 
+  path: path.join(__dirname, '..', '.env.local') 
+})
+
+// Fallback a .env si .env.local no existe
+if (!process.env.EMAIL_USER) {
+  require('dotenv').config({ 
+    path: path.join(__dirname, '..', '.env') 
+  })
+}
 
 const emailService = require('./services/emailService')
 
@@ -17,9 +29,11 @@ const PORT = process.env.PORT || 3001
 app.use(helmet())
 app.use(cors({
   origin: [
-    process.env.FRONTEND_URL || 'http://localhost:9000',
+    process.env.FRONTEND_URL || 'http://localhost:9001',
     'https://artemodular.vercel.app',
-    'http://localhost:5173' // Para desarrollo con Vue CLI
+    'http://localhost:9001', // Desarrollo local
+    'http://localhost:9000', // Alternativo
+    'http://localhost:9002'  // Puerto alternativo
   ],
   credentials: true
 }))
@@ -79,9 +93,21 @@ app.get('/', (req, res) => {
   res.json({
     message: '🏡 ArteModular Backend funcionando correctamente',
     version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
+    port: PORT,
+    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:9001',
     endpoints: {
       contact: 'POST /api/contact',
-      health: 'GET /api/health'
+      health: 'GET /api/health',
+      testEmail: 'GET /api/test-email'
+    },
+    cors: {
+      origins: [
+        process.env.FRONTEND_URL || 'http://localhost:9001',
+        'http://localhost:9001',
+        'http://localhost:9000',
+        'http://localhost:9002'
+      ]
     }
   })
 })
@@ -92,13 +118,23 @@ app.get('/api/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    port: PORT,
+    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:9001',
+    backend: {
+      url: `http://localhost:${PORT}`,
+      endpoints: {
+        contact: `/api/contact`,
+        health: `/api/health`,
+        testEmail: `/api/test-email`
+      }
+    }
   })
 })
 
 // 📧 Endpoint principal para envío de emails
 app.post('/api/contact', emailLimiter, contactValidation, async (req, res) => {
-  console.log('BODY RECIBIDO', req.body)
+  console.log('📧 BODY RECIBIDO:', req.body)
   try {
     // Verificar errores de validación
     const errors = validationResult(req)
@@ -198,7 +234,12 @@ app.listen(PORT, () => {
 🔧 Test Email: http://localhost:${PORT}/api/test-email
 
 📝 Environment: ${process.env.NODE_ENV || 'development'}
-🔐 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:9000'}
+🔐 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:9001'}
+🌍 Puertos configurados:
+   - Backend: ${PORT}
+   - Frontend (dev): 9001
+   - Frontend (alt): 9000, 9002
+   - Frontend (prod): https://artemodular.vercel.app
   `)
 })
 
