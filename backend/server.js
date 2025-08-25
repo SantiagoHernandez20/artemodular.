@@ -16,7 +16,11 @@ const PORT = process.env.PORT || 3001
 // 🛡️ Middlewares de seguridad
 app.use(helmet())
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:9000',
+    'https://artemodular.vercel.app',
+    'http://localhost:5173' // Para desarrollo con Vue CLI
+  ],
   credentials: true
 }))
 app.use(express.json({ limit: '10mb' }))
@@ -194,7 +198,7 @@ app.listen(PORT, () => {
 🔧 Test Email: http://localhost:${PORT}/api/test-email
 
 📝 Environment: ${process.env.NODE_ENV || 'development'}
-🔐 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:5173'}
+🔐 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:9000'}
   `)
 })
 
