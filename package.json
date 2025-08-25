@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build": "npm run tailwind:build && vue-cli-service build",
+    "build": "vue-cli-service build",
     "dev:full": "concurrently \"npm run tailwind:watch\" \"vue-cli-service serve\"",
     "tailwind:build": "tailwindcss -i ./src/assets/main.css -o ./src/output.css",
     "tailwind:watch": "tailwindcss -i ./src/assets/main.css -o ./src/output.css --watch"
