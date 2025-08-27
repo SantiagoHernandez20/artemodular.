@@ -77,15 +77,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div class="text-center md:text-left">
                          <h5 style="font-weight: 600; color: #F5E9DA; margin-bottom: 0.5rem;">📞 Contacto 24/7</h5>
-            <p class="text-gray-300">313 358-9795</p>
+            <p class="text-gray-300">313-358-9795</p>
           </div>
           <div class="text-center md:text-left">
             <h5 style="font-weight: 600; color: #F5E9DA; margin-bottom: 0.5rem;">📧 Email</h5>
-            <p class="text-gray-300">info@artemodular.com</p>
+            <p class="text-gray-300">aartemodular@gmail.com</p>
           </div>
           <div class="text-center md:text-left">
             <h5 style="font-weight: 600; color: #F5E9DA; margin-bottom: 0.5rem;">📍 Ubicación</h5>
-            <p class="text-gray-300">Medellín, Colombia</p>
+            <p class="text-gray-300">Mosquera, Cundinamarca.</p>
           </div>
         </div>
       </div>

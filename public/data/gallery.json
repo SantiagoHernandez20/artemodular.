@@ -85,10 +85,9 @@
       "description": "Lámpara decorativa con textura lunar",
       "fullDescription": "Lámpara decorativa única con textura lunar realista. Fabricada con tecnología 3D y sistema de iluminación LED regulable que crea ambientes únicos.",
       "images": [
-        "/images/luna1.jpeg",
-        "/images/luna2.jpeg",
-        "/images/Posteo_Instagram.png",
-        "/images/Post_instagram2.png"
+        "/images/decorativos/luna1.jpeg",
+        "/images/decorativos/luna2.jpeg"
+      
       ],
       "features": ["Luz LED", "Textura 3D", "Diseño único", "Regulable"]
     }

@@ -5,6 +5,7 @@ Context/
 
 # local env files
 .env
+.env.local
 
 # Log files
 npm-debug.log*

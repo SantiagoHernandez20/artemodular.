@@ -21,7 +21,7 @@ if (!process.env.EMAIL_USER) {
 }
 
 const emailService = require('./services/emailService')
-
+const testimonialRoutes = require('./routes/TestimonialRoutes')
 const app = express()
 const PORT = process.env.PORT || 3001
 
@@ -233,6 +233,8 @@ app.get('/api/test-email', async (req, res) => {
   }
 })
 
+app.use('/api/testimonials', testimonialRoutes)
+
 // ❌ Manejo de rutas no encontradas
 app.use('*', (req, res) => {
   res.status(404).json({
@@ -267,6 +269,7 @@ app.listen(PORT, () => {
 📧 API Email: http://localhost:${PORT}/api/contact
 💊 Health: http://localhost:${PORT}/api/health
 🔧 Test Email: http://localhost:${PORT}/api/test-email
+ Testimonials: http://localhost:${PORT}/api/testimonials
 
 📝 Environment: ${process.env.NODE_ENV || 'development'}
 🔐 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:9001'}
