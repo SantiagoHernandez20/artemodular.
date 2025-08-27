@@ -11,8 +11,13 @@
         </p>
       </div>
 
+      <!-- Loading state -->
+      <div v-if="isLoading" class="flex justify-center items-center py-16">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brown-600"></div>
+      </div>
+
       <!-- Carousel de testimonios -->
-      <div class="relative max-w-4xl mx-auto">
+      <div v-else-if="testimonials.length > 0" class="relative max-w-4xl mx-auto">
         <div class="overflow-hidden rounded-2xl">
           <div 
             class="flex transition-transform duration-500 ease-in-out"
@@ -60,10 +65,17 @@
             class="w-3 h-3 rounded-full transition-colors duration-200"
                          :style="{ backgroundColor: currentTestimonial === index ? '#8D5524' : '#D1D5DB' }"
           ></button>
+                </div>
+      </div>
+
+      <!-- Estado vacío -->
+      <div v-else class="text-center py-16">
+        <div class="text-gray-500 text-lg">
+          No hay testimonios disponibles en este momento.
         </div>
       </div>
 
-             <!-- Estadísticas de satisfacción -->
+      <!-- Estadísticas de satisfacción -->
        <div style="margin-top: 4rem; background-color: #F5E9DA; border-radius: 1rem; padding: 2rem;">
          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center;">
            <div>
@@ -87,6 +99,7 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import TestimonialCard from './TestimonialCard.vue'
+import { testimonialService } from '@/services/testimonialService'
 
 export default {
   name: 'TestimonialsSection',
@@ -95,46 +108,69 @@ export default {
   },
   setup() {
     const currentTestimonial = ref(0)
+    const testimonials = ref([])
+    const isLoading = ref(true)
     let autoplayInterval = null
 
-    const testimonials = ref([
-      {
-        id: 1,
-        name: 'María González',
-        role: 'Propietaria',
-        service: 'Cocina integral',
-        content: 'ArteModular transformó completamente mi cocina. El diseño es perfecto para mi espacio y la calidad de los materiales es excepcional. Todo el proceso fue muy profesional y el resultado superó mis expectativas.',
-        rating: 5,
-        avatar: 'M.G.'
-      },
-      {
-        id: 2,
-        name: 'Carlos Rodríguez',
-        role: 'Arquitecto',
-        service: 'Carpintería de obra',
-        content: 'Como arquitecto, valoro mucho la precisión y la calidad. ArteModular demostró un nivel de craftsmanship impresionante. Las puertas y marcos que fabricaron para mi proyecto quedaron perfectos.',
-        rating: 5,
-        avatar: 'C.R.'
-      },
-      {
-        id: 3,
-        name: 'Ana Martínez',
-        role: 'Diseñadora de interiores',
-        service: 'Muebles decorativos',
-        content: 'La atención al detalle y la capacidad de materializar ideas creativas es lo que más me gusta de trabajar con ArteModular. Cada pieza que crean es única y de altísima calidad.',
-        rating: 5,
-        avatar: 'A.M.'
-      },
-      {
-        id: 4,
-        name: 'Roberto Silva',
-        role: 'Empresario',
-        service: 'Oficina completa',
-        content: 'Necesitaba amueblar mi oficina con un diseño moderno y funcional. El equipo de ArteModular entendió perfectamente mi visión y entregó un espacio de trabajo excepcional.',
-        rating: 5,
-        avatar: 'R.S.'
+    // Cargar testimonios desde la API
+    const loadTestimonials = async () => {
+      try {
+        isLoading.value = true
+        //console.log('🔄 Iniciando carga de testimonios desde la API...')
+        
+        // Llamar al servicio
+        const response = await testimonialService.getAllTestimonials()
+
+        
+        // Validar y procesar la respuesta
+        if (response && typeof response === 'object') {
+          // Si la respuesta tiene estructura { success: true, data: [...] }
+          if (response.success && Array.isArray(response.data)) {
+            testimonials.value = response.data
+
+          }
+                      // Si la respuesta es directamente un array
+            else if (Array.isArray(response)) {
+              testimonials.value = response
+            }
+          // Si la respuesta tiene estructura { success: true, data: [...] } pero data no es array
+          else if (response.success && response.data) {
+
+            testimonials.value = Array.isArray(response.data) ? response.data : []
+          }
+          // Otros casos
+          else {
+
+            testimonials.value = []
+          }
+        } else {
+
+          testimonials.value = []
+        }
+        
+        // Log centralizado con toda la información
+        console.log('📋 Testimonios cargados:', {
+          count: testimonials.value.length,
+          source: response.success ? 'API response.data' : 'API direct response',
+          data: testimonials.value
+        })
+        
+      } catch (error) {
+        console.error('❌ Error cargando testimonios:', error.message)
+        testimonials.value = []
+        
+      } finally {
+        isLoading.value = false
+        
+     
+
       }
-    ])
+    }
+
+    // Recargar testimonios (para cuando se crea uno nuevo)
+    const refreshTestimonials = () => {
+      loadTestimonials()
+    }
 
     const nextTestimonial = () => {
       if (currentTestimonial.value < testimonials.value.length - 1) {
@@ -153,13 +189,15 @@ export default {
     }
 
     const startAutoplay = () => {
-      autoplayInterval = setInterval(() => {
-        if (currentTestimonial.value === testimonials.value.length - 1) {
-          currentTestimonial.value = 0
-        } else {
-          nextTestimonial()
-        }
-      }, 5000) // Cambiar cada 5 segundos
+      if (testimonials.value.length > 1) {
+        autoplayInterval = setInterval(() => {
+          if (currentTestimonial.value === testimonials.value.length - 1) {
+            currentTestimonial.value = 0
+          } else {
+            nextTestimonial()
+          }
+        }, 5000)
+      }
     }
 
     const stopAutoplay = () => {
@@ -170,7 +208,7 @@ export default {
     }
 
     onMounted(() => {
-      startAutoplay()
+      loadTestimonials()
     })
 
     onUnmounted(() => {
@@ -180,9 +218,11 @@ export default {
     return {
       testimonials,
       currentTestimonial,
+      isLoading,
       nextTestimonial,
       previousTestimonial,
-      goToTestimonial
+      goToTestimonial,
+      refreshTestimonials
     }
   }
 }

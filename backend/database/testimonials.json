@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "name": "María González",
+    "role": "Propietaria",
+    "service": "Cocina integral",
+    "content": "ArteModular transformó completamente mi cocina. El diseño es perfecto para mi espacio y la calidad de los materiales es excepcional.",
+    "rating": 5,
+    "avatar": "M.G.",
+    "is_approved": true,
+    "created_at": "2024-01-01T00:00:00.000Z",
+    "updated_at": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "name": "Carlos Rodríguez",
+    "role": "Arquitecto",
+    "service": "Carpintería de obra",
+    "content": "Como arquitecto, valoro mucho la precisión y la calidad. ArteModular demostró un nivel de craftsmanship impresionante.",
+    "rating": 5,
+    "avatar": "C.R.",
+    "is_approved": true,
+    "created_at": "2024-01-01T00:00:00.000Z",
+    "updated_at": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "a3cada17-9720-4fb2-b698-8c5d26ea6f03",
+    "name": "prueba",
+    "role": "dev",
+    "service": "Oficina completa",
+    "content": "asassasdsdasasas",
+    "rating": 2,
+    "avatar": "P",
+    "is_approved": false,
+    "created_at": "2025-08-27T01:36:12.023Z",
+    "updated_at": "2025-08-27T01:36:12.023Z"
+  }
+]

@@ -14,7 +14,8 @@ const config = {
     endpoints: {
       contact: '/api/contact',
       health: '/api/health',
-      testEmail: '/api/test-email'
+      testEmail: '/api/test-email',
+      testimonials: '/api/testimonials'
     },
     
     // Configuración de requests
