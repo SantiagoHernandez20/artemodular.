@@ -119,7 +119,7 @@
 
           <!-- CTA del modal -->
           <div class="pt-4 border-t border-gray-200">
-            <button class="w-full btn-primary text-center text-sm font-medium py-3">
+            <button @click="scrollToContact" class="w-full btn-primary text-center text-sm font-medium py-3">
               Solicitar cotización
             </button>
           </div>
@@ -215,6 +215,16 @@ export default {
       document.body.style.overflow = 'auto'
     }
 
+    const scrollToContact = () => {
+      // Cerrar el modal
+      closeMobileModal()
+      // Scroll suave a la sección de contacto
+      const contactSection = document.getElementById('contacto')
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+
     // Seleccionar el primer servicio por defecto (solo en desktop)
     onMounted(() => {
       updateWindowWidth()
@@ -237,7 +247,8 @@ export default {
       showMobileModal,
       isMobile,
       selectService,
-      closeMobileModal
+      closeMobileModal,
+      scrollToContact
     }
   }
 }

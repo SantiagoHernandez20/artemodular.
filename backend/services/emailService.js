@@ -2,6 +2,28 @@
 // Maneja el envío de emails usando Nodemailer
 
 const nodemailer = require('nodemailer')
+const path = require('path')
+
+// 🔧 Cargar variables de entorno según el entorno
+if (process.env.NODE_ENV === 'production') {
+  // En producción, las variables ya están disponibles en el sistema
+  console.log('🚀 Entorno de producción detectado - usando variables del sistema')
+} else {
+  // En desarrollo, cargar desde archivos .env
+  try {
+    require('dotenv').config({ 
+      path: path.join(__dirname, '..', '..', '.env.local') 
+    })
+    
+    if (!process.env.EMAIL_USER) {
+      require('dotenv').config({ 
+        path: path.join(__dirname, '..', '..', '.env') 
+      })
+    }
+  } catch (error) {
+    console.warn('⚠️ No se pudieron cargar archivos .env:', error.message)
+  }
+}
 
 // 📋 Mapeo de tipos de proyecto para el email
 const PROJECT_TYPES = {
@@ -80,7 +102,7 @@ const generateBusinessEmailHTML = (contactData) => {
         
         <div class="content">
           <div class="field">
-            <div class="label">👤 Nombre del Cliente:</div>
+            <div class="label">�� Nombre del Cliente:</div>
             <div class="value">${name}</div>
           </div>
           

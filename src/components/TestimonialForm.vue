@@ -128,7 +128,7 @@
 
 <script>
 import { ref, reactive, computed } from 'vue'
-import { testimonialService } from '@/services/testimonialService'
+import { testimonialsService } from '@/services/testimonialsService'
 
 export default {
   name: 'TestimonialForm',
@@ -173,7 +173,7 @@ export default {
       message.value = ''
 
       try {
-        const result = await testimonialService.createTestimonial(form)
+        const result = await testimonialsService.createTestimonial(form)
         
         message.value = result.message
         messageType.value = 'success'
