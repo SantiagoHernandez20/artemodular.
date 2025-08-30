@@ -34,8 +34,8 @@ app.use(cors({
     
     // Lista de orígenes permitidos
     const allowedOrigins = [
-      'https://artemodular.vercel.app',
-      'https://artemodular.vercel.app/',
+      'https://artemodular.site',
+      'https://www.artemodular.site',
       'http://localhost:9001',
       'http://localhost:9000',
       'http://localhost:9002'
@@ -43,9 +43,11 @@ app.use(cors({
     
     // Verificar si el origen está permitido
     if (allowedOrigins.includes(origin)) {
+      console.log('✅ Origen permitido por CORS:', origin)
       callback(null, true)
     } else {
       console.log('🚫 Origen bloqueado por CORS:', origin)
+      console.log('📋 Orígenes permitidos:', allowedOrigins)
       callback(new Error('No permitido por CORS'))
     }
   },
@@ -115,12 +117,12 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     environment: process.env.NODE_ENV || 'development',
     port: PORT,
-    frontendUrl: process.env.FRONTEND_URL || 'https://artemodular.vercel.app',
+    frontendUrl: process.env.FRONTEND_URL || 'https://artemodular.site',
     cors: {
       enabled: true,
       allowedOrigins: [
-        'https://artemodular.vercel.app',
-        'https://artemodular.vercel.app/',
+        'https://artemodular.site',
+        'https://www.artemodular.site',
         'http://localhost:9001',
         'http://localhost:9000',
         'http://localhost:9002'
@@ -143,12 +145,12 @@ app.get('/api/health', (req, res) => {
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
     port: PORT,
-    frontendUrl: process.env.FRONTEND_URL || 'https://artemodular.vercel.app',
+    frontendUrl: process.env.FRONTEND_URL || 'https://artemodular.site',
     cors: {
       enabled: true,
       allowedOrigins: [
-        'https://artemodular.vercel.app',
-        'https://artemodular.vercel.app/',
+        'https://artemodular.site',
+        'https://www.artemodular.site',
         'http://localhost:9001',
         'http://localhost:9000',
         'http://localhost:9002'
