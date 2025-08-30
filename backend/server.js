@@ -35,7 +35,6 @@ app.use(cors({
     // Lista de orígenes permitidos
     const allowedOrigins = [
       'https://artemodular.site',
-      'https://www.artemodular.site',
       'http://localhost:9001',
       'http://localhost:9000',
       'http://localhost:9002'
