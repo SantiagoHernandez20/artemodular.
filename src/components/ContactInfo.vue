@@ -1,10 +1,45 @@
 <template>
-  <div class="contact-info-item group">
+  <div class="contact-info-item group" :class="{ 'clickable': href }">
+    <!-- Enlace principal que cubre toda la tarjeta -->
+    <a v-if="href" :href="href" class="full-link" :aria-label="`${title} - ${content}`" target="_blank" rel="noopener noreferrer">
+      <span class="sr-only">{{ title }} - {{ content }}</span>
+    </a>
+    
     <!-- Icono principal con fondo -->
     <div class="icon-container">
-      <PhoneIcon v-if="icon === 'PhoneIcon'" />
-      <EmailIcon v-else-if="icon === 'EmailIcon'" />
-      <LocationIcon v-else-if="icon === 'LocationIcon'" />
+      <!-- Icono de teléfono -->
+      <svg v-if="icon === 'PhoneIcon'" class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+      </svg>
+      
+      <!-- Icono de email -->
+      <svg v-else-if="icon === 'EmailIcon'" class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      </svg>
+      
+      <!-- Icono de ubicación -->
+      <svg v-else-if="icon === 'LocationIcon'" class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      
+      <!-- Icono de WhatsApp -->
+      <svg v-else-if="icon === 'WhatsAppIcon'" class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M9 7h6m-6 4h6m-6 4h6"/>
+      </svg>
+      
+      <!-- Icono por defecto (teléfono) -->
+      <svg v-else class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+      </svg>
     </div>
     
     <!-- Contenido de información -->
@@ -14,25 +49,18 @@
       <p class="subtitle">{{ subtitle }}</p>
     </div>
     
-    <!-- Enlace si existe -->
-    <a v-if="href" :href="href" class="action-link" :aria-label="`${title} - ${content}`">
+    <!-- Enlace de acción (flecha) -->
+    <div v-if="href" class="action-link">
       <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
       </svg>
-    </a>
+    </div>
   </div>
 </template>
 
 <script>
-import { PhoneIcon, EmailIcon, LocationIcon } from './icons/ContactIcons.vue'
-
 export default {
   name: 'ContactInfo',
-  components: {
-    PhoneIcon,
-    EmailIcon,
-    LocationIcon
-  },
   props: {
     icon: {
       type: String,
@@ -72,6 +100,41 @@ export default {
   overflow: hidden;
 }
 
+/* Enlace que cubre toda la tarjeta */
+.full-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  cursor: pointer;
+}
+
+/* Texto oculto para accesibilidad */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Estilo para tarjetas clickeables */
+.contact-info-item.clickable {
+  cursor: pointer;
+}
+
+.contact-info-item.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 .contact-info-item::before {
   content: '';
   position: absolute;
@@ -88,12 +151,6 @@ export default {
   opacity: 1;
 }
 
-.contact-info-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
 /* Contenedor del icono */
 .icon-container {
   flex-shrink: 0;
@@ -106,7 +163,8 @@ export default {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(141, 85, 36, 0.2);
+  box-shadow: 0 12px 32px rgba(141, 85, 36, 0.25);
+  transition: all 0.4s ease;
 }
 
 .icon-container::before {
@@ -120,7 +178,7 @@ export default {
   border-radius: 16px;
 }
 
-/* Iconos SVG - IMPORTANTE: sobrescribir estilos del componente padre */
+/* Iconos SVG */
 .icon-container :deep(.contact-icon) {
   width: 32px !important;
   height: 32px !important;
@@ -159,7 +217,7 @@ export default {
   line-height: 1.4;
 }
 
-/* Enlace de acción */
+/* Enlace de acción (flecha) */
 .action-link {
   flex-shrink: 0;
   width: 44px;
@@ -171,12 +229,7 @@ export default {
   justify-content: center;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.action-link:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  pointer-events: none; /* No intercepta clicks */
 }
 
 .arrow-icon {
@@ -184,10 +237,6 @@ export default {
   height: 20px;
   color: #F5E9DA;
   transition: transform 0.3s ease;
-}
-
-.action-link:hover .arrow-icon {
-  transform: translateX(2px);
 }
 
 /* Responsive */

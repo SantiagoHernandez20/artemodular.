@@ -277,7 +277,7 @@ app.listen(PORT, () => {
    - Backend: ${PORT}
    - Frontend (dev): 9001
    - Frontend (alt): 9000, 9002
-   - Frontend (prod): https://artemodular.vercel.app
+   - Frontend (prod): artemodular.site
   `)
 })
 

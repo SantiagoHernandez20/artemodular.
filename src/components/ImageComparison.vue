@@ -4,7 +4,7 @@
     <!-- IMAGEN 1 (Fondo completo) -->
     <div class="before-image">
       <img 
-        src="/images/decorativos/despues.png" 
+        src="/images/decorativos/despues.jpg" 
         alt="Diseño 3D en SketchUp" 
         style="width: 100%; height: 100%; object-fit: cover;"
       />
@@ -16,7 +16,7 @@
       :style="{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }"
     >
       <img 
-        src="/images/decorativos/antes.png" 
+        src="/images/decorativos/antes.jpg" 
         width="10px"
         height="100px"
         alt="Mueble terminado real" 

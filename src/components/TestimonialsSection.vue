@@ -99,7 +99,7 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import TestimonialCard from './TestimonialCard.vue'
-import { testimonialService } from '@/services/testimonialService'
+import { testimonialsService } from '@/services/testimonialsService'
 
 export default {
   name: 'TestimonialsSection',
@@ -112,65 +112,26 @@ export default {
     const isLoading = ref(true)
     let autoplayInterval = null
 
-    // Cargar testimonios desde la API
-    const loadTestimonials = async () => {
-      try {
-        isLoading.value = true
-        //console.log('🔄 Iniciando carga de testimonios desde la API...')
+    // Usar listener en tiempo real
+    onMounted(() => {
+      // Suscribirse a testimonios aprobados
+      const unsubscribe = testimonialsService.subscribeToApprovedTestimonials((newTestimonials) => {
+        testimonials.value = newTestimonials;
+        console.log('📋 Testimonios actualizados en tiempo real:', newTestimonials.length);
+        isLoading.value = false;
         
-        // Llamar al servicio
-        const response = await testimonialService.getAllTestimonials()
-
-        
-        // Validar y procesar la respuesta
-        if (response && typeof response === 'object') {
-          // Si la respuesta tiene estructura { success: true, data: [...] }
-          if (response.success && Array.isArray(response.data)) {
-            testimonials.value = response.data
-
-          }
-                      // Si la respuesta es directamente un array
-            else if (Array.isArray(response)) {
-              testimonials.value = response
-            }
-          // Si la respuesta tiene estructura { success: true, data: [...] } pero data no es array
-          else if (response.success && response.data) {
-
-            testimonials.value = Array.isArray(response.data) ? response.data : []
-          }
-          // Otros casos
-          else {
-
-            testimonials.value = []
-          }
-        } else {
-
-          testimonials.value = []
+        // Iniciar autoplay si hay más de un testimonio
+        if (newTestimonials.length > 1) {
+          startAutoplay();
         }
-        
-        // Log centralizado con toda la información
-        console.log('📋 Testimonios cargados:', {
-          count: testimonials.value.length,
-          source: response.success ? 'API response.data' : 'API direct response',
-          data: testimonials.value
-        })
-        
-      } catch (error) {
-        console.error('❌ Error cargando testimonios:', error.message)
-        testimonials.value = []
-        
-      } finally {
-        isLoading.value = false
-        
-     
+      });
 
-      }
-    }
-
-    // Recargar testimonios (para cuando se crea uno nuevo)
-    const refreshTestimonials = () => {
-      loadTestimonials()
-    }
+      // Limpiar suscripción al desmontar
+      onUnmounted(() => {
+        unsubscribe();
+        stopAutoplay();
+      });
+    });
 
     const nextTestimonial = () => {
       if (currentTestimonial.value < testimonials.value.length - 1) {
@@ -207,22 +168,13 @@ export default {
       }
     }
 
-    onMounted(() => {
-      loadTestimonials()
-    })
-
-    onUnmounted(() => {
-      stopAutoplay()
-    })
-
     return {
       testimonials,
       currentTestimonial,
       isLoading,
       nextTestimonial,
       previousTestimonial,
-      goToTestimonial,
-      refreshTestimonials
+      goToTestimonial
     }
   }
 }

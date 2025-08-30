@@ -2,78 +2,23 @@
   <div id="app" class="min-h-screen bg-white">
     <AppHeader />
     <main>
-      <HeroSection />
-      <ServicesSection />
-      <ProcessSection />
-      <GallerySection />
-      <TestimonialsSection ref="testimonialsSection" />
-      
-      <!-- Formulario de testimonio -->
-      <section class="bg-white section-padding">
-        <div class="container-custom">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              ¿Trabajaste con nosotros?
-            </h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-              Comparte tu experiencia y ayuda a otros a conocer la calidad de nuestro trabajo
-            </p>
-          </div>
-          
-          <TestimonialForm @testimonial-created="handleTestimonialCreated" />
-        </div>
-      </section>
-      
-      <ContactSection />
+      <router-view />
     </main>
     <AppFooter />
     
     <!-- Panel de debug (solo en desarrollo) -->
-    <ApiDebugPanel />
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
 import AppHeader from './components/AppHeader.vue'
-import HeroSection from './components/HeroSection.vue'
-import ServicesSection from './components/ServicesSection.vue'
-import ProcessSection from './components/ProcessSection.vue'
-import GallerySection from './components/GallerySection.vue'
-import TestimonialsSection from './components/TestimonialsSection.vue'
-import TestimonialForm from './components/TestimonialForm.vue'
-import ContactSection from './components/ContactSection.vue'
 import AppFooter from './components/AppFooter.vue'
-import ApiDebugPanel from './components/ApiDebugPanel.vue'
 
 export default {
   name: 'App',
   components: {
     AppHeader,
-    HeroSection,
-    ServicesSection,
-    ProcessSection,
-    GallerySection,
-    TestimonialsSection,
-    TestimonialForm,
-    ContactSection,
-    AppFooter,
-    ApiDebugPanel
-  },
-  setup() {
-    const testimonialsSection = ref(null)
-
-    const handleTestimonialCreated = () => {
-      // Recargar testimonios cuando se crea uno nuevo
-      if (testimonialsSection.value) {
-        testimonialsSection.value.refreshTestimonials()
-      }
-    }
-
-    return {
-      testimonialsSection,
-      handleTestimonialCreated
-    }
+    AppFooter
   }
 }
 </script>

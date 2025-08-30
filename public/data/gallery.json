@@ -56,40 +56,66 @@
   "centros": [
     {
       "id": 3,
-      "title": "Centro de Entretenimiento Minimalista",
+      "title": "Centro de Entretenimiento con mueble flotante",
       "description": "Diseño flotante con gestión de cables oculta",
       "fullDescription": "Centro de entretenimiento de diseño minimalista que combina elegancia y funcionalidad. Fabricado con acabados de madera natural y sistema de gestión de cables integrado. Perfecto para televisores de 55\" a 75\", incluye compartimentos ocultos para equipos audiovisuales y sistema de ventilación pasiva.",
       "images": [
-        "/images/centro_entretenimiento/centro_1.jpg",
-        "/images/centro_entretenimiento/centro_2.jpg"
+        "/images/centro_entretenimiento/centro_mueble_1.jpg",
+        "/images/centro_entretenimiento/centro_mueble_2.jpg"
       ],
       "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
     },
     {
       "id": 4,
-      "title": "Centro Multimedia Premium",
+      "title": "Centro Multimedia con chimenea",
       "description": "Sistema modular con iluminación LED ambiental",
-      "fullDescription": "Centro de entretenimiento premium de diseño modular que se adapta a cualquier espacio. Cuenta con sistema de iluminación LED RGB programable, estantes ajustables, cajones con cierre suave y panel posterior con gestión completa de cables. Ideal para crear el ambiente perfecto en tu sala de estar.",
+      "fullDescription": "Centro de entretenimiento premium de diseño modular que se adapta a cualquier espacio. Cuenta con sistema de iluminación LED RGB programable, chimenea, Ideal para crear el ambiente perfecto en tu sala de estar.",
       "images": [
-        "/images/centro_entretenimiento/centro_3.jpg",
-        "/images/centro_entretenimiento/centro_4.jpg",
-        "/images/centro_entretenimiento/centro_5.jpg"
+        "/images/centro_entretenimiento/centro_chimenea_1.jpg",
+        "/images/centro_entretenimiento/centro_chimenea_2.jpg",
+        "/images/centro_entretenimiento/centro_chimenea_3.jpg"
       ],
       "features": ["Iluminación LED RGB", "Módulos ajustables", "Cajones soft-close", "Panel de cables trasero", "Acabado premium"]
+    },
+    {
+      "id": 5,
+      "title": "Centro de Entretenimiento con mueble flotante2",
+      "description": "Diseño flotante con gestión de cables oculta",
+      "fullDescription": "Centro de entretenimiento de diseño minimalista que combina elegancia y funcionalidad. Fabricado con acabados de madera natural y sistema de gestión de cables integrado. Perfecto para televisores de 55\" a 75\", incluye compartimentos ocultos para equipos audiovisuales y sistema de ventilación pasiva.",
+      "images": [
+        "/images/centro_entretenimiento/centro_mueble2_1.jpg",
+        "/images/centro_entretenimiento/centro_mueble2_2.jpg"
+      ],
+      "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
     }
   ],
   "decorativos": [
     {
-      "id": 5,
+      "id": 6,
       "title": "Lámpara Lunar",
       "description": "Lámpara decorativa con textura lunar",
       "fullDescription": "Lámpara decorativa única con textura lunar realista. Fabricada con tecnología 3D y sistema de iluminación LED regulable que crea ambientes únicos.",
       "images": [
-        "/images/decorativos/luna1.jpeg",
-        "/images/decorativos/luna2.jpeg"
+        "/images/decorativos/luna1.jpg",
+        "/images/decorativos/luna2.jpg",
+        "/images/decorativos/luna3.jpg"
       
       ],
       "features": ["Luz LED", "Textura 3D", "Diseño único", "Regulable"]
     }
+  ],
+  "bibliotecas": [
+    {
+      "id": 7,
+      "title": "Biblioteca con escritorio semiflotante con panel LED",
+      "description": "Diseño semiflotante con gestión de cables oculta",
+      "fullDescription": "Biblioteca moderna con panel LED acústico de listones de madera y tiras LED integradas. Incluye escritorio semiflotante de madera natural con cajones blancos, estanterías flotantes en diseño moderno y unidad alta con compartimentos iluminados. Perfecta para oficinas en casa y espacios de trabajo creativo.",
+      "images": [
+        "/images/bibliotecas/biblioteca1.jpg",
+        "/images/bibliotecas/biblioteca2.jpg"
+      ],
+      "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
+    }
+
   ]
 }

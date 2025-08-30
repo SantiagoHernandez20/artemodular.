@@ -1,0 +1,33 @@
+{
+  "rules": {
+    "testimonials": {
+      ".read": true,
+      ".write": "auth != null || newData.child('is_approved').val() === false",
+      "$testimonialId": {
+        ".validate": "newData.hasChildren(['name', 'content', 'rating'])",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 100"
+        },
+        "content": {
+          ".validate": "newData.isString() && newData.val().length >= 10 && newData.val().length < 1000"
+        },
+        "rating": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5"
+        },
+        "is_approved": {
+          ".validate": "newData.isBoolean()"
+        },
+        "created_at": {
+          ".validate": "newData.isString()"
+        },
+        "updated_at": {
+          ".validate": "newData.isString()"
+        }
+      }
+    },
+    "admin": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}

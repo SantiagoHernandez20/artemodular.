@@ -16,14 +16,14 @@
 
           <!-- Información de contacto -->
           <div class="space-y-6 mb-8">
-            <ContactInfo icon="PhoneIcon" title="Llámanos ahora" content="313 358-9795"
-              subtitle="Disponible 24 horas del día" href="tel:+573133589795" />
-
-            <ContactInfo icon="EmailIcon" title="Envíanos un email" content="aartemodular@gmail.com"
-              subtitle="Te respondemos en menos de 24h" href="aartemodular@gmail.com" />
+            <!-- <ContactInfo icon="EmailIcon" title="Envíanos un email" content="aartemodular@gmail.com"
+              subtitle="Te respondemos en menos de 24h" href="mailto:aartemodular@gmail.com" /> -->
 
             <ContactInfo icon="LocationIcon" title="Visítanos" content="Mosquera, Cundinamarca"
-              subtitle="Servicio a domicilio" />
+              subtitle="Servicio a domicilio" href="https://www.google.com.co/search?kgmid=/g/11xvrv4x5v&hl=es-CO&q=ArteModular&shndl=30&shem=lcuae,lsptbl1&source=sh/x/loc/osrp/m1/2&kgs=b2aa79673d6769ba"/>
+
+            <ContactInfo icon="WhatsAppIcon" title="WhatsApp" content="313 358-9795"
+              subtitle="Respuesta inmediata" href="https://wa.me/573133589795" />
           </div>
 
           <!-- Redes sociales -->
@@ -35,15 +35,9 @@
                   d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" />
               </svg>
             </a>
-            <a href="#"
-              class="w-10 h-10 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center transition-all">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
-              </svg>
-            </a>
-            <a href="#"
-              class="w-10 h-10 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center transition-all">
+         
+            <a href="https://www.artemodular.site"
+              class="w-10 h-10 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center transition-all" target="_blank">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd"
                   d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
@@ -55,7 +49,19 @@
         <!-- Formulario de contacto -->
         <div class="backdrop-blur-sm rounded-2xl p-8"
           style="background: rgba(245, 233, 218, 0.95); backdrop-filter: blur(10px);">
-          <h3 class="text-2xl font-bold mb-6" style="color: #8D5524;">Solicita tu presupuesto gratuito</h3>
+          
+          <!-- Icono decorativo que contrasta -->
+          <div class="text-center mb-6">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" 
+                 style="background: linear-gradient(135deg, #8D5524, #6B3F1A);">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl font-bold mb-6 text-center" style="color: #8D5524;">Solicita tu presupuesto gratuito</h3>
 
           <form @submit.prevent="submitForm" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
