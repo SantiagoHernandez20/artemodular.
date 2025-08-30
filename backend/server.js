@@ -34,7 +34,7 @@ app.use(cors({
     
     // Lista de orígenes permitidos
     const allowedOrigins = [
-      'https://artemodular.vercel.app',
+      'https://artemodular.site',
       'https://artemodular.vercel.app/',
       'http://localhost:9001',
       'http://localhost:9000',
