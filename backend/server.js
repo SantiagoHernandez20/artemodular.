@@ -1,5 +1,6 @@
 // 🚀 ArteModular Backend - Express + Nodemailer
 // Servidor para manejar envío de emails de contacto
+const { authenticateUser, optionalAuth } = require('./middleware/auth');
 
 const express = require('express')
 const cors = require('cors')
@@ -24,7 +25,6 @@ const emailService = require('./services/emailService')
 const testimonialRoutes = require('./routes/TestimonialRoutes')
 const app = express()
 const PORT = process.env.PORT || 3001
-
 // 🛡️ Middlewares de seguridad
 app.use(helmet())
 app.use(cors({
@@ -236,7 +236,65 @@ app.get('/api/test-email', async (req, res) => {
 
 app.use('/api/testimonials', testimonialRoutes)
 
-// ❌ Manejo de rutas no encontradas
+// 🔐 RUTAS DE AUTENTICACIÓN (MOVER AQUÍ, ANTES del 404 handler)
+
+// Verificar estado de autenticación
+app.get('/api/auth/status', optionalAuth, (req, res) => {
+  if (req.user) {
+    res.json({
+      success: true,
+      authenticated: true,
+      user: {
+        uid: req.user.uid,
+        email: req.user.email,
+        emailVerified: req.user.emailVerified,
+        name: req.user.name,
+        picture: req.user.picture,
+        provider: req.user.provider
+      }
+    });
+  } else {
+    res.json({
+      success: true,
+      authenticated: false,
+      message: 'Usuario no autenticado'
+    });
+  }
+});
+
+// Endpoint protegido para verificar token
+app.post('/api/auth/verify', authenticateUser, (req, res) => {
+  res.json({
+    success: true,
+    message: 'Token válido',
+    user: {
+      uid: req.user.uid,
+      email: req.user.email,
+      emailVerified: req.user.emailVerified,
+      name: req.user.name,
+      picture: req.user.picture,
+      provider: req.user.provider
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Endpoint para obtener información del usuario actual
+app.get('/api/auth/me', authenticateUser, (req, res) => {
+  res.json({
+    success: true,
+    user: {
+      uid: req.user.uid,
+      email: req.user.email,
+      emailVerified: req.user.emailVerified,
+      name: req.user.name,
+      picture: req.user.picture,
+      provider: req.user.provider
+    }
+  });
+});
+
+// ❌ Manejo de rutas no encontradas (MOVER AL FINAL)
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
@@ -245,7 +303,10 @@ app.use('*', (req, res) => {
       'GET /',
       'GET /api/health',
       'POST /api/contact',
-      'GET /api/test-email'
+      'GET /api/test-email',
+      'GET /api/auth/status',
+      'POST /api/auth/verify',
+      'GET /api/auth/me'
     ]
   })
 })
@@ -292,3 +353,10 @@ process.on('SIGINT', () => {
   console.log('🛑 SIGINT recibido, cerrando servidor...')
   process.exit(0)
 })
+
+// Agregar headers de seguridad para COOP
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  next();
+});

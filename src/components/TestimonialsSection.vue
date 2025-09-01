@@ -99,7 +99,7 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import TestimonialCard from './TestimonialCard.vue'
-import { testimonialsService } from '@/services/testimonialsService'
+import config from '../config/index.js'
 
 export default {
   name: 'TestimonialsSection',
@@ -112,26 +112,55 @@ export default {
     const isLoading = ref(true)
     let autoplayInterval = null
 
-    // Usar listener en tiempo real
-    onMounted(() => {
-      // Suscribirse a testimonios aprobados
-      const unsubscribe = testimonialsService.subscribeToApprovedTestimonials((newTestimonials) => {
-        testimonials.value = newTestimonials;
-        console.log('📋 Testimonios actualizados en tiempo real:', newTestimonials.length);
-        isLoading.value = false;
+    // Cargar testimonios aprobados desde tu backend
+    const loadApprovedTestimonials = async () => {
+      try {
+        console.log(' Iniciando carga de testimonios aprobados...')
+        isLoading.value = true
+        
+        // ✅ Usar configuración centralizada
+        const apiUrl = config.utils.getBackendUrl(config.backend.endpoints.testimonials)
+        console.log('🌐 Obteniendo testimonios desde:', apiUrl)
+        
+        const response = await fetch(apiUrl)
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const allTestimonials = await response.json()
+        //console.log('✅ Todos los testimonios recibidos:', allTestimonials)
+        
+        // Filtrar solo los aprobados
+        const approvedTestimonials = allTestimonials.filter(t => t.is_approved === true)
+        //console.log('✅ Testimonios aprobados filtrados:', approvedTestimonials)
+        
+        // Ordenar por fecha de creación (más recientes primero)
+        testimonials.value = approvedTestimonials.sort((a, b) => 
+          new Date(b.created_at) - new Date(a.created_at)
+        )
+        
+        //console.log(' Testimonios procesados y ordenados:', testimonials.value)
+        console.log('📊 Total testimonios aprobados:', testimonials.value.length)
+        isLoading.value = false
         
         // Iniciar autoplay si hay más de un testimonio
-        if (newTestimonials.length > 1) {
-          startAutoplay();
+        if (testimonials.value.length > 1) {
+          startAutoplay()
         }
-      });
+      } catch (error) {
+        console.error('❌ Error al cargar testimonios:', error)
+        isLoading.value = false
+      }
+    }
 
-      // Limpiar suscripción al desmontar
-      onUnmounted(() => {
-        unsubscribe();
-        stopAutoplay();
-      });
-    });
+    onMounted(() => {
+      loadApprovedTestimonials()
+    })
+
+    onUnmounted(() => {
+      stopAutoplay()
+    })
 
     const nextTestimonial = () => {
       if (currentTestimonial.value < testimonials.value.length - 1) {

@@ -17,6 +17,8 @@
     "core-js": "^3.8.3",
     "emailjs-com": "^3.2.0",
     "firebase": "^12.2.1",
+    "firebase-admin": "^13.5.0",
+    "pinia": "^3.0.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
     "vue": "^3.2.13",

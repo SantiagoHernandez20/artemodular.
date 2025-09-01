@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { onMounted } from 'vue'
+import { useAuthStore } from './stores/authStore'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 
@@ -19,6 +21,18 @@ export default {
   components: {
     AppHeader,
     AppFooter
+  },
+  setup() {
+    const authStore = useAuthStore()
+
+    onMounted(() => {
+      // Inicializar autenticación
+      authStore.initAuth()
+    })
+
+    return {
+      authStore
+    }
   }
 }
 </script>

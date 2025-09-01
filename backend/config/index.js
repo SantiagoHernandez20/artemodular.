@@ -13,7 +13,7 @@ const config = {
     // Configuración de CORS
     cors: {
       origins: [
-        process.env.FRONTEND_URL || 'http://localhost:9001',
+        process.env.VUE_APP_FRONTEND_URL || 'http://localhost:9001',
         'https://artemodular.vercel.app',
         'http://localhost:9001', // Desarrollo local
         'http://localhost:9000', // Alternativo
@@ -91,7 +91,14 @@ const config = {
     root: '/',
     health: '/api/health',
     contact: '/api/contact',
-    testEmail: '/api/test-email'
+    testEmail: '/api/test-email',
+    
+    // ✅ Agregar endpoints de testimonios
+    testimonials: '/api/testimonials',
+    testimonialsStats: '/api/testimonials/stats',
+    testimonialsApprove: '/api/testimonials/:id/approve',
+    testimonialsReject: '/api/testimonials/:id/reject',
+    testimonialsDelete: '/api/testimonials/:id'
   },
 
   // 🔍 Métodos de Utilidad
@@ -117,7 +124,7 @@ const config = {
         'Variables de entorno': {
           PORT: process.env.PORT,
           NODE_ENV: process.env.NODE_ENV,
-          FRONTEND_URL: process.env.FRONTEND_URL,
+          VUE_APP_FRONTEND_URLL: process.env.VUE_APP_FRONTEND_URL,
           BUSINESS_EMAIL: process.env.BUSINESS_EMAIL,
           BUSINESS_NAME: process.env.BUSINESS_NAME
         }

@@ -1,8 +1,8 @@
 <template>
   <div class="bg-gray-50 p-8 mx-4">
     <div class="max-w-3xl mx-auto text-center">
-             <!-- Comillas decorativas -->
-       <div style="font-size: 4rem; color: #8D5524; margin-bottom: 1.5rem; opacity: 0.2;">"</div>
+      <!-- Comillas decorativas -->
+      <div style="font-size: 4rem; color: #8D5524; margin-bottom: 1.5rem; opacity: 0.2;">"</div>
       
       <!-- Contenido del testimonial -->
       <blockquote class="text-xl text-gray-700 leading-relaxed mb-8">
@@ -10,13 +10,13 @@
       </blockquote>
       
       <!-- Estrellas de rating -->
-      <div class="flex justify-center mb-6">
+      <div v-if="testimonial.rating" class="flex justify-center mb-6">
         <div class="flex space-x-1">
           <svg 
             v-for="star in 5" 
             :key="star"
             class="w-5 h-5"
-                         :style="{ color: star <= testimonial.rating ? '#8D5524' : '#D1D5DB' }"
+            :style="{ color: star <= testimonial.rating ? '#8D5524' : '#D1D5DB' }"
             fill="currentColor" 
             viewBox="0 0 20 20"
           >
@@ -27,17 +27,17 @@
       
       <!-- Información del cliente -->
       <div class="flex items-center justify-center space-x-4">
-                 <!-- Avatar -->
-         <div style="width: 3rem; height: 3rem; background-color: #8D5524; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
-           {{ testimonial.avatar }}
-         </div>
-         
-         <!-- Datos del cliente -->
-         <div style="text-align: left;">
-           <div style="font-weight: 600; color: #111827;">{{ testimonial.name }}</div>
-           <div style="font-size: 0.875rem; color: #4B5563;">{{ testimonial.role }}</div>
-           <div style="font-size: 0.875rem; color: #8D5524; font-weight: 500;">{{ testimonial.service }}</div>
-         </div>
+        <!-- Avatar -->
+        <div style="width: 3rem; height: 3rem; background-color: #8D5524; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+          {{ testimonial.avatar || getInitials(testimonial.name) }}
+        </div>
+        
+        <!-- Datos del cliente -->
+        <div style="text-align: left;">
+          <div style="font-weight: 600; color: #111827;">{{ testimonial.name }}</div>
+          <div v-if="testimonial.role" style="font-size: 0.875rem; color: #4B5563;">{{ testimonial.role }}</div>
+          <div v-if="testimonial.service" style="font-size: 0.875rem; color: #8D5524; font-weight: 500;">{{ testimonial.service }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -50,6 +50,21 @@ export default {
     testimonial: {
       type: Object,
       required: true
+    }
+  },
+  setup(props) {
+    const getInitials = (name) => {
+      if (!name) return 'U'
+      return name
+        .split(' ')
+        .map(word => word.charAt(0))
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    }
+
+    return {
+      getInitials
     }
   }
 }
