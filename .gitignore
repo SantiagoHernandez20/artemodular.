@@ -6,7 +6,9 @@ Context/
 # local env files
 .env
 .env.local
-
+.firebaserc
+database.rules.json
+firebase.json
 # Log files
 npm-debug.log*
 yarn-debug.log*
