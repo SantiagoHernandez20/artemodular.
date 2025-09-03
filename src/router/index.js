@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { nextTick } from 'vue'
 import Home from '../views/Home.vue'
+import { useAuthStore } from '../stores/authStore'
 
 const routes = [
   {
@@ -7,6 +9,7 @@ const routes = [
     name: 'Home',
     component: Home
   },
+  
   {
     path: '/contacto',
     name: 'Contact',

@@ -128,7 +128,7 @@
 
 <script>
 import { ref, reactive, computed } from 'vue'
-import { testimonialsService } from '@/services/testimonialsService'
+import config from '../config/index.js'
 
 export default {
   name: 'TestimonialForm',
@@ -173,25 +173,45 @@ export default {
       message.value = ''
 
       try {
-        const result = await testimonialsService.createTestimonial(form)
+        // ✅ Usar configuración centralizada
+        const apiUrl = config.utils.getBackendUrl(config.backend.endpoints.testimonials)
+        console.log('🌐 Enviando testimonio a:', apiUrl)
         
-        message.value = result.message
-        messageType.value = 'success'
-        
-        // Limpiar formulario
-        Object.assign(form, {
-          name: '',
-          role: '',
-          service: '',
-          content: '',
-          rating: 0
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(form)
         })
 
-        // Emitir evento para que el padre sepa que se creó un testimonio
-        emit('testimonial-created')
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const result = await response.json()
         
-        clearMessage()
+        if (result.success) {
+          message.value = 'Testimonio enviado exitosamente. Será revisado antes de ser publicado.'
+          messageType.value = 'success'
+          
+          // Limpiar formulario
+          Object.assign(form, {
+            name: '',
+            role: '',
+            service: '',
+            content: '',
+            rating: 0
+          })
+
+          // Emitir evento
+          emit('testimonial-created')
+          clearMessage()
+        } else {
+          throw new Error(result.message || 'Error al enviar testimonio')
+        }
       } catch (error) {
+        console.error('Error al enviar testimonio:', error)
         message.value = error.message || 'Error al enviar el testimonio'
         messageType.value = 'error'
         clearMessage()

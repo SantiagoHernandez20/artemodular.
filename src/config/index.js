@@ -15,7 +15,13 @@ const config = {
       contact: '/api/contact',
       health: '/api/health',
       testEmail: '/api/test-email',
-      testimonials: '/api/testimonials'
+      
+      // ✅ Agregar endpoints de testimonios
+      testimonials: '/api/testimonials',
+      testimonialsStats: '/api/testimonials/stats',
+      testimonialsApprove: '/api/testimonials/:id/approve',
+      testimonialsReject: '/api/testimonials/:id/reject',
+      testimonialsDelete: '/api/testimonials/:id'
     },
     
     // Configuración de requests
@@ -34,7 +40,7 @@ const config = {
     url: process.env.VUE_APP_FRONTEND_URL || 
       (process.env.NODE_ENV === 'development' 
         ? 'http://localhost:9001' 
-        : 'https://artemodular.vercel.app'),
+        : 'https://artemodular.site'),
     
     // Configuración del servidor de desarrollo
     devServer: {

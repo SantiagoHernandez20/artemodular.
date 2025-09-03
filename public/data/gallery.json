@@ -79,12 +79,15 @@
     },
     {
       "id": 5,
-      "title": "Centro de Entretenimiento con mueble flotante2",
-      "description": "Diseño flotante con gestión de cables oculta",
-      "fullDescription": "Centro de entretenimiento de diseño minimalista que combina elegancia y funcionalidad. Fabricado con acabados de madera natural y sistema de gestión de cables integrado. Perfecto para televisores de 55\" a 75\", incluye compartimentos ocultos para equipos audiovisuales y sistema de ventilación pasiva.",
+      "title": "Centro de entretenimiento valencia",
+      "description": "Diseño flotante con alistonado",
+      "fullDescription": "Centro de entretenimiento de diseño alistonado con mueble flotante de alto brillo. Incorpora iluminación LED cálida estratégicamente ubicada en repisas superiores e inferiores. Cuenta con sistema eléctrico integrado y diseño minimalista que elimina la contaminación visual, creando un ambiente moderno y funcional.",
       "images": [
-        "/images/centro_entretenimiento/centro_mueble2_1.jpg",
-        "/images/centro_entretenimiento/centro_mueble2_2.jpg"
+        "/images/centro_entretenimiento/valencia_1.jpg",
+        "/images/centro_entretenimiento/valencia_2.jpg",
+        "/images/centro_entretenimiento/valencia_3.png",
+        "/images/centro_entretenimiento/valencia_4.png"
+        
       ],
       "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
     }
@@ -107,12 +110,13 @@
   "bibliotecas": [
     {
       "id": 7,
-      "title": "Biblioteca con escritorio semiflotante con panel LED",
+      "title": "Estudio alistonado dunezco",
       "description": "Diseño semiflotante con gestión de cables oculta",
       "fullDescription": "Biblioteca moderna con panel LED acústico de listones de madera y tiras LED integradas. Incluye escritorio semiflotante de madera natural con cajones blancos, estanterías flotantes en diseño moderno y unidad alta con compartimentos iluminados. Perfecta para oficinas en casa y espacios de trabajo creativo.",
       "images": [
-        "/images/bibliotecas/biblioteca1.jpg",
-        "/images/bibliotecas/biblioteca2.jpg"
+        "/images/bibliotecas/valencia_1.png",
+        "/images/bibliotecas/valencia_2.png"
+
       ],
       "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
     }
