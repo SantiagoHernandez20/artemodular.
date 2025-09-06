@@ -2,13 +2,13 @@
 // Copia este archivo como .env.local y reemplaza los valores con tu configuración real
 
 export const firebaseConfig = {
-  apiKey: "TU_API_KEY_AQUI",
-  authDomain: "tu-proyecto.firebaseapp.com",
-  databaseURL: "https://tu-proyecto-default-rtdb.firebaseio.com",
-  projectId: "tu-proyecto",
-  storageBucket: "tu-proyecto.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "tu-app-id-aqui"
+  apiKey: "AIzaSyB-QnjXvhi8VjimX5wVY6VQ0Mas3EBZ5iE",
+  authDomain: "artemodular-6954d.firebaseapp.com",
+  databaseURL: "https://artemodular-6954d-default-rtdb.firebaseio.com",
+  projectId: "artemodular-6954d",
+  storageBucket: "artemodular-6954d.firebasestorage.app",
+  messagingSenderId: "612236073715",
+  appId: "1:612236073715:web:73633cf5f26892229db586"
 };
 
 // Pasos para configurar:
