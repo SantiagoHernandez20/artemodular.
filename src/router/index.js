@@ -11,19 +11,37 @@ const routes = [
     name: 'Home',
     component: Home
   },
-  
-  {
-    path: '/contacto',
-    name: 'Contact',
-    component: Home,
-    meta: { scrollTo: 'contacto' }
-  },
   {
     path: '/servicios',
     name: 'Services',
     component: Home,
     meta: { scrollTo: 'servicios' }
   },
+  {
+    path: '/proceso',
+    name: 'Proceso',
+    component: Home,
+    meta: { scrollTo: 'proceso' }
+  },
+  {
+    path: '/testimonios',
+    name: 'Testimonios',
+    component: Home,
+    meta: { scrollTo: 'testimonios' }
+  },
+  {
+    path: '/galeria',
+    name: 'Galeria',
+    component: Home,
+    meta: { scrollTo: 'galeria' }
+  },
+  {
+    path: '/contacto',
+    name: 'Contacto',
+    component: Home,
+    meta: { scrollTo: 'contacto' }
+  },
+
   {
     path: '/dashboard',
     name: 'Dashboard',

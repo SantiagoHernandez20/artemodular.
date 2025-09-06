@@ -22,9 +22,9 @@
           <div class="nav-links">
             <router-link to="/" class="nav-link">Inicio</router-link>
             <router-link to="/servicios" class="nav-link">Servicios</router-link>
-            <router-link to="/" class="nav-link">Proceso</router-link>
-            <router-link to="/" class="nav-link">Testimonios</router-link>
-            <router-link to="/" class="nav-link">Galería</router-link>
+            <router-link to="/proceso" class="nav-link">Proceso</router-link>
+            <router-link to="/testimonios" class="nav-link">Testimonios</router-link>
+            <router-link to="/galeria" class="nav-link">Galería</router-link>
             <router-link to="/contacto" class="btn-primary">Solicitar Presupuesto</router-link>
           </div>
 
@@ -127,9 +127,9 @@
           <!-- Enlaces de navegación -->
           <router-link to="/" @click="closeMenu" class="mobile-nav-link">Inicio</router-link>
           <router-link to="/servicios" @click="closeMenu" class="mobile-nav-link">Servicios</router-link>
-          <router-link to="/" @click="closeMenu" class="mobile-nav-link">Proceso</router-link>
-          <router-link to="/" @click="closeMenu" class="mobile-nav-link">Testimonios</router-link>
-          <router-link to="/" @click="closeMenu" class="mobile-nav-link">Galería</router-link>
+          <router-link to="/proceso" @click="closeMenu" class="mobile-nav-link">Proceso</router-link>
+          <router-link to="/testimonios" @click="closeMenu" class="mobile-nav-link">Testimonios</router-link>
+          <router-link to="/galeria" @click="closeMenu" class="mobile-nav-link">Galería</router-link>
           <router-link to="/contacto" @click="closeMenu" class="mobile-nav-link btn-primary">Solicitar Presupuesto</router-link>
         </div>
       </div>
