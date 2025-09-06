@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import HeroSection from '../components/HeroSection.vue'
 import ServicesSection from '../components/ServicesSection.vue'
 import ProcessSection from '../components/ProcessSection.vue'
@@ -49,10 +50,40 @@ export default {
   },
   setup() {
     const testimonialsSection = ref(null)
+    const route = useRoute()
 
     const handleTestimonialCreated = () => {
       console.log('Testimonio creado correctamente')
     }
+
+    const scrollToSection = (sectionId) => {
+      setTimeout(() => {
+        const element = document.getElementById(sectionId)
+        if (element) {
+          const headerHeight = 80 // Ajusta según tu header
+          const elementPosition = element.offsetTop - headerHeight
+          
+          window.scrollTo({
+            top: elementPosition,
+            behavior: 'smooth'
+          })
+        }
+      }, 100) // Pequeño delay para asegurar que el DOM esté listo
+    }
+
+    // Escuchar cambios en la ruta para hacer scroll automático
+    watch(() => route.meta.scrollTo, (newScrollTo) => {
+      if (newScrollTo) {
+        scrollToSection(newScrollTo)
+      }
+    }, { immediate: true })
+
+    // También hacer scroll al montar el componente si hay una sección especificada
+    onMounted(() => {
+      if (route.meta.scrollTo) {
+        scrollToSection(route.meta.scrollTo)
+      }
+    })
 
     return {
       testimonialsSection,

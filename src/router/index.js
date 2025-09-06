@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { nextTick } from 'vue'
-import Home from '../views/Home.vue'
+import Home from '../views/Homeview.vue'
+import Dashboard from '../views/DashboardView.vue'
+import AdminPanel from '../views/AdminPanel.vue'
 import { useAuthStore } from '../stores/authStore'
 
 const routes = [
@@ -14,42 +16,25 @@ const routes = [
     path: '/contacto',
     name: 'Contact',
     component: Home,
-    beforeEnter: (to, from, next) => {
-      // Scroll a la sección de contacto después de que se monte
-      nextTick(() => {
-        const contactSection = document.getElementById('contacto')
-        if (contactSection) {
-          const headerHeight = 80 // Ajusta según tu header
-          const elementPosition = contactSection.offsetTop - headerHeight
-          
-          window.scrollTo({
-            top: elementPosition,
-            behavior: 'smooth'
-          })
-        }
-      })
-      next()
-    }
+    meta: { scrollTo: 'contacto' }
   },
   {
     path: '/servicios',
     name: 'Services',
     component: Home,
-    beforeEnter: (to, from, next) => {
-      nextTick(() => {
-        const servicesSection = document.getElementById('servicios')
-        if (servicesSection) {
-          const headerHeight = 80
-          const elementPosition = servicesSection.offsetTop - headerHeight
-          
-          window.scrollTo({
-            top: elementPosition,
-            behavior: 'smooth'
-          })
-        }
-      })
-      next()
-    }
+    meta: { scrollTo: 'servicios' }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: AdminPanel,
+    meta: { requiresAuth: true, requiresAdmin: true }
   }
 ]
 
@@ -78,6 +63,25 @@ const router = createRouter({
     // Para navegación normal, ir al top
     return { top: 0 }
   }
+})
+
+// Navigation guards
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  
+  // Verificar si la ruta requiere autenticación
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next('/')
+    return
+  }
+  
+  // Verificar si la ruta requiere permisos de admin
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    next('/')
+    return
+  }
+  
+  next()
 })
 
 export default router
