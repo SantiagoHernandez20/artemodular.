@@ -5,8 +5,8 @@ const config = {
   // 🌐 URLs del Backend
   backend: {
     // URL del backend (desarrollo vs producción)
-    url: process.env.VUE_APP_BACKEND_URL || 
-      (process.env.NODE_ENV === 'development' 
+    url: import.meta.env.VITE_APP_BACKEND_URL || 
+      (import.meta.env.MODE === 'development' 
         ? 'http://localhost:3001' 
         : 'https://artemodular.onrender.com'),
     
@@ -37,8 +37,8 @@ const config = {
   // 🎨 URLs del Frontend
   frontend: {
     // URL del frontend (desarrollo vs producción)
-    url: process.env.VUE_APP_FRONTEND_URL || 
-      (process.env.NODE_ENV === 'development' 
+    url: import.meta.env.VITE_APP_FRONTEND_URL || 
+      (import.meta.env.MODE === 'development' 
         ? 'http://localhost:9001' 
         : 'https://artemodular.site'),
     
@@ -51,14 +51,14 @@ const config = {
   // 🌍 Entorno y Configuración
   environment: {
     // Tipo de entorno
-    isDevelopment: process.env.NODE_ENV === 'development',
-    isProduction: process.env.NODE_ENV === 'production',
+    isDevelopment: import.meta.env.MODE === 'development',
+    isProduction: import.meta.env.MODE === 'production',
     
     // Nombre del entorno
-    name: process.env.NODE_ENV || 'development',
+    name: import.meta.env.MODE || 'development',
     
     // Configuración de debug
-    debug: process.env.NODE_ENV === 'development'
+    debug: import.meta.env.MODE === 'development'
   },
 
   // 🛡️ Configuración de Seguridad
@@ -96,9 +96,9 @@ const config = {
         security: {
           cors: config.security.cors
         },
-        'VUE_APP_BACKEND_URL': process.env.VUE_APP_BACKEND_URL,
-        'VUE_APP_FRONTEND_URL': process.env.VUE_APP_FRONTEND_URL,
-        NODE_ENV: process.env.NODE_ENV
+        'VITE_APP_BACKEND_URL': import.meta.env.VITE_APP_BACKEND_URL,
+        'VITE_APP_FRONTEND_URL': import.meta.env.VITE_APP_FRONTEND_URL,
+        MODE: import.meta.env.MODE
       })
     },
 
