@@ -115,12 +115,12 @@ export default {
     // Cargar testimonios aprobados desde tu backend
     const loadApprovedTestimonials = async () => {
       try {
-        console.log(' Iniciando carga de testimonios aprobados...')
+        //console.log(' Iniciando carga de testimonios aprobados...')
         isLoading.value = true
         
         // ✅ Usar configuración centralizada
         const apiUrl = config.utils.getBackendUrl(config.backend.endpoints.testimonials)
-        console.log('🌐 Obteniendo testimonios desde:', apiUrl)
+        //console.log('🌐 Obteniendo testimonios desde:', apiUrl)
         
         const response = await fetch(apiUrl)
         
@@ -141,7 +141,7 @@ export default {
         )
         
         //console.log(' Testimonios procesados y ordenados:', testimonials.value)
-        console.log('📊 Total testimonios aprobados:', testimonials.value.length)
+        //console.log('📊 Total testimonios aprobados:', testimonials.value.length)
         isLoading.value = false
         
         // Iniciar autoplay si hay más de un testimonio

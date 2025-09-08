@@ -10,14 +10,14 @@ const { body, validationResult } = require('express-validator')
 const path = require('path')
 
 // Cargar variables de entorno desde la raíz del proyecto
-require('dotenv').config({ 
-  path: path.join(__dirname, '..', '.env.local') 
+require('dotenv').config({
+  path: path.join(__dirname, '..', '.env.local')
 })
 
 // Fallback a .env si .env.local no existe
 if (!process.env.EMAIL_USER) {
-  require('dotenv').config({ 
-    path: path.join(__dirname, '..', '.env') 
+  require('dotenv').config({
+    path: path.join(__dirname, '..', '.env')
   })
 }
 
@@ -25,21 +25,44 @@ const emailService = require('./services/emailService')
 const testimonialRoutes = require('./routes/TestimonialRoutes')
 const app = express()
 const PORT = process.env.PORT || 3001
+
+// 🛡️ Headers de seguridad COOP/COEP ANTES de helmet
+app.use((req, res, next) => {
+  // Headers específicos para Google OAuth y comunicación con frontend
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none'); // Cambiado a unsafe-none para evitar problemas
+  
+  // Headers adicionales para mejor compatibilidad
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  
+  next();
+});
+
 // 🛡️ Middlewares de seguridad
-app.use(helmet())
+app.use(helmet({
+  // Configurar helmet para que no interfiera con COOP
+  crossOriginOpenerPolicy: false, // Manejado manualmente arriba
+  crossOriginEmbedderPolicy: false, // Manejado manualmente arriba
+  crossOriginResourcePolicy: false // Manejado manualmente arriba
+}))
+
 app.use(cors({
   origin: function (origin, callback) {
     // Permitir requests sin origin (como Postman)
     if (!origin) return callback(null, true)
-    
+
     // Lista de orígenes permitidos
     const allowedOrigins = [
       'https://artemodular.site',
+      'https://www.artemodular.site',
       'http://localhost:9001',
       'http://localhost:9000',
-      'http://localhost:9002'
+      'http://localhost:9002',
+      'https://accounts.google.com',
+      'https://oauth2.googleapis.com',
+      'https://www.googleapis.com'
     ]
-    
+
     // Verificar si el origen está permitido
     if (allowedOrigins.includes(origin)) {
       console.log('✅ Origen permitido por CORS:', origin)
@@ -52,9 +75,18 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'Accept', 
+    'Origin', 
+    'X-Requested-With',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Headers'
+  ],
   optionsSuccessStatus: 200
 }))
+
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true }))
 
@@ -82,24 +114,24 @@ const contactValidation = [
     .withMessage('El nombre debe tener entre 2 y 50 caracteres')
     .trim()
     .escape(),
-  
+
   body('email')
     .isEmail()
     .withMessage('Email inválido')
     .normalizeEmail(),
-  
+
   body('phone')
     .notEmpty()
     .withMessage('El teléfono es requerido')
     .isMobilePhone('es-CO')
     .withMessage('Formato de teléfono inválido para Colombia'),
-  
+
   body('projectType')
     .notEmpty()
     .withMessage('El tipo de proyecto es requerido')
     .isIn(['cocina', 'closet', 'muebles', 'oficina', 'obra', 'otro'])
     .withMessage('Tipo de proyecto inválido'),
-  
+
   body('message')
     .notEmpty()
     .withMessage('El mensaje es requerido')
@@ -124,14 +156,27 @@ app.get('/', (req, res) => {
         'https://www.artemodular.site',
         'http://localhost:9001',
         'http://localhost:9000',
-        'http://localhost:9002'
+        'http://localhost:9002',
+        'https://accounts.google.com',
+        'https://oauth2.googleapis.com'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    },
+    security: {
+      coop: 'same-origin-allow-popups',
+      coep: 'unsafe-none',
+      corp: 'cross-origin'
     },
     endpoints: {
       contact: 'POST /api/contact',
       health: 'GET /api/health',
-      testEmail: 'GET /api/test-email'
+      testEmail: 'GET /api/test-email',
+      testimonials: 'GET/POST /api/testimonials',
+      auth: {
+        status: 'GET /api/auth/status',
+        verify: 'POST /api/auth/verify',
+        me: 'GET /api/auth/me'
+      }
     }
   })
 })
@@ -152,17 +197,26 @@ app.get('/api/health', (req, res) => {
         'https://www.artemodular.site',
         'http://localhost:9001',
         'http://localhost:9000',
-        'http://localhost:9002'
+        'http://localhost:9002',
+        'https://accounts.google.com',
+        'https://oauth2.googleapis.com'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       credentials: true
+    },
+    security: {
+      coop: 'same-origin-allow-popups',
+      coep: 'unsafe-none',
+      corp: 'cross-origin',
+      helmet: 'enabled'
     },
     backend: {
       url: `https://artemodular.onrender.com`,
       endpoints: {
         contact: `/api/contact`,
         health: `/api/health`,
-        testEmail: `/api/test-email`
+        testEmail: `/api/test-email`,
+        testimonials: `/api/testimonials`
       }
     }
   })
@@ -234,9 +288,10 @@ app.get('/api/test-email', async (req, res) => {
   }
 })
 
+// 📝 Rutas de testimonials
 app.use('/api/testimonials', testimonialRoutes)
 
-// 🔐 RUTAS DE AUTENTICACIÓN (MOVER AQUÍ, ANTES del 404 handler)
+// 🔐 RUTAS DE AUTENTICACIÓN
 
 // Verificar estado de autenticación
 app.get('/api/auth/status', optionalAuth, (req, res) => {
@@ -294,7 +349,7 @@ app.get('/api/auth/me', authenticateUser, (req, res) => {
   });
 });
 
-// ❌ Manejo de rutas no encontradas (MOVER AL FINAL)
+// ❌ Manejo de rutas no encontradas
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
@@ -304,6 +359,8 @@ app.use('*', (req, res) => {
       'GET /api/health',
       'POST /api/contact',
       'GET /api/test-email',
+      'GET /api/testimonials',
+      'POST /api/testimonials',
       'GET /api/auth/status',
       'POST /api/auth/verify',
       'GET /api/auth/me'
@@ -314,7 +371,7 @@ app.use('*', (req, res) => {
 // 🔥 Manejo global de errores
 app.use((error, req, res, next) => {
   console.error('💥 Error no manejado:', error)
-  
+
   res.status(error.status || 500).json({
     success: false,
     message: error.message || 'Error interno del servidor',
@@ -331,15 +388,23 @@ app.listen(PORT, () => {
 📧 API Email: http://localhost:${PORT}/api/contact
 💊 Health: http://localhost:${PORT}/api/health
 🔧 Test Email: http://localhost:${PORT}/api/test-email
- Testimonials: http://localhost:${PORT}/api/testimonials
+📝 Testimonials: http://localhost:${PORT}/api/testimonials
+🔐 Auth Status: http://localhost:${PORT}/api/auth/status
 
 📝 Environment: ${process.env.NODE_ENV || 'development'}
 🔐 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:9001'}
+🛡️ Seguridad:
+   - COOP: same-origin-allow-popups
+   - COEP: unsafe-none
+   - CORP: cross-origin
+   - Helmet: enabled
+
 🌍 Puertos configurados:
    - Backend: ${PORT}
    - Frontend (dev): 9001
    - Frontend (alt): 9000, 9002
    - Frontend (prod): artemodular.site
+   - Google OAuth: habilitado
   `)
 })
 
@@ -353,10 +418,3 @@ process.on('SIGINT', () => {
   console.log('🛑 SIGINT recibido, cerrando servidor...')
   process.exit(0)
 })
-
-// Agregar headers de seguridad para COOP
-app.use((req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
-  next();
-});

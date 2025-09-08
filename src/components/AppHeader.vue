@@ -20,52 +20,95 @@
         <!-- Navegación desktop -->
         <div class="nav-desktop">
           <div class="nav-links">
-            <a href="#inicio" class="nav-link">Inicio</a>
-            <a href="#servicios" class="nav-link">Servicios</a>
-            <a href="#proceso" class="nav-link">Proceso</a>
-            <a href="#testimonios" class="nav-link">Testimonios</a>
-            <a href="#galeria" class="nav-link">Galería</a>
-            <a href="#contacto" class="btn-primary">Solicitar Presupuesto</a>
+            <router-link to="/" class="nav-link">Inicio</router-link>
+            <router-link to="/servicios" class="nav-link">Servicios</router-link>
+            <router-link to="/proceso" class="nav-link">Proceso</router-link>
+            <router-link to="/testimonios" class="nav-link">Testimonios</router-link>
+            <router-link to="/galeria" class="nav-link">Galería</router-link>
+            <router-link to="/contacto" class="btn-primary">Solicitar Presupuesto</router-link>
           </div>
 
-          <!-- Enlaces según rol -->
-          <div class="role-links">
-            <a 
-              v-if="authStore.isAdmin" 
-              href="#" 
-              class="admin-link"
-              title="Panel de Administración"
-            >
-              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c.94 1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-              <span>Admin</span>
-            </a>
-            
-            <a 
-              v-else-if="authStore.isAuthenticated" 
-              href="/dashboard" 
-              class="user-link"
-              title="Mi Cuenta"
-            >
-              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
-              <span>Mi Cuenta</span>
-            </a>
+          <!-- Sección de usuario autenticado -->
+          <div v-if="authStore.isAuthenticated" class="user-section">
+            <!-- Usuario normal -->
+            <div v-if="!authStore.isAdmin" class="user-info">
+              <div class="user-avatar">
+                {{ getInitials(authStore.user?.displayName || 'U') }}
+              </div>
+              <div class="user-details">
+                <span class="user-name">{{ authStore.user?.displayName || 'Usuario' }}</span>
+                <router-link to="/dashboard" class="user-link">Mi Cuenta</router-link>
+              </div>
+              <button @click="logout" class="logout-btn" title="Cerrar sesión">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Admin -->
+            <div v-else class="admin-info">
+              <div class="admin-avatar">
+                {{ getInitials(authStore.user?.displayName || 'A') }}
+              </div>
+              <div class="admin-details">
+                <span class="admin-name">{{ authStore.user?.displayName || 'Admin' }}</span>
+                <router-link to="/admin" class="admin-link">Panel Admin</router-link>
+              </div>
+              <button @click="logout" class="logout-btn" title="Cerrar sesión">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <!-- Google Login - Siempre visible en desktop -->
-          <div class="auth-section">
+          <!-- Google Login - Solo si no está autenticado -->
+          <div v-else class="auth-section">
             <GoogleLogin />
           </div>
         </div>
 
         <!-- Controles móviles -->
         <div class="mobile-controls">
-          <!-- Google Login móvil - Solo icono -->
-          <div class="mobile-auth-icon">
+          <!-- Usuario autenticado móvil - Mismo diseño que desktop -->
+          <div v-if="authStore.isAuthenticated" class="mobile-user-section">
+            <!-- Usuario normal -->
+            <router-link v-if="!authStore.isAdmin" to="/dashboard" class="mobile-user-info">
+              <div class="mobile-user-avatar">
+                {{ getInitials(authStore.user?.displayName || 'U') }}
+              </div>
+              <div class="mobile-user-details">
+                <span class="mobile-user-name">{{ authStore.user?.displayName || 'Usuario' }}</span>
+                <span class="mobile-user-link">Mi Cuenta</span>
+              </div>
+
+              <button @click.stop="logout" class="mobile-logout-btn" title="Cerrar sesión">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+              </button>
+            </router-link>
+
+            <!-- Admin -->
+            <router-link v-else to="/admin" class="mobile-admin-info">
+              <div class="mobile-admin-avatar">
+                {{ getInitials(authStore.user?.displayName || 'A') }}
+              </div>
+              <div class="mobile-admin-details">
+                <span class="mobile-admin-name">{{ authStore.user?.displayName || 'Admin' }}</span>
+                <span class="mobile-admin-link">Panel Admin</span>
+              </div>
+              <button @click.stop="logout" class="mobile-logout-btn" title="Cerrar sesión">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+              </button>
+            </router-link>
+          </div>
+          
+          <!-- Google Login móvil - Solo si no está autenticado -->
+          <div v-else class="mobile-auth-icon">
             <GoogleLogin />
           </div>
           
@@ -81,38 +124,13 @@
       <!-- Navegación móvil -->
       <div v-show="isMenuOpen" class="mobile-nav">
         <div class="mobile-nav-content">
-          <a href="#inicio" @click="closeMenu" class="mobile-nav-link">Inicio</a>
-          <a href="#servicios" @click="closeMenu" class="mobile-nav-link">Servicios</a>
-          <a href="#proceso" @click="closeMenu" class="mobile-nav-link">Proceso</a>
-          <a href="#testimonios" @click="closeMenu" class="mobile-nav-link">Testimonios</a>
-          <a href="#galeria" @click="closeMenu" class="mobile-nav-link">Galería</a>
-          <a href="#contacto" @click="closeMenu" class="mobile-nav-link btn-primary">Solicitar Presupuesto</a>
-          
-          <!-- Enlaces según rol en móvil -->
-          <a 
-            v-if="authStore.isAdmin" 
-            href="#" 
-            @click="closeMenu"
-            class="mobile-role-link admin"
-          >
-            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c.94 1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            <span>Panel de Administración</span>
-          </a>
-          
-          <a 
-            v-else-if="authStore.isAuthenticated" 
-            href="/dashboard" 
-            @click="closeMenu"
-            class="mobile-role-link user"
-          >
-            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
-            <span>Mi Cuenta</span>
-          </a>
+          <!-- Enlaces de navegación -->
+          <router-link to="/" @click="closeMenu" class="mobile-nav-link">Inicio</router-link>
+          <router-link to="/servicios" @click="closeMenu" class="mobile-nav-link">Servicios</router-link>
+          <router-link to="/proceso" @click="closeMenu" class="mobile-nav-link">Proceso</router-link>
+          <router-link to="/testimonios" @click="closeMenu" class="mobile-nav-link">Testimonios</router-link>
+          <router-link to="/galeria" @click="closeMenu" class="mobile-nav-link">Galería</router-link>
+          <router-link to="/contacto" @click="closeMenu" class="mobile-nav-link btn-primary">Solicitar Presupuesto</router-link>
         </div>
       </div>
     </nav>
@@ -141,11 +159,28 @@ export default {
       isMenuOpen.value = false
     }
 
+    const getInitials = (name) => {
+      if (!name) return 'U'
+      return name
+        .split(' ')
+        .map(word => word.charAt(0))
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    }
+
+    const logout = () => {
+      authStore.logout()
+      closeMenu()
+    }
+
     return {
       isMenuOpen,
       authStore,
       toggleMenu,
-      closeMenu
+      closeMenu,
+      getInitials,
+      logout
     }
   }
 }
@@ -223,31 +258,95 @@ export default {
   color: #8D5524;
 }
 
-/* Enlaces según rol */
-.role-links {
+/* Estilos para router-link activo */
+.nav-link.router-link-active {
+  color: #8D5524;
+  font-weight: 600;
+}
+
+/* Sección de usuario */
+.user-section {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.admin-link,
-.user-link {
+.user-info,
+.admin-info {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #8D5524;
-  font-weight: 600;
-  text-decoration: none;
+  gap: 0.75rem;
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  background: #fef3c7;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  min-width: 0;
 }
 
-.admin-link:hover,
-.user-link:hover {
-  background: #fde68a;
+.user-avatar,
+.admin-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #8D5524;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.user-details,
+.admin-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.user-name,
+.admin-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.user-link,
+.admin-link {
+  color: #8D5524;
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.user-link:hover,
+.admin-link:hover {
+  color: #6B3F1A;
+}
+
+.logout-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
   transform: translateY(-1px);
 }
 
@@ -267,6 +366,96 @@ export default {
   display: none;
   align-items: center;
   gap: 1rem;
+}
+
+.mobile-user-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mobile-user-info,
+.mobile-admin-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  min-width: 0;
+  max-width: 200px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.mobile-user-info:hover,
+.mobile-admin-info:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-user-avatar,
+.mobile-admin-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #8D5524;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.mobile-user-details,
+.mobile-admin-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.mobile-user-name,
+.mobile-admin-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+}
+
+.mobile-user-link,
+.mobile-admin-link {
+  color: #8D5524;
+  font-size: 0.625rem;
+  font-weight: 500;
+}
+
+.mobile-logout-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-logout-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
 }
 
 .mobile-auth-icon {
@@ -301,6 +490,7 @@ export default {
   gap: 1rem;
 }
 
+
 .mobile-nav-link {
   color: #374151;
   font-weight: 500;
@@ -311,6 +501,12 @@ export default {
 
 .mobile-nav-link:hover {
   color: #8D5524;
+}
+
+/* Estilos para router-link activo en móvil */
+.mobile-nav-link.router-link-active {
+  color: #8D5524;
+  font-weight: 600;
 }
 
 .mobile-role-link {
@@ -363,6 +559,17 @@ export default {
   .nav-links a {
     font-size: 0.875rem;
   }
+
+  .user-info,
+  .admin-info {
+    padding: 0.375rem 0.75rem;
+  }
+
+  .user-name,
+  .admin-name {
+    max-width: 100px;
+    font-size: 0.8125rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -406,7 +613,24 @@ export default {
   }
   
   .mobile-controls {
-    gap: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .mobile-user-info,
+  .mobile-admin-info {
+    padding: 0.25rem 0.5rem;
+    max-width: 160px;
+  }
+
+  .mobile-user-name,
+  .mobile-admin-name {
+    max-width: 60px;
+    font-size: 0.6875rem;
+  }
+
+  .mobile-user-link,
+  .mobile-admin-link {
+    font-size: 0.5625rem;
   }
 }
 </style>
