@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { auth } from '@/config/firebase'
+import { auth } from '@/config/firebase.js'
 import { onAuthStateChanged, signOut, signInWithPopup } from 'firebase/auth'
 
 export const useAuthStore = defineStore('auth', () => {
