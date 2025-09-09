@@ -2,3 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .btn-primary {
+    @apply bg-[#8D5524] text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 inline-block no-underline whitespace-nowrap overflow-hidden text-ellipsis max-w-full;
+  }
+
+  .btn-primary:hover {
+    @apply bg-[#6B3F1A];
+  }
+
+  .btn-secondary {
+    @apply bg-[#F5E9DA] text-[#8D5524] font-semibold px-6 py-3 rounded-lg border-2 border-[#8D5524] transition-colors duration-200 inline-block no-underline whitespace-nowrap overflow-hidden text-ellipsis max-w-full;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-[#E6D4C1];
+  }
+
+  /* Responsive button adjustments */
+  @media (max-width: 768px) {
+    .btn-primary,
+    .btn-secondary {
+      @apply px-4 py-2 text-sm whitespace-normal text-center leading-tight min-h-[2.5rem] flex items-center justify-center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .btn-primary,
+    .btn-secondary {
+      @apply px-3 py-2 text-xs min-h-[2.25rem];
+    }
+  }
+}

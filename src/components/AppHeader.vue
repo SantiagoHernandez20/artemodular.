@@ -537,13 +537,27 @@ export default {
   font-weight: 600;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  white-space: nowrap;
   display: inline-block;
+  min-width: fit-content;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive button adjustments for AppHeader */
+@media (max-width: 640px) {
+  .btn-primary {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    min-width: auto;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+  }
 }
 
 /* Responsive */
