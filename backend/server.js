@@ -224,7 +224,7 @@ app.get('/api/health', (req, res) => {
 
 // 📧 Endpoint principal para envío de emails
 app.post('/api/contact', emailLimiter, contactValidation, async (req, res) => {
-  console.log('📧 BODY RECIBIDO:', req.body)
+  //console.log('📧 BODY RECIBIDO:', req.body)
   try {
     // Verificar errores de validación
     const errors = validationResult(req)
@@ -239,7 +239,7 @@ app.post('/api/contact', emailLimiter, contactValidation, async (req, res) => {
     const { name, email, phone, projectType, message } = req.body
 
     // Log para debugging (sin datos sensibles)
-    console.log(`📧 Nueva solicitud de contacto de: ${name} (${projectType})`)
+   // console.log(`📧 Nueva solicitud de contacto de: ${name} (${projectType})`)
 
     // Enviar email
     const emailResult = await emailService.sendContactEmail({

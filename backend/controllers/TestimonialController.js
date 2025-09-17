@@ -7,11 +7,11 @@ class TestimonialController {
       const db = admin.database();
       const testimonialsRef = db.ref('testimonials');
       const snapshot = await testimonialsRef.once('value');
-      
+
       if (!snapshot.exists()) {
         return 1; // Primer testimonio
       }
-      
+
       let maxId = 0;
       snapshot.forEach((childSnapshot) => {
         const id = parseInt(childSnapshot.key);
@@ -19,7 +19,7 @@ class TestimonialController {
           maxId = id;
         }
       });
-      
+
       return maxId + 1;
     } catch (error) {
       console.error('❌ Error obteniendo siguiente ID:', error);
@@ -32,7 +32,7 @@ class TestimonialController {
       const db = admin.database();
       const testimonialsRef = db.ref('testimonials');
       const snapshot = await testimonialsRef.once('value');
-      
+
       let testimonials = [];
       if (snapshot.exists()) {
         snapshot.forEach((childSnapshot) => {
@@ -41,17 +41,17 @@ class TestimonialController {
             ...childSnapshot.val()
           });
         });
-        
+
         // Ordenar por ID (secuencial)
         testimonials.sort((a, b) => parseInt(a.id) - parseInt(b.id));
       }
-      
+
       res.json(testimonials);
     } catch (error) {
       console.error('❌ Error obteniendo testimonios:', error);
-      res.status(500).json({ 
+      res.status(500).json({
         success: false,
-        message: 'Error interno del servidor' 
+        message: 'Error interno del servidor'
       });
     }
   }
@@ -95,6 +95,7 @@ class TestimonialController {
         rating,
         avatar: TestimonialController.generateAvatar(name),
         is_approved: false, // Por defecto pendiente
+        is_reject: 'pending',   // Por defecto no rechazado
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
@@ -104,7 +105,7 @@ class TestimonialController {
       const testimonialsRef = db.ref('testimonials');
       const newTestimonialRef = testimonialsRef.child(nextId.toString());
       await newTestimonialRef.set(testimonialData);
-      
+
       console.log('✅ Testimonio guardado en Firebase con ID secuencial:', nextId);
 
       // Retornar respuesta exitosa
@@ -118,9 +119,9 @@ class TestimonialController {
       });
     } catch (error) {
       console.error('❌ Error creando testimonio:', error);
-      res.status(500).json({ 
+      res.status(500).json({
         success: false,
-        message: 'Error interno del servidor' 
+        message: 'Error interno del servidor'
       });
     }
   }
@@ -131,9 +132,10 @@ class TestimonialController {
       const { id } = req.params;
       const db = admin.database();
       const testimonialRef = db.ref(`testimonials/${id}`);
-      
+
       await testimonialRef.update({
         is_approved: true,
+        is_reject: 'approved',
         updated_at: new Date().toISOString()
       });
 
@@ -156,9 +158,10 @@ class TestimonialController {
       const { reason } = req.body;
       const db = admin.database();
       const testimonialRef = db.ref(`testimonials/${id}`);
-      
+
       await testimonialRef.update({
         is_approved: false,
+        is_reject: 'rejected',
         rejection_reason: reason || '',
         updated_at: new Date().toISOString()
       });
@@ -181,7 +184,7 @@ class TestimonialController {
       const { id } = req.params;
       const db = admin.database();
       const testimonialRef = db.ref(`testimonials/${id}`);
-      
+
       await testimonialRef.remove();
 
       res.json({
@@ -197,28 +200,42 @@ class TestimonialController {
     }
   }
 
-  // Método para obtener estadísticas con IDs secuenciales
-  static async getTestimonialsStats(req, res) {
+  // Método para obtener un testimonio por ID (antes estaba en getTestimonialsStats)
+  static async getTestimonialsID(req, res) {
     try {
-      const allTestimonials = await TestimonialController.getAllTestimonials(req, res);
-      
-      const stats = {
-        total: allTestimonials.length,
-        pending: allTestimonials.filter(t => !t.is_approved).length,
-        approved: allTestimonials.filter(t => t.is_approved).length,
-        rejected: 0, // Tu backend no tiene estado "rejected" separado
-        nextId: await TestimonialController.getNextSequentialId()
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({
+          success: false,
+          message: 'El parámetro "id" es requerido'
+        });
+      }
+
+      const db = admin.database();
+      const testimonialRef = db.ref(`testimonials/${id}`);
+      const snapshot = await testimonialRef.once('value');
+
+      if (!snapshot.exists()) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
+
+      const testimonial = {
+        id: snapshot.key,
+        ...snapshot.val()
       };
-      
+
       res.json({
         success: true,
-        data: stats
+        data: testimonial
       });
     } catch (error) {
-      console.error('❌ Error al obtener estadísticas:', error);
+      console.error('❌ Error obteniendo testimonio:', error);
       res.status(500).json({
         success: false,
-        message: 'Error al obtener estadísticas'
+        message: 'Error interno del servidor'
       });
     }
   }
@@ -226,13 +243,66 @@ class TestimonialController {
   static generateAvatar(name) {
     const words = name.split(' ');
     let initials = '';
-    
+
     words.slice(0, 2).forEach(word => {
       initials += word.charAt(0).toUpperCase();
     });
-    
+
     return initials;
   }
+
+  static async streamTestimonials(req, res) {
+    try {
+      // Configurar headers CORS específicos para SSE
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+      // Configurar cabeceras para SSE
+      res.set({
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+      });
+      res.flushHeaders();
+
+      // Enviar mensaje inicial
+      res.write('data: Conexión establecida\n\n');
+
+      const db = admin.database();
+      const testimonialsRef = db.ref('testimonials');
+
+      // Función que se encargará de enviar las actualizaciones
+      const onValueChange = (snapshot) => {
+        let testimonials = [];
+        if (snapshot.exists()) {
+          snapshot.forEach((childSnapshot) => {
+            testimonials.push({
+              id: childSnapshot.key,
+              ...childSnapshot.val()
+            });
+          });
+          // Ordenar por ID
+          testimonials.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        }
+        // Enviar datos actualizados vía SSE
+        res.write(`data: ${JSON.stringify(testimonials)}\n\n`);
+      };
+
+      // Establecer listener para cambios en los testimonios
+      testimonialsRef.on('value', onValueChange);
+
+      // Limpiar cuando el cliente se desconecte
+      req.on('close', () => {
+        testimonialsRef.off('value', onValueChange);
+        res.end();
+      });
+    } catch (error) {
+      console.error('❌ Error en streamTestimonials:', error);
+      res.status(500).end();
+    }
+  }
+
 }
 
 module.exports = TestimonialController;

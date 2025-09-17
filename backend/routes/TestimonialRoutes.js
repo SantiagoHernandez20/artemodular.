@@ -48,9 +48,10 @@ router.get('/', TestimonialController.getAllTestimonials);
 
 // POST /api/testimonials - Crear nuevo testimonio
 router.post('/', testimonialValidation, TestimonialController.createTestimonial);
-
+// ruta para actualizar SSE
+router.get('/stream', TestimonialController.streamTestimonials);
 // GET /api/testimonials/stats - Obtener estadísticas
-router.get('/stats', TestimonialController.getTestimonialsStats);
+router.get('/:id', TestimonialController.getTestimonialsID);
 
 // PUT /api/testimonials/:id/approve - Aprobar testimonio
 router.put('/:id/approve', TestimonialController.approveTestimonial);
@@ -60,5 +61,7 @@ router.put('/:id/reject', TestimonialController.rejectTestimonial);
 
 // DELETE /api/testimonials/:id - Eliminar testimonio
 router.delete('/:id', TestimonialController.deleteTestimonial);
+
+
 
 module.exports = router;
