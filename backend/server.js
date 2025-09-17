@@ -60,7 +60,9 @@ app.use(cors({
       'http://localhost:9002',
       'https://accounts.google.com',
       'https://oauth2.googleapis.com',
-      'https://www.googleapis.com'
+      'https://www.googleapis.com',
+      'artemodular-git-dev-santiagohernandez20s-projects.vercel.app'
+      
     ]
 
     // Verificar si el origen está permitido
