@@ -53,7 +53,7 @@ export default {
     const route = useRoute()
 
     const handleTestimonialCreated = () => {
-      console.log('Testimonio creado correctamente')
+      //console.log('Testimonio creado correctamente')
     }
 
     const scrollToSection = (sectionId) => {

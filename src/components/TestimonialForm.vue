@@ -175,7 +175,7 @@ export default {
       try {
         // ✅ Usar configuración centralizada
         const apiUrl = config.utils.getBackendUrl(config.backend.endpoints.testimonials)
-        console.log('🌐 Enviando testimonio a:', apiUrl)
+        //console.log('🌐 Enviando testimonio a:', apiUrl)
         
         const response = await fetch(apiUrl, {
           method: 'POST',

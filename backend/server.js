@@ -61,7 +61,8 @@ app.use(cors({
       'https://accounts.google.com',
       'https://oauth2.googleapis.com',
       'https://www.googleapis.com',
-      'artemodular-git-dev-santiagohernandez20s-projects.vercel.app'
+      'artemodular-git-dev-santiagohernandez20s-projects.vercel.app',
+      'https://pre-deploy.artemodular.site'
       
     ]
 
@@ -160,7 +161,8 @@ app.get('/', (req, res) => {
         'http://localhost:9000',
         'http://localhost:9002',
         'https://accounts.google.com',
-        'https://oauth2.googleapis.com'
+        'https://oauth2.googleapis.com',
+        'https://pre-deploy.artemodular.site'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
     },
@@ -201,7 +203,8 @@ app.get('/api/health', (req, res) => {
         'http://localhost:9000',
         'http://localhost:9002',
         'https://accounts.google.com',
-        'https://oauth2.googleapis.com'
+        'https://oauth2.googleapis.com',
+        'https://pre-deploy.artemodular.site'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       credentials: true
