@@ -31,16 +31,16 @@
           <!-- Estadísticas simplificadas para móvil -->
           <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <div class="text-center lg:text-left">
-              <div class="text-2xl sm:text-3xl font-bold text-8D5524 mb-2">25+</div>
+              <div class="text-2xl sm:text-3xl font-bold mb-2" style="color: #8D5524;">25+</div>
               <div class="text-sm sm:text-base text-gray-600 font-medium">Años de experiencia</div>
             </div>
             <div class="text-center lg:text-left">
-              <div class="text-2xl sm:text-3xl font-bold text-8D5524 mb-2">300+</div>
+              <div class="text-2xl sm:text-3xl font-bold mb-2" style="color: #8D5524;">300+</div>
               <div class="text-sm sm:text-base text-gray-600 font-medium">Proyectos realizados</div>
             </div>
             <!-- Ocultar tercera estadística en móvil -->
             <div class="text-center lg:text-left hidden lg:block">
-              <div class="text-2xl sm:text-3xl font-bold text-8D5524 mb-2">24/7</div>
+              <div class="text-2xl sm:text-3xl font-bold mb-2" style="color: #8D5524;">24/7</div>
               <div class="text-sm sm:text-base text-gray-600 font-medium">Disponibilidad</div>
             </div>
           </div>
@@ -51,8 +51,8 @@
           <ThreeDShowcase />
           
           <!-- Elementos decorativos -->
-          <div class="absolute -top-2 -right-2 w-8 h-8 bg-8D5524 rounded-full opacity-60"></div>
-          <div class="absolute -bottom-2 -left-2 w-12 h-12 bg-6B3F1A rounded-full opacity-40"></div>
+          <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full opacity-60" style="background-color: #8D5524;"></div>
+          <div class="absolute -bottom-2 -left-2 w-12 h-12 rounded-full opacity-40" style="background-color: #6B3F1A;"></div>
         </div>
       </div>
     </div>
