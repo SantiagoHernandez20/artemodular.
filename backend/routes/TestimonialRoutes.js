@@ -1,7 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
 const TestimonialController = require('../controllers/TestimonialController');
-
 const router = express.Router();
 
 // Validaciones para testimonios
@@ -63,5 +62,5 @@ router.put('/:id/reject', TestimonialController.rejectTestimonial);
 router.delete('/:id', TestimonialController.deleteTestimonial);
 
 
-
+//export default router
 module.exports = router;

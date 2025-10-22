@@ -1,12 +1,9 @@
-var admin = require("firebase-admin");
+const admin = require('firebase-admin');
+const dotenv = require('dotenv');
 const path = require('path');
 
-// Cargar variables de entorno
-require('dotenv').config({ 
-  path: path.join(__dirname, '..', '..', '.env.local') 
-});
-
-// Usar variables de entorno
+// Cargar .env desde la raíz del proyecto
+dotenv.config({ path: path.join(__dirname, '..', '..', '.env.local') });
 
 const serviceAccount = {
   type: "service_account",
@@ -21,11 +18,11 @@ const serviceAccount = {
   client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL
 };
 
-const app = admin.initializeApp({
+admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: process.env.DATABASE_URL
 });
 
 console.log('✅ Firebase Admin inicializado correctamente');
 
-module.exports = { admin, app };
+module.exports = admin;

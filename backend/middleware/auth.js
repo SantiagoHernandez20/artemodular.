@@ -1,5 +1,5 @@
 // 🔐 Middleware de autenticación Firebase
-const { admin } = require('../config/firebase');
+const admin = require('../config/firebase-admin');
 
 // Middleware para verificar token de Firebase
 const authenticateUser = async (req, res, next) => {
@@ -99,4 +99,7 @@ const optionalAuth = async (req, res, next) => {
   }
 };
 
-module.exports = { authenticateUser, optionalAuth };
+module.exports = {
+  authenticateUser,
+  optionalAuth
+};

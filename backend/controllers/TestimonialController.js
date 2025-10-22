@@ -1,4 +1,4 @@
-const { admin } = require('../config/firebase');
+const admin = require('../config/firebase-admin');
 
 class TestimonialController {
   // Obtener el siguiente ID secuencial
@@ -304,5 +304,4 @@ class TestimonialController {
   }
 
 }
-
 module.exports = TestimonialController;

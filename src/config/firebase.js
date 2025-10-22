@@ -2,15 +2,17 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
+// Cargar variables de entorno
+
 // Configuración de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyB-QnjXvhi8VjimX5wVY6VQ0Mas3EBZ5iE",
-  authDomain: "artemodular-6954d.firebaseapp.com",
-  databaseURL: "https://artemodular-6954d-default-rtdb.firebaseio.com",
-  projectId: "artemodular-6954d",
-  storageBucket: "artemodular-6954d.firebasestorage.app",
-  messagingSenderId: "612236073715",
-  appId: "1:612236073715:web:73633cf5f26892229db586"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
+  databaseURL: import.meta.env.VITE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID, // Referencia a la variable VITE
+  storageBucket: import.meta.env.VITE_FIREBASE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_SENDER,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Inicializar Firebase
