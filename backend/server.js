@@ -1,28 +1,28 @@
 // 🚀 ArteModular Backend - Express + Nodemailer
 // Servidor para manejar envío de emails de contacto
 const { authenticateUser, optionalAuth } = require('./middleware/auth');
-
-const express = require('express')
-const cors = require('cors')
-const helmet = require('helmet')
-const rateLimit = require('express-rate-limit')
-const { body, validationResult } = require('express-validator')
-const path = require('path')
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
+const path = require('path');
+const dotenv = require('dotenv');
 
 // Cargar variables de entorno desde la raíz del proyecto
-require('dotenv').config({
+dotenv.config({
   path: path.join(__dirname, '..', '.env.local')
 })
 
 // Fallback a .env si .env.local no existe
 if (!process.env.EMAIL_USER) {
-  require('dotenv').config({
+  dotenv.config({
     path: path.join(__dirname, '..', '.env')
   })
 }
+const { sendContactEmail, testEmailConfiguration } = require('./services/emailService');
+const testimonialRoutes = require('./routes/TestimonialRoutes');
 
-const emailService = require('./services/emailService')
-const testimonialRoutes = require('./routes/TestimonialRoutes')
 const app = express()
 const PORT = process.env.PORT || 3001
 
@@ -247,7 +247,7 @@ app.post('/api/contact', emailLimiter, contactValidation, async (req, res) => {
    // console.log(`📧 Nueva solicitud de contacto de: ${name} (${projectType})`)
 
     // Enviar email
-    const emailResult = await emailService.sendContactEmail({
+    const emailResult = await sendContactEmail({
       name,
       email,
       phone,
@@ -278,7 +278,7 @@ app.post('/api/contact', emailLimiter, contactValidation, async (req, res) => {
 // 🔧 Endpoint para probar configuración de email
 app.get('/api/test-email', async (req, res) => {
   try {
-    const testResult = await emailService.testEmailConfiguration()
+    const testResult = await testEmailConfiguration()
     res.json({
       success: true,
       message: 'Configuración de email válida',

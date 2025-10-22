@@ -31,7 +31,7 @@
           <!-- Estadísticas simplificadas para móvil -->
           <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <div class="text-center lg:text-left">
-              <div class="text-2xl sm:text-3xl font-bold mb-2" style="color: #8D5524;">25+</div>
+              <div class="text-2xl sm:text-3xl font-bold mb-2" style="color: #8D5524;">15+</div>
               <div class="text-sm sm:text-base text-gray-600 font-medium">Años de experiencia</div>
             </div>
             <div class="text-center lg:text-left">

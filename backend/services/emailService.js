@@ -1,8 +1,10 @@
 // 📧 Servicio de Email para ArteModular
 // Maneja el envío de emails usando Nodemailer
 
+
 const nodemailer = require('nodemailer')
 const path = require('path')
+const dotenv = require('dotenv')
 
 // 🔧 Cargar variables de entorno según el entorno
 if (process.env.NODE_ENV === 'production') {
