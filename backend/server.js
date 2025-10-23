@@ -1,13 +1,13 @@
 // 🚀 ArteModular Backend - Express + Nodemailer
 // Servidor para manejar envío de emails de contacto
 const { authenticateUser, optionalAuth } = require('./middleware/auth');
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const { body, validationResult } = require('express-validator');
-const path = require('path');
-const dotenv = require('dotenv');
+
+const express = require('express')
+const cors = require('cors')
+const helmet = require('helmet')
+const rateLimit = require('express-rate-limit')
+const { z } = require('zod')
+const path = require('path')
 
 // Cargar variables de entorno desde la raíz del proyecto
 dotenv.config({
@@ -108,41 +108,45 @@ const emailLimiter = rateLimit({
   legacyHeaders: false
 })
 
-// 📝 Validaciones para el formulario de contacto
-const contactValidation = [
-  body('name')
-    .notEmpty()
-    .withMessage('El nombre es requerido')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('El nombre debe tener entre 2 y 50 caracteres')
-    .trim()
-    .escape(),
+// 📝 Schema de validación con Zod para el formulario de contacto
+const contactSchema = z.object({
+  name: z.string()
+    .min(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+    .max(50, { message: 'El nombre no puede tener más de 50 caracteres' }),
+  
+  email: z.string()
+    .email({ message: 'Email inválido' }),
+  
+  phone: z.string()
+    .regex(/^(\+57|57)?[1-9][0-9]{9}$/, { 
+      message: 'Formato de teléfono inválido para Colombia' 
+    }),
+  
+  projectType: z.enum(['cocina', 'closet', 'muebles', 'oficina', 'obra', 'otro'], {
+    errorMap: () => ({ message: 'Tipo de proyecto inválido' })
+  }),
+  
+  message: z.string()
+    .min(10, { message: 'El mensaje debe tener al menos 10 caracteres' })
+    .max(1000, { message: 'El mensaje no puede tener más de 1000 caracteres' })
+});
 
-  body('email')
-    .isEmail()
-    .withMessage('Email inválido')
-    .normalizeEmail(),
-
-  body('phone')
-    .notEmpty()
-    .withMessage('El teléfono es requerido')
-    .isMobilePhone('es-CO')
-    .withMessage('Formato de teléfono inválido para Colombia'),
-
-  body('projectType')
-    .notEmpty()
-    .withMessage('El tipo de proyecto es requerido')
-    .isIn(['cocina', 'closet', 'muebles', 'oficina', 'obra', 'otro'])
-    .withMessage('Tipo de proyecto inválido'),
-
-  body('message')
-    .notEmpty()
-    .withMessage('El mensaje es requerido')
-    .isLength({ min: 10, max: 1000 })
-    .withMessage('El mensaje debe tener entre 10 y 1000 caracteres')
-    .trim()
-    .escape()
-]
+// Middleware de validación
+const contactValidation = async (req, res, next) => {
+  try {
+    await contactSchema.parseAsync(req.body);
+    next();
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: 'Datos de entrada inválidos',
+      errors: error.errors.map(err => ({
+        field: err.path.join('.'),
+        message: err.message
+      }))
+    });
+  }
+}
 
 // 🏠 Ruta de prueba
 app.get('/', (req, res) => {
@@ -231,15 +235,6 @@ app.get('/api/health', (req, res) => {
 app.post('/api/contact', emailLimiter, contactValidation, async (req, res) => {
   //console.log('📧 BODY RECIBIDO:', req.body)
   try {
-    // Verificar errores de validación
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Datos de entrada inválidos',
-        errors: errors.array()
-      })
-    }
 
     const { name, email, phone, projectType, message } = req.body
 

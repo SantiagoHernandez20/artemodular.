@@ -1,46 +1,47 @@
 const express = require('express');
-const { body } = require('express-validator');
+const { z } = require('zod');
 const TestimonialController = require('../controllers/TestimonialController');
 const router = express.Router();
 
-// Validaciones para testimonios
-const testimonialValidation = [
-  body('name')
-    .notEmpty()
-    .withMessage('El nombre es requerido')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('El nombre debe tener entre 2 y 50 caracteres')
-    .trim()
-    .escape(),
+// Schema de validación con Zod
+const testimonialSchema = z.object({
+  name: z.string()
+    .min(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+    .max(50, { message: 'El nombre no puede tener más de 50 caracteres' }),
   
-  body('role')
-    .notEmpty()
-    .withMessage('El rol/profesión es requerido')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('El rol debe tener entre 2 y 50 caracteres')
-    .trim()
-    .escape(),
+  role: z.string()
+    .min(2, { message: 'El rol debe tener al menos 2 caracteres' })
+    .max(50, { message: 'El rol no puede tener más de 50 caracteres' }),
   
-  body('service')
-    .notEmpty()
-    .withMessage('El servicio es requerido')
-    .isLength({ min: 2, max: 100 })
-    .withMessage('El servicio debe tener entre 2 y 100 caracteres')
-    .trim()
-    .escape(),
+  service: z.string()
+    .min(2, { message: 'El servicio debe tener al menos 2 caracteres' })
+    .max(100, { message: 'El servicio no puede tener más de 100 caracteres' }),
   
-  body('content')
-    .notEmpty()
-    .withMessage('El comentario es requerido')
-    .isLength({ min: 10, max: 1000 })
-    .withMessage('El comentario debe tener entre 10 y 1000 caracteres')
-    .trim()
-    .escape(),
+  content: z.string()
+    .min(10, { message: 'El comentario debe tener al menos 10 caracteres' })
+    .max(1000, { message: 'El comentario no puede tener más de 1000 caracteres' }),
   
-  body('rating')
-    .isInt({ min: 1, max: 5 })
-    .withMessage('La calificación debe ser un número entre 1 y 5')
-];
+  rating: z.number()
+    .int()
+    .min(1, { message: 'La calificación debe ser al menos 1' })
+    .max(5, { message: 'La calificación no puede ser mayor a 5' })
+});
+
+// Middleware de validación
+const testimonialValidation = async (req, res, next) => {
+  try {
+    await testimonialSchema.parseAsync(req.body);
+    next();
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      errors: error.errors.map(err => ({
+        field: err.path.join('.'),
+        message: err.message
+      }))
+    });
+  }
+};
 
 // GET /api/testimonials - Obtener todos los testimonios aprobados
 router.get('/', TestimonialController.getAllTestimonials);
