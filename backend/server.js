@@ -1,7 +1,7 @@
 // 🚀 ArteModular Backend - Express + Nodemailer
 // Servidor para manejar envío de emails de contacto
 const { authenticateUser, optionalAuth } = require('./middleware/auth');
-
+const dotenv = require('dotenv')
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
