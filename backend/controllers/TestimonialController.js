@@ -1,4 +1,5 @@
-const { admin } = require('../config/firebase-admin');
+const admin = require('../config/firebase-admin');
+console.log('Admin SDK disponible:', !!admin);
 
 class TestimonialController {
   // Obtener el siguiente ID secuencial
