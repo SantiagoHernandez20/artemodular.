@@ -299,23 +299,37 @@ export default {
 
     const rejectTestimonial = async (id) => {
       try {
-        const apiUrl = config.utils.getBackendUrl(`/api/testimonials/${id}/reject`)
-        //console.log('🌐 Rechazando testimonio:', apiUrl)
+        const apiUrl = config.utils.getBackendUrl(`api/testimonials/${id}/reject`)
+        
+        // Agregamos los headers correctos y aseguramos el formato del body
         const response = await fetch(apiUrl, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reason: 'Rechazado por administrador' })
-        })
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            reason: 'Testimonio rechazado por el administrador'
+          })
+        });
 
-        if (response.ok) {
-          await loadTestimonials() // Recargar datos
-          console.log('✅ Testimonio rechazado')
-        } else {
-          const errorData = await response.json()
-          console.error('❌ Error al rechazar testimonio:', errorData.message)
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Error al rechazar el testimonio');
         }
+
+        const data = await response.json();
+        console.log('✅ Testimonio rechazado exitosamente:', data);
+        
+        // Actualizar el estado del testimonio en la UI
+        const testimonialIndex = testimonials.value.findIndex(t => t.id === id);
+        if (testimonialIndex !== -1) {
+          testimonials.value[testimonialIndex].status = 'rejected';
+        }
+
       } catch (error) {
-        console.error('❌ Error al rechazar testimonio:', error)
+        console.error('❌ Error al rechazar testimonio:', error);
+        // Aquí podrías agregar una notificación al usuario
       }
     }
 
