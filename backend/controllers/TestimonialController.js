@@ -1,53 +1,35 @@
-const admin = require('../config/firebase-admin');
-console.log('Admin SDK disponible:', !!admin);
+// backend/controllers/TestimonialController.js
+const { supabase } = require('../middleware/supabase-auth');
 
 class TestimonialController {
-  // Obtener el siguiente ID secuencial
-  static async getNextSequentialId() {
-    try {
-      const db = admin.database();
-      const testimonialsRef = db.ref('testimonials');
-      const snapshot = await testimonialsRef.once('value');
-
-      if (!snapshot.exists()) {
-        return 1; // Primer testimonio
-      }
-
-      let maxId = 0;
-      snapshot.forEach((childSnapshot) => {
-        const id = parseInt(childSnapshot.key);
-        if (!isNaN(id) && id > maxId) {
-          maxId = id;
-        }
-      });
-
-      return maxId + 1;
-    } catch (error) {
-      console.error('❌ Error obteniendo siguiente ID:', error);
-      throw error;
-    }
-  }
-
+  // Obtener todos los testimonios
   static async getAllTestimonials(req, res) {
     try {
-      const db = admin.database();
-      const testimonialsRef = db.ref('testimonials');
-      const snapshot = await testimonialsRef.once('value');
+      const { approved_only } = req.query;
+      
+      let query = supabase
+        .from('testimonials')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-      let testimonials = [];
-      if (snapshot.exists()) {
-        snapshot.forEach((childSnapshot) => {
-          testimonials.push({
-            id: childSnapshot.key,
-            ...childSnapshot.val()
-          });
-        });
-
-        // Ordenar por ID (secuencial)
-        testimonials.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+      if (approved_only === 'true') {
+        query = query.eq('is_approved', true);
       }
 
-      res.json(testimonials);
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('❌ Error obteniendo testimonios:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Error interno del servidor'
+        });
+      }
+
+      res.json({
+        success: true,
+        data: data || []
+      });
     } catch (error) {
       console.error('❌ Error obteniendo testimonios:', error);
       res.status(500).json({
@@ -57,11 +39,11 @@ class TestimonialController {
     }
   }
 
+  // Crear nuevo testimonio
   static async createTestimonial(req, res) {
     try {
       const { name, role, service, content, rating } = req.body;
 
-      // Validaciones básicas
       if (!name || !role || !service || !content || !rating) {
         return res.status(400).json({
           success: false,
@@ -83,40 +65,39 @@ class TestimonialController {
         });
       }
 
-      // Obtener siguiente ID secuencial
-      const nextId = await TestimonialController.getNextSequentialId();
-      console.log('🔢 Siguiente ID secuencial:', nextId);
-
-      // Crear objeto del testimonio
       const testimonialData = {
         name,
         role,
         service,
         content,
-        rating,
+        rating: parseInt(rating),
         avatar: TestimonialController.generateAvatar(name),
-        is_approved: false, // Por defecto pendiente
-        is_reject: 'pending',   // Por defecto no rechazado
+        is_approved: false,
+        is_reject: 'pending',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
 
-      // Guardar en Firebase usando Admin SDK con ID secuencial
-      const db = admin.database();
-      const testimonialsRef = db.ref('testimonials');
-      const newTestimonialRef = testimonialsRef.child(nextId.toString());
-      await newTestimonialRef.set(testimonialData);
+      const { data, error } = await supabase
+        .from('testimonials')
+        .insert(testimonialData)
+        .select()
+        .single();
 
-      console.log('✅ Testimonio guardado en Firebase con ID secuencial:', nextId);
+      if (error) {
+        console.error('❌ Error creando testimonio:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Error al crear el testimonio'
+        });
+      }
 
-      // Retornar respuesta exitosa
+      console.log('✅ Testimonio guardado en Supabase:', data.id);
+
       res.status(201).json({
         success: true,
         message: 'Testimonio enviado exitosamente. Será revisado antes de ser publicado.',
-        data: {
-          id: nextId.toString(),
-          ...testimonialData
-        }
+        data
       });
     } catch (error) {
       console.error('❌ Error creando testimonio:', error);
@@ -127,22 +108,41 @@ class TestimonialController {
     }
   }
 
-  // Métodos para administración
+  // Aprobar testimonio (admin)
   static async approveTestimonial(req, res) {
     try {
       const { id } = req.params;
-      const db = admin.database();
-      const testimonialRef = db.ref(`testimonials/${id}`);
 
-      await testimonialRef.update({
-        is_approved: true,
-        is_reject: 'approved',
-        updated_at: new Date().toISOString()
-      });
+      const { data, error } = await supabase
+        .from('testimonials')
+        .update({
+          is_approved: true,
+          is_reject: 'approved',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ Error al aprobar testimonio:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Error al aprobar testimonio'
+        });
+      }
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
 
       res.json({
         success: true,
-        message: 'Testimonio aprobado exitosamente'
+        message: 'Testimonio aprobado exitosamente',
+        data
       });
     } catch (error) {
       console.error('❌ Error al aprobar testimonio:', error);
@@ -153,23 +153,43 @@ class TestimonialController {
     }
   }
 
+  // Rechazar testimonio (admin)
   static async rejectTestimonial(req, res) {
     try {
       const { id } = req.params;
       const { reason } = req.body;
-      const db = admin.database();
-      const testimonialRef = db.ref(`testimonials/${id}`);
 
-      await testimonialRef.update({
-        is_approved: false,
-        is_reject: 'rejected',
-        rejection_reason: reason || '',
-        updated_at: new Date().toISOString()
-      });
+      const { data, error } = await supabase
+        .from('testimonials')
+        .update({
+          is_approved: false,
+          is_reject: 'rejected',
+          rejection_reason: reason || 'Rechazado por administrador',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ Error al rechazar testimonio:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Error al rechazar testimonio'
+        });
+      }
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
 
       res.json({
         success: true,
-        message: 'Testimonio rechazado exitosamente'
+        message: 'Testimonio rechazado exitosamente',
+        data
       });
     } catch (error) {
       console.error('❌ Error al rechazar testimonio:', error);
@@ -180,13 +200,23 @@ class TestimonialController {
     }
   }
 
+  // Eliminar testimonio (admin)
   static async deleteTestimonial(req, res) {
     try {
       const { id } = req.params;
-      const db = admin.database();
-      const testimonialRef = db.ref(`testimonials/${id}`);
 
-      await testimonialRef.remove();
+      const { error } = await supabase
+        .from('testimonials')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('❌ Error al eliminar testimonio:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Error al eliminar testimonio'
+        });
+      }
 
       res.json({
         success: true,
@@ -201,10 +231,11 @@ class TestimonialController {
     }
   }
 
-  // Método para obtener un testimonio por ID (antes estaba en getTestimonialsStats)
+  // Obtener testimonio por ID
   static async getTestimonialsID(req, res) {
     try {
       const { id } = req.params;
+
       if (!id) {
         return res.status(400).json({
           success: false,
@@ -212,25 +243,22 @@ class TestimonialController {
         });
       }
 
-      const db = admin.database();
-      const testimonialRef = db.ref(`testimonials/${id}`);
-      const snapshot = await testimonialRef.once('value');
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('id', id)
+        .single();
 
-      if (!snapshot.exists()) {
+      if (error || !data) {
         return res.status(404).json({
           success: false,
           message: 'Testimonio no encontrado'
         });
       }
 
-      const testimonial = {
-        id: snapshot.key,
-        ...snapshot.val()
-      };
-
       res.json({
         success: true,
-        data: testimonial
+        data
       });
     } catch (error) {
       console.error('❌ Error obteniendo testimonio:', error);
@@ -241,6 +269,7 @@ class TestimonialController {
     }
   }
 
+  // Generar avatar a partir del nombre
   static generateAvatar(name) {
     const words = name.split(' ');
     let initials = '';
@@ -252,57 +281,93 @@ class TestimonialController {
     return initials;
   }
 
-  static async streamTestimonials(req, res) {
+  // Obtener estadísticas de testimonios
+  static async getTestimonialsStats(req, res) {
     try {
-      // Configurar headers CORS específicos para SSE
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      const { count: total } = await supabase
+        .from('testimonials')
+        .select('*', { count: 'exact', head: true });
 
-      // Configurar cabeceras para SSE
-      res.set({
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive'
-      });
-      res.flushHeaders();
+      const { count: approved } = await supabase
+        .from('testimonials')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_approved', true);
 
-      // Enviar mensaje inicial
-      res.write('data: Conexión establecida\n\n');
+      const { count: pending } = await supabase
+        .from('testimonials')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_approved', false);
 
-      const db = admin.database();
-      const testimonialsRef = db.ref('testimonials');
-
-      // Función que se encargará de enviar las actualizaciones
-      const onValueChange = (snapshot) => {
-        let testimonials = [];
-        if (snapshot.exists()) {
-          snapshot.forEach((childSnapshot) => {
-            testimonials.push({
-              id: childSnapshot.key,
-              ...childSnapshot.val()
-            });
-          });
-          // Ordenar por ID
-          testimonials.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+      res.json({
+        success: true,
+        data: {
+          total: total || 0,
+          approved: approved || 0,
+          pending: pending || 0,
+          rejected: (total || 0) - (approved || 0)
         }
-        // Enviar datos actualizados vía SSE
-        res.write(`data: ${JSON.stringify(testimonials)}\n\n`);
-      };
-
-      // Establecer listener para cambios en los testimonios
-      testimonialsRef.on('value', onValueChange);
-
-      // Limpiar cuando el cliente se desconecte
-      req.on('close', () => {
-        testimonialsRef.off('value', onValueChange);
-        res.end();
       });
     } catch (error) {
-      console.error('❌ Error en streamTestimonials:', error);
-      res.status(500).end();
+      console.error('❌ Error obteniendo estadísticas:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor'
+      });
     }
   }
 
+  // Actualizar testimonio (admin)
+  static async updateTestimonial(req, res) {
+    try {
+      const { id } = req.params;
+      const { name, role, service, content, rating, is_approved } = req.body;
+
+      const updateData = {};
+      
+      if (name) updateData.name = name;
+      if (role) updateData.role = role;
+      if (service) updateData.service = service;
+      if (content) updateData.content = content;
+      if (rating) updateData.rating = parseInt(rating);
+      if (is_approved !== undefined) updateData.is_approved = is_approved;
+
+      updateData.updated_at = new Date().toISOString();
+
+      const { data, error } = await supabase
+        .from('testimonials')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ Error actualizando testimonio:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Error al actualizar testimonio'
+        });
+      }
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Testimonio actualizado exitosamente',
+        data
+      });
+    } catch (error) {
+      console.error('❌ Error actualizando testimonio:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor'
+      });
+    }
+  }
 }
+
 module.exports = TestimonialController;

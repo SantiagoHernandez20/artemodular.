@@ -49,7 +49,6 @@ router.get('/', TestimonialController.getAllTestimonials);
 // POST /api/testimonials - Crear nuevo testimonio
 router.post('/', testimonialValidation, TestimonialController.createTestimonial);
 // ruta para actualizar SSE
-router.get('/stream', TestimonialController.streamTestimonials);
 // GET /api/testimonials/stats - Obtener estadísticas
 router.get('/:id', TestimonialController.getTestimonialsID);
 

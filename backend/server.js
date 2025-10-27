@@ -1,15 +1,9 @@
 // 🚀 ArteModular Backend - Express + Nodemailer
 // Servidor para manejar envío de emails de contacto
-const { authenticateUser, optionalAuth } = require('./middleware/auth');
 const dotenv = require('dotenv')
-const express = require('express')
-const cors = require('cors')
-const helmet = require('helmet')
-const rateLimit = require('express-rate-limit')
-const { z } = require('zod')
 const path = require('path')
 
-// Cargar variables de entorno desde la raíz del proyecto
+// Cargar variables de entorno ANTES de importar otros módulos
 dotenv.config({
   path: path.join(__dirname, '..', '.env.local')
 })
@@ -20,6 +14,14 @@ if (!process.env.EMAIL_USER) {
     path: path.join(__dirname, '..', '.env')
   })
 }
+
+// Ahora importar middleware de Supabase (después de cargar variables)
+const { authenticateUser, optionalAuth } = require('./middleware/supabase-auth');
+const express = require('express')
+const cors = require('cors')
+const helmet = require('helmet')
+const rateLimit = require('express-rate-limit')
+const { z } = require('zod')
 const { sendContactEmail, testEmailConfiguration } = require('./services/emailService');
 const testimonialRoutes = require('./routes/TestimonialRoutes');
 
