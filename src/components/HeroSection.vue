@@ -9,25 +9,32 @@
             <span style="color: #8D5524;">diseño <span style="color: black;">y</span> fabricación</span>
             de muebles a medida
           </h1>
-          
+
           <p class="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-            Creamos muebles únicos que se adaptan perfectamente a tu espacio y estilo de vida. 
+            Creamos muebles únicos que se adaptan perfectamente a tu espacio y estilo de vida.
             Desde la idea inicial hasta la instalación final.
           </p>
 
           <!-- Botones con mejor espaciado -->
-          <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center lg:justify-start mb-8 sm:mb-12">
-            <a href="#contacto" class="btn-primary text-center px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto lg:mx-0 mb-8 sm:mb-12">
+            <a href="#contacto"
+              class="btn-primary h-[60px] flex items-center justify-center w-full px-8 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 order-2 sm:order-1">
               Solicitar Presupuesto Gratuito
             </a>
-            <a href="tel:+573133589795" class="btn-secondary flex items-center justify-center gap-3 px-8 py-4 text-lg font-semibold border-2 transition-all duration-300 hover:bg-gray-50">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+            <a href="tel:+573133589795"
+              class="btn-secondary h-[60px] flex items-center justify-center w-full px-8 text-lg font-semibold border-2 transition-all duration-300 hover:bg-gray-50 order-1 sm:order-2">
+              <svg class="w-6 h-6 flex-shrink-0 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
               </svg>
               313 358-9795
             </a>
           </div>
 
+        
+
+          
+        
           <!-- Estadísticas simplificadas para móvil -->
           <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <div class="text-center lg:text-left">
@@ -49,10 +56,12 @@
         <!-- Showcase 3D Completo -->
         <div class="relative order-first lg:order-last mb-8 lg:mb-0">
           <ThreeDShowcase />
-          
+
           <!-- Elementos decorativos -->
-          <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full opacity-60" style="background-color: #8D5524;"></div>
-          <div class="absolute -bottom-2 -left-2 w-12 h-12 rounded-full opacity-40" style="background-color: #6B3F1A;"></div>
+          <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full opacity-60" style="background-color: #8D5524;">
+          </div>
+          <div class="absolute -bottom-2 -left-2 w-12 h-12 rounded-full opacity-40" style="background-color: #6B3F1A;">
+          </div>
         </div>
       </div>
     </div>

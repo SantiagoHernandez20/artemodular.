@@ -65,7 +65,8 @@ app.use(cors({
       'https://oauth2.googleapis.com',
       'https://www.googleapis.com',
       'artemodular-git-dev-santiagohernandez20s-projects.vercel.app',
-      'https://pre-deploy.artemodular.site'
+      'https://pre-deploy.artemodular.site',
+      'http://localhost:4174'
       
     ]
 
