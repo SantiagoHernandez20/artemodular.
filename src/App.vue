@@ -5,14 +5,15 @@
       <router-view />
     </main>
     <AppFooter />
-    
+
     <!-- Panel de debug (solo en desarrollo) -->
   </div>
+
+
 </template>
 
 <script>
-import { onMounted } from 'vue'
-import { useAuthStore } from './stores/authStore'
+
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 
@@ -23,16 +24,7 @@ export default {
     AppFooter
   },
   setup() {
-    const authStore = useAuthStore()
 
-    onMounted(() => {
-      // Inicializar autenticación
-      authStore.initAuth()
-    })
-
-    return {
-      authStore
-    }
   }
 }
 </script>
@@ -121,7 +113,7 @@ html {
   .md\\:flex {
     display: flex !important;
   }
-  
+
   .md\\:hidden {
     display: none !important;
   }

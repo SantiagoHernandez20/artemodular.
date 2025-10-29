@@ -17,6 +17,7 @@ if (!process.env.EMAIL_USER) {
 
 // Ahora importar middleware de Supabase (después de cargar variables)
 const { authenticateUser, optionalAuth } = require('./middleware/supabase-auth');
+const { getMyIP } = require('./middleware/ipconfig');
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
@@ -120,9 +121,10 @@ const contactSchema = z.object({
     .email({ message: 'Email inválido' }),
   
   phone: z.string()
-    .regex(/^(\+57|57)?[1-9][0-9]{9}$/, { 
-      message: 'Formato de teléfono inválido para Colombia' 
-    }),
+    .transform(val => val.trim().replace(/\s|-|\(|\)/g, '')) // Limpiar espacios, guiones, paréntesis
+    .pipe(z.string().regex(/^(\+57|57)?3[0-9]{9}$/, { 
+      message: 'Formato de teléfono inválido para Colombia. Use: 3195413243 o +573195413243' 
+    })),
   
   projectType: z.enum(['cocina', 'closet', 'muebles', 'oficina', 'obra', 'otro'], {
     errorMap: () => ({ message: 'Tipo de proyecto inválido' })
@@ -292,6 +294,9 @@ app.get('/api/test-email', async (req, res) => {
 
 // 📝 Rutas de testimonials
 app.use('/api/testimonials', testimonialRoutes)
+
+// 🔍 Endpoint para ver tu IP actual (útil para configurar ipconfig.js)
+app.get('/api/auth/my-ip', getMyIP);
 
 // 🔐 RUTAS DE AUTENTICACIÓN
 

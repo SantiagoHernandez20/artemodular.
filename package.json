@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@supabase/supabase-js": "^2.76.1",
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.21",
     "concurrently": "^7.6.0",
     "core-js": "^3.8.3",
+    "dotenv": "^17.2.3",
     "emailjs-com": "^3.2.0",
     "firebase": "^12.2.1",
     "firebase-admin": "^13.5.0",

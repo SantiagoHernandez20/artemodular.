@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import Home from '../views/Homeview.vue'
 import Dashboard from '../views/DashboardView.vue'
 import AdminPanel from '../views/AdminPanel.vue'
+import AuthCallback from '../views/AuthCallback.vue'
 import { useAuthStore } from '../stores/authStore'
 
 const routes = [
@@ -51,8 +52,13 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
-    component: AdminPanel,
-    meta: { requiresAuth: true, requiresAdmin: true }
+    component: AdminPanel
+    // No requiere autenticación de Google, el control es por IP en el backend
+  },
+  {
+    path: '/auth/callback',
+    name: 'AuthCallback',
+    component: AuthCallback
   }
 ]
 
@@ -93,11 +99,8 @@ router.beforeEach((to, from, next) => {
     return
   }
   
-  // Verificar si la ruta requiere permisos de admin
-  if (to.meta.requiresAdmin && !authStore.isAdmin) {
-    next('/')
-    return
-  }
+  // La ruta /admin ya no requiere autenticación de Google
+  // El control de acceso se maneja por IP en el backend
   
   next()
 })

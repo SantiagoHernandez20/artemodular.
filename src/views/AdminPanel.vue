@@ -9,14 +9,14 @@
             <p class="text-gray-600 mt-2">Gestiona testimonios y contenido del sitio</p>
           </div>
 
-          <!-- Información del usuario -->
+          <!-- Información del administrador -->
           <div class="flex items-center space-x-4">
             <div class="text-right">
-              <div class="font-medium text-gray-900">{{ authStore.user?.displayName || 'Administrador' }}</div>
-              <div class="text-sm text-gray-500">{{ authStore.user?.email }}</div>
+              <div class="font-medium text-gray-900">Administrador</div>
+              <div class="text-sm text-gray-500">Panel de Control</div>
             </div>
             <div class="w-10 h-10 bg-8D5524 rounded-full flex items-center justify-center text-white font-semibold">
-              {{ getInitials(authStore.user?.displayName || 'A') }}
+              AD
             </div>
           </div>
         </div>
@@ -155,13 +155,11 @@
 
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useAuthStore } from '../stores/authStore'
 import config from '../config/index.js'
 
 export default {
   name: 'AdminPanel',
   setup() {
-    const authStore = useAuthStore()
     const filterStatus = ref('all')
     const testimonials = ref([])
 
@@ -226,16 +224,6 @@ export default {
       })
     })
 
-    const getInitials = (name) => {
-      if (!name) return 'A'
-      return name
-        .split(' ')
-        .map(word => word.charAt(0))
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-    }
-    
     const allTestimonials = computed(() => testimonials.value.length)
     const pendingTestimonials = computed(() => testimonials.value.filter(t => t.status === 'pending').length)
     const approvedTestimonials = computed(() => testimonials.value.filter(t => t.status === 'approved').length)
@@ -282,12 +270,11 @@ export default {
     const approveTestimonial = async (id) => {
       try {
         const apiUrl = config.utils.getBackendUrl(`/api/testimonials/${id}/approve`)
-        //console.log('🌐 Aprobando testimonio:', apiUrl)
         const response = await fetch(apiUrl, { method: 'PUT' })
 
         if (response.ok) {
-          await loadTestimonials() // Recargar datos
           console.log('✅ Testimonio aprobado')
+          // Los datos se actualizarán automáticamente vía SSE
         } else {
           const errorData = await response.json()
           console.error('❌ Error al aprobar testimonio:', errorData.message)
@@ -334,7 +321,6 @@ export default {
     }
 
     return {
-      authStore,
       filterStatus,
       testimonials,
       allTestimonials,
@@ -342,7 +328,6 @@ export default {
       approvedTestimonials,
       rejectedTestimonials,
       filteredTestimonials,
-      getInitials,
       getStatusClass,
       getStatusText,
       formatDate,

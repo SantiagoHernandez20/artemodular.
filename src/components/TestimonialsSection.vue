@@ -115,12 +115,12 @@ export default {
     // Cargar testimonios aprobados desde tu backend
     const loadApprovedTestimonials = async () => {
       try {
-        //console.log(' Iniciando carga de testimonios aprobados...')
+        console.log('🔄 Iniciando carga de testimonios aprobados...')
         isLoading.value = true
         
         // ✅ Usar configuración centralizada
-        const apiUrl = config.utils.getBackendUrl(config.backend.endpoints.testimonials)
-        //console.log('🌐 Obteniendo testimonios desde:', apiUrl)
+        const apiUrl = config.utils.getBackendUrl(config.backend.endpoints.testimonials + '?approved_only=true')
+        console.log('🌐 Obteniendo testimonios desde:', apiUrl)
         
         const response = await fetch(apiUrl)
         
@@ -128,20 +128,23 @@ export default {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         
-        const allTestimonials = await response.json()
-        //console.log('✅ Todos los testimonios recibidos:', allTestimonials)
+        const result = await response.json()
+        console.log('✅ Respuesta del backend:', result)
         
-        // Filtrar solo los aprobados
+        // El backend devuelve { success: true, data: [...] }
+        const allTestimonials = result.data || []
+        //console.log('📋 Testimonios recibidos:', allTestimonials)
+        
+        // Filtrar solo los aprobados (por si acaso)
         const approvedTestimonials = allTestimonials.filter(t => t.is_approved === true)
-        //console.log('✅ Testimonios aprobados filtrados:', approvedTestimonials)
+        //console.log('✅ Testimonios aprobados:', approvedTestimonials)
         
         // Ordenar por fecha de creación (más recientes primero)
         testimonials.value = approvedTestimonials.sort((a, b) => 
           new Date(b.created_at) - new Date(a.created_at)
         )
         
-        //console.log(' Testimonios procesados y ordenados:', testimonials.value)
-        //console.log('📊 Total testimonios aprobados:', testimonials.value.length)
+        console.log('📊 Total testimonios aprobados cargados:', testimonials.value.length)
         isLoading.value = false
         
         // Iniciar autoplay si hay más de un testimonio
@@ -150,6 +153,7 @@ export default {
         }
       } catch (error) {
         console.error('❌ Error al cargar testimonios:', error)
+        testimonials.value = [] // Asegurar array vacío
         isLoading.value = false
       }
     }

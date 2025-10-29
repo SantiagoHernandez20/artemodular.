@@ -31,42 +31,13 @@
           <!-- Sección de usuario autenticado -->
           <div v-if="authStore.isAuthenticated" class="user-section">
             <!-- Usuario normal -->
-            <div v-if="!authStore.isAdmin" class="user-info">
-              <div class="user-avatar">
-                {{ getInitials(authStore.user?.displayName || 'U') }}
-              </div>
-              <div class="user-details">
-                <span class="user-name">{{ authStore.user?.displayName || 'Usuario' }}</span>
-                <router-link to="/dashboard" class="user-link">Mi Cuenta</router-link>
-              </div>
-              <button @click="logout" class="logout-btn" title="Cerrar sesión">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-              </button>
-            </div>
+           
 
             <!-- Admin -->
-            <div v-else class="admin-info">
-              <div class="admin-avatar">
-                {{ getInitials(authStore.user?.displayName || 'A') }}
-              </div>
-              <div class="admin-details">
-                <span class="admin-name">{{ authStore.user?.displayName || 'Admin' }}</span>
-                <router-link to="/admin" class="admin-link">Panel Admin</router-link>
-              </div>
-              <button @click="logout" class="logout-btn" title="Cerrar sesión">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-              </button>
-            </div>
+           
           </div>
 
-          <!-- Google Login - Solo si no está autenticado -->
-          <div v-else class="auth-section">
-            <GoogleLogin />
-          </div>
+        
         </div>
 
         <!-- Controles móviles -->
@@ -169,18 +140,14 @@ export default {
         .slice(0, 2)
     }
 
-    const logout = () => {
-      authStore.logout()
-      closeMenu()
-    }
+  
 
     return {
       isMenuOpen,
       authStore,
       toggleMenu,
       closeMenu,
-      getInitials,
-      logout
+      getInitials
     }
   }
 }

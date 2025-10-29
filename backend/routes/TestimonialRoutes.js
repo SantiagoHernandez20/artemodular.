@@ -1,6 +1,8 @@
 const express = require('express');
 const { z } = require('zod');
 const TestimonialController = require('../controllers/TestimonialController');
+const { verifyIP } = require('../middleware/ipconfig');
+const { supabase } = require('../middleware/supabase-auth');
 const router = express.Router();
 
 // Schema de validación con Zod
@@ -48,18 +50,62 @@ router.get('/', TestimonialController.getAllTestimonials);
 
 // POST /api/testimonials - Crear nuevo testimonio
 router.post('/', testimonialValidation, TestimonialController.createTestimonial);
-// ruta para actualizar SSE
-// GET /api/testimonials/stats - Obtener estadísticas
+
+// GET /api/testimonials/stream - Streaming SSE para admin (requiere IP verificada)
+router.get('/stream', verifyIP, async (req, res) => {
+  console.log('📡 Cliente conectado al SSE stream');
+  
+  // Configurar headers para Server-Sent Events
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  
+  // Enviar mensaje de conexión
+  res.write(`data: ${JSON.stringify('Conexión establecida')}\n\n`);
+  
+  // Función para enviar testimonios actualizados
+  const sendTestimonials = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (!error && data) {
+        res.write(`data: ${JSON.stringify(data)}\n\n`);
+      }
+    } catch (err) {
+      console.error('❌ Error en SSE:', err);
+    }
+  };
+  
+  // Enviar testimonios inmediatamente
+  await sendTestimonials();
+  
+  // Polling cada 5 segundos
+  const interval = setInterval(() => {
+    sendTestimonials();
+  }, 5000);
+  
+  // Limpiar al cerrar la conexión
+  req.on('close', () => {
+    console.log('📡 Cliente desconectado del SSE stream');
+    clearInterval(interval);
+    res.end();
+  });
+});
+
+// GET /api/testimonials/:id - Obtener testimonio por ID
 router.get('/:id', TestimonialController.getTestimonialsID);
 
-// PUT /api/testimonials/:id/approve - Aprobar testimonio
-router.put('/:id/approve', TestimonialController.approveTestimonial);
+// PUT /api/testimonials/:id/approve - Aprobar testimonio (requiere IP verificada)
+router.put('/:id/approve', verifyIP, TestimonialController.approveTestimonial);
 
-// PUT /api/testimonials/:id/reject - Rechazar testimonio
-router.put('/:id/reject', TestimonialController.rejectTestimonial);
+// PUT /api/testimonials/:id/reject - Rechazar testimonio (requiere IP verificada)
+router.put('/:id/reject', verifyIP, TestimonialController.rejectTestimonial);
 
-// DELETE /api/testimonials/:id - Eliminar testimonio
-router.delete('/:id', TestimonialController.deleteTestimonial);
+// DELETE /api/testimonials/:id - Eliminar testimonio (requiere IP verificada)
+router.delete('/:id', verifyIP, TestimonialController.deleteTestimonial);
 
 
 //export default router
