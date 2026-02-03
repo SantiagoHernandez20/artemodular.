@@ -146,103 +146,81 @@ export default {
     })
 
     const submitForm = async () => {
-      isSubmitting.value = true
+      isSubmitting.value = true;
 
       try {
         // Validar campos requeridos
         if (!form.name || !form.email || !form.phone || !form.projectType || !form.message) {
-          alert('Por favor completa todos los campos.')
-          return
+          alert('Por favor completa todos los campos.');
+          return;
         }
-
-        // Debug: Mostrar configuración centralizada
-        config.utils.debug()
 
         // URL del backend desde la configuración centralizada
-        const backendURL = config.utils.getBackendUrl(config.backend.endpoints.contact)
-        console.log('🚀 Backend URL configurada:', backendURL)
+        const backendURL = config.utils.getBackendUrl(config.backend.endpoints.contact);
 
         // Crear AbortController para timeout
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), config.backend.request.timeout)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos de timeout
 
+        const response = await fetch(backendURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...config.backend.request.headers
+          },
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            projectType: form.projectType,
+            message: form.message
+          }),
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        // Primero verifica si la respuesta es ok antes de intentar parsear el JSON
+        if (!response.ok) {
+          throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
+        }
+
+        // Intenta parsear la respuesta JSON dentro de un try/catch
+        let result;
         try {
-          // Enviar al backend usando la configuración centralizada
-          const response = await fetch(backendURL, {
-            method: 'POST',
-            headers: config.backend.request.headers,
-            body: JSON.stringify({
-              name: form.name,
-              email: form.email,
-              phone: form.phone,
-              projectType: form.projectType,
-              message: form.message
-            }),
-            signal: controller.signal
-          })
-
-          clearTimeout(timeoutId)
-
-          console.log('📡 Respuesta del servidor:', {
-            status: response.status,
-            statusText: response.statusText,
-            headers: Object.fromEntries(response.headers.entries())
-          })
-
-          const result = await response.json()
-          console.log('📨 Resultado del servidor:', result)
-          
-          if (!response.ok) {
-            if (result.errors) {
-              alert(result.errors.map(e => e.msg).join('\n'))
-            }
-            throw new Error(result.message || 'Error al enviar el formulario')
-          }
-
-          console.log('✅ Email enviado exitosamente:', result)
-
-          // Limpiar formulario
-          Object.keys(form).forEach(key => {
-            form[key] = ''
-          })
-
-          alert('¡Gracias por tu solicitud! Hemos enviado una confirmación a tu email. Te contactaremos en menos de 24 horas.')
-        } catch (fetchError) {
-          clearTimeout(timeoutId)
-          
-          if (fetchError.name === 'AbortError') {
-            throw new Error('La solicitud tardó demasiado tiempo. Verifica tu conexión a internet.')
-          }
-          
-          throw fetchError
+          result = await response.json();
+        } catch (parseError) {
+          throw new Error('Error al procesar la respuesta del servidor');
         }
+
+        // Limpiar formulario solo si todo fue exitoso
+        Object.keys(form).forEach(key => {
+          form[key] = '';
+        });
+
+        alert('¡Gracias por tu solicitud! Hemos enviado una confirmación a tu email. Te contactaremos en menos de 24 horas.');
+
       } catch (error) {
-        console.error('❌ Error al enviar email:', error)
-        console.error('🔍 Detalles del error:', {
-          name: error.name,
-          message: error.message,
-          stack: error.stack,
-          cause: error.cause
-        })
+        console.error('Error al enviar formulario:', error);
 
-        // Mensaje de error específico
-        let errorMessage = 'Hubo un error al enviar tu solicitud. '
+        // Manejo específico de errores
+        let errorMessage = 'Hubo un error al enviar tu solicitud. ';
 
-        if (error.message.includes('Failed to fetch')) {
-          errorMessage += 'No pudimos conectar con el servidor. '
-        } else if (error.message.includes('Demasiados emails')) {
-          errorMessage += 'Has enviado demasiados emails recientemente. Espera un momento. '
-        } else if (error.message.includes('tardó demasiado tiempo')) {
-          errorMessage += 'La conexión al servidor tardó demasiado. '
+        if (error.name === 'AbortError') {
+          errorMessage += 'La conexión al servidor tardó demasiado tiempo. ';
+        } else if (error.message.includes('Failed to fetch')) {
+          errorMessage += 'No se pudo conectar con el servidor. Verifica tu conexión a internet. ';
+        } else if (response && !response.ok) {
+          errorMessage += `Error del servidor: ${response.status}. `;
         } else {
-          errorMessage += 'Intenta de nuevo en unos minutos. '
+          errorMessage += 'Por favor intenta nuevamente más tarde. ';
         }
 
-        errorMessage += `O contáctanos directamente al ${config.email.contact.phone}.`
+        errorMessage += `También puedes contactarnos directamente al ${config.email.contact.phone}`;
+        alert(errorMessage);
 
-        alert(errorMessage)
       } finally {
-        isSubmitting.value = false
+        isSubmitting.value = false;
       }
     }
 

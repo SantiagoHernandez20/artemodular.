@@ -119,32 +119,53 @@ export default {
         isLoading.value = true
         
         // ✅ Usar configuración centralizada
-        const apiUrl = config.utils.getBackendUrl(config.backend.endpoints.testimonials + '?approved_only=true')
-        console.log('🌐 Obteniendo testimonios desde:', apiUrl)
+        // El endpoint ya incluye el / inicial, así que lo pasamos directamente
+        const endpoint = config.backend.endpoints.testimonials + '?approved_only=true'
+        const apiUrl = config.utils.getBackendUrl(endpoint)
+        //console.log('🌐 URL del backend:', config.backend.url)
+        //console.log('🌐 Endpoint:', endpoint)
+        //console.log('🌐 URL completa:', apiUrl)
         
-        const response = await fetch(apiUrl)
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        
+       
         
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+          const errorText = await response.text()
+          console.error('❌ Error en respuesta HTTP:', errorText)
+          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
         }
         
         const result = await response.json()
-        console.log('✅ Respuesta del backend:', result)
+        //console.log('✅ Respuesta del backend completa:', result)
         
         // El backend devuelve { success: true, data: [...] }
-        const allTestimonials = result.data || []
-        //console.log('📋 Testimonios recibidos:', allTestimonials)
+        if (!result.success) {
+          console.warn('⚠️ Backend devolvió success: false', result)
+        }
         
-        // Filtrar solo los aprobados (por si acaso)
-        const approvedTestimonials = allTestimonials.filter(t => t.is_approved === true)
-        //console.log('✅ Testimonios aprobados:', approvedTestimonials)
+        const allTestimonials = result.data || []
+        console.log('📋 Testimonios recibidos (sin filtrar):', allTestimonials.length, allTestimonials)
+        
+        // Filtrar solo los aprobados usando status (el backend ya filtra, pero por seguridad)
+        const approvedTestimonials = allTestimonials.filter(t => t.status === 'approved')
+        console.log('✅ Testimonios aprobados (después de filtrar):', approvedTestimonials.length, approvedTestimonials)
         
         // Ordenar por fecha de creación (más recientes primero)
-        testimonials.value = approvedTestimonials.sort((a, b) => 
-          new Date(b.created_at) - new Date(a.created_at)
-        )
+        testimonials.value = approvedTestimonials.sort((a, b) => {
+          const dateA = new Date(a.created_at || 0)
+          const dateB = new Date(b.created_at || 0)
+          return dateB - dateA
+        })
         
         console.log('📊 Total testimonios aprobados cargados:', testimonials.value.length)
+        //console.log('📊 Testimonios finales:', testimonials.value)
         isLoading.value = false
         
         // Iniciar autoplay si hay más de un testimonio
@@ -153,6 +174,7 @@ export default {
         }
       } catch (error) {
         console.error('❌ Error al cargar testimonios:', error)
+        console.error('❌ Stack trace:', error.stack)
         testimonials.value = [] // Asegurar array vacío
         isLoading.value = false
       }

@@ -127,25 +127,75 @@
 
                   </div>
                   <p class="text-gray-600 mb-2">{{ testimonial.message }}</p>
-                  <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
-                    <span>{{ testimonial.email }}</span>
-                    <span>{{ formatDate(testimonial.createdAt) }}</span>
+                  
+                  <!-- Mostrar razón de rechazo si está rechazado -->
+                  <div v-if="testimonial.status === 'rejected' && testimonial.rejection_reason" 
+                    class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div class="flex items-start">
+                      <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <div>
+                        <p class="text-sm font-semibold text-red-800 mb-1">Razón del rechazo:</p>
+                        <p class="text-sm text-red-700">{{ testimonial.rejection_reason }}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div v-if="testimonial.status === 'pending'" class="">
+                <div v-if="testimonial.status === 'pending'" class="flex flex-col sm:flex-row gap-2">
                   <button @click="approveTestimonial(testimonial.id)"
                     class="bg-green-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors w-full sm:w-auto">
                     Aprobar
                   </button>
-                  <button @click="rejectTestimonial(testimonial.id)"
+                  <button @click="openRejectModal(testimonial.id)"
                     class="px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors w-full sm:w-auto"
                     id="btn_reject">
                     Rechazar
                   </button>
                 </div>
+                
+                <!-- Badge de estado para aprobados y rechazados -->
+                <div v-else class="flex items-center">
+                  <span :class="['px-3 py-1 rounded-full text-sm font-medium', 
+                    testimonial.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                    {{ getStatusText(testimonial.status) }}
+                  </span>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de rechazo -->
+    <div v-if="showRejectModal" class="modal-overlay" @click="closeRejectModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-body">
+          <h3 class="modal-title">Rechazar Testimonio</h3>
+          <p class="modal-subtitle">¿Estás seguro de que quieres rechazar este testimonio?</p>
+          
+          <div class="modal-form-group">
+            <label for="rejection-reason" class="modal-label">
+              Razón del rechazo (opcional):
+            </label>
+            <textarea 
+              id="rejection-reason"
+              v-model="rejectionReason"
+              placeholder="Escribe una razón para el rechazo..."
+              rows="4"
+              class="modal-textarea"
+            ></textarea>
+          </div>
+          
+          <div class="modal-actions">
+            <button @click="closeRejectModal" class="btn-cancel">
+              Cancelar
+            </button>
+            <button @click="confirmReject" class="btn-reject-confirm">
+              Rechazar
+            </button>
           </div>
         </div>
       </div>
@@ -162,34 +212,24 @@ export default {
   setup() {
     const filterStatus = ref('all')
     const testimonials = ref([])
+    
+    // Modal de rechazo
+    const showRejectModal = ref(false)
+    const selectedTestimonialId = ref(null)
+    const rejectionReason = ref('')
 
     // Función para mapear testimonios del backend al formato de UI
     const mapTestimonials = (data) => {
       return data.map(t => {
-        let status = 'pending'
-        if (typeof t.is_reject === 'string') {
-          status = t.is_reject
-        } else if (typeof t.is_reject === 'boolean') {
-          if (t.is_reject === true) {
-            status = 'rejected'
-          } else if (t.is_approved === true) {
-            status = 'approved'
-          } else {
-            status = 'pending'
-          }
-        } else {
-          if (t.is_approved === true) {
-            status = 'approved'
-          } else {
-            status = 'pending'
-          }
-        }
+        // El backend ahora devuelve status directamente ('pending', 'approved', 'rejected')
+        const status = t.status || 'pending'
+        
         return {
           id: t.id,
           name: t.name ?? '',
-          email: t.email ?? '',
           message: t.content ?? '',
           status,
+          rejection_reason: t.rejection_reason ?? null,
           createdAt: t.created_at ? new Date(t.created_at) : null,
           avatar: t.avatar ?? '',
           rating: t.rating ?? null,
@@ -284,9 +324,23 @@ export default {
       }
     }
 
-    const rejectTestimonial = async (id) => {
+    const openRejectModal = (id) => {
+      selectedTestimonialId.value = id
+      rejectionReason.value = ''
+      showRejectModal.value = true
+    }
+
+    const closeRejectModal = () => {
+      showRejectModal.value = false
+      selectedTestimonialId.value = null
+      rejectionReason.value = ''
+    }
+
+    const confirmReject = async () => {
+      if (!selectedTestimonialId.value) return
+      
       try {
-        const apiUrl = config.utils.getBackendUrl(`api/testimonials/${id}/reject`)
+        const apiUrl = config.utils.getBackendUrl(`api/testimonials/${selectedTestimonialId.value}/reject`)
         
         // Agregamos los headers correctos y aseguramos el formato del body
         const response = await fetch(apiUrl, {
@@ -296,7 +350,7 @@ export default {
             'Accept': 'application/json'
           },
           body: JSON.stringify({
-            reason: 'Testimonio rechazado por el administrador'
+            reason: rejectionReason.value || 'Testimonio rechazado por el administrador'
           })
         });
 
@@ -309,14 +363,16 @@ export default {
         console.log('✅ Testimonio rechazado exitosamente:', data);
         
         // Actualizar el estado del testimonio en la UI
-        const testimonialIndex = testimonials.value.findIndex(t => t.id === id);
+        const testimonialIndex = testimonials.value.findIndex(t => t.id === selectedTestimonialId.value);
         if (testimonialIndex !== -1) {
           testimonials.value[testimonialIndex].status = 'rejected';
+          testimonials.value[testimonialIndex].rejection_reason = rejectionReason.value || 'Testimonio rechazado por el administrador';
         }
 
+        closeRejectModal()
       } catch (error) {
         console.error('❌ Error al rechazar testimonio:', error);
-        // Aquí podrías agregar una notificación al usuario
+        alert('Error al rechazar el testimonio: ' + error.message);
       }
     }
 
@@ -332,7 +388,11 @@ export default {
       getStatusText,
       formatDate,
       approveTestimonial,
-      rejectTestimonial
+      openRejectModal,
+      closeRejectModal,
+      confirmReject,
+      showRejectModal,
+      rejectionReason
     }
   }
 }
@@ -355,5 +415,110 @@ export default {
 
 #btn_reject {
   color: beige;
+}
+
+/* Estilos del modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.modal-subtitle {
+  color: #4B5563;
+  margin-bottom: 1rem;
+}
+
+.modal-form-group {
+  margin-bottom: 1rem;
+}
+
+.modal-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.modal-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.modal-textarea:focus {
+  outline: none;
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn-cancel {
+  padding: 0.5rem 1rem;
+  color: #374151;
+  background-color: #F3F4F6;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #E5E7EB;
+}
+
+.btn-reject-confirm {
+  padding: 0.5rem 1rem;
+  color: white;
+  background-color: #DC2626;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-reject-confirm:hover {
+  background-color: #B91C1C;
 }
 </style>

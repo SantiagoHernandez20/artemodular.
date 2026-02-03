@@ -1,10 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { nextTick } from 'vue'
 import Home from '../views/Homeview.vue'
 import Dashboard from '../views/DashboardView.vue'
 import AdminPanel from '../views/AdminPanel.vue'
-import AuthCallback from '../views/AuthCallback.vue'
-import { useAuthStore } from '../stores/authStore'
+//import AuthCallback from '../views/AuthCallback.vue'
 
 const routes = [
   {
@@ -46,19 +44,13 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: Dashboard,
-    meta: { requiresAuth: true }
+    component: Dashboard
   },
   {
     path: '/admin',
     name: 'Admin',
     component: AdminPanel
     // No requiere autenticación de Google, el control es por IP en el backend
-  },
-  {
-    path: '/auth/callback',
-    name: 'AuthCallback',
-    component: AuthCallback
   }
 ]
 
@@ -89,19 +81,10 @@ const router = createRouter({
   }
 })
 
-// Navigation guards
+// Navigation guards - Sin autenticación, todas las rutas son accesibles
+// El control de acceso para /admin se maneja por IP en el backend
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
-  
-  // Verificar si la ruta requiere autenticación
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/')
-    return
-  }
-  
-  // La ruta /admin ya no requiere autenticación de Google
-  // El control de acceso se maneja por IP en el backend
-  
+  // Permitir acceso a todas las rutas sin verificación de autenticación
   next()
 })
 

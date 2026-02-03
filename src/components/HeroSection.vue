@@ -16,19 +16,18 @@
           </p>
 
           <!-- Botones con mejor espaciado -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto lg:mx-0 mb-8 sm:mb-12">
-            <a href="#contacto"
-              class="btn-primary h-[60px] flex items-center justify-center w-full px-8 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 order-2 sm:order-1">
-              Solicitar Presupuesto Gratuito
-            </a>
-            <a href="tel:+573133589795"
-              class="btn-secondary h-[60px] flex items-center justify-center w-full px-8 text-lg font-semibold border-2 transition-all duration-300 hover:bg-gray-50 order-1 sm:order-2">
-              <svg class="w-6 h-6 flex-shrink-0 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-              </svg>
-              313 358-9795
-            </a>
+          <div class="w-full max-w-xl mx-auto lg:mx-0 mb-8 sm:mb-12">
+            <div class="flex-container">
+              <a href="#contacto" class="button button-primary">
+                <span>Solicitar Presupuesto</span>
+              </a>
+              <a href="tel:+573133589795" class="button button-secondary">
+                <svg class="phone-icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+                <span>313 358-9795</span>
+              </a>
+            </div>
           </div>
 
         
@@ -67,6 +66,65 @@
     </div>
   </section>
 </template>
+
+<style scoped>
+.flex-container {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto 2rem auto;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 60px;
+  padding: 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+
+.button-primary {
+  background-color: #8D5524;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button-secondary {
+  background-color: transparent;
+  color: #1a1a1a;
+  border: 2px solid #8D5524;
+}
+
+.button-secondary:hover {
+  background-color: rgba(141, 85, 36, 0.1);
+}
+
+.phone-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  .flex-container {
+    margin: 0 0 2rem 0;
+  }
+}
+</style>
 
 <script>
 import ThreeDShowcase from './ThreeDShowcase.vue'
