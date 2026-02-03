@@ -15,8 +15,7 @@ if (!process.env.EMAIL_USER) {
   })
 }
 
-// Ahora importar middleware de Supabase (después de cargar variables)
-const { authenticateUser, optionalAuth } = require('./middleware/supabase-auth');
+// Importar middleware de IP
 const { getMyIP } = require('./middleware/ipconfig');
 const express = require('express')
 const cors = require('cors')
@@ -31,9 +30,9 @@ const PORT = process.env.PORT || 3001
 
 // 🛡️ Headers de seguridad COOP/COEP ANTES de helmet
 app.use((req, res, next) => {
-  // Headers específicos para Google OAuth y comunicación con frontend
+  // Headers de seguridad para comunicación con frontend
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-  res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none'); // Cambiado a unsafe-none para evitar problemas
+  res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
   
   // Headers adicionales para mejor compatibilidad
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
@@ -61,9 +60,6 @@ app.use(cors({
       'http://localhost:9001',
       'http://localhost:9000',
       'http://localhost:9002',
-      'https://accounts.google.com',
-      'https://oauth2.googleapis.com',
-      'https://www.googleapis.com',
       'artemodular-git-dev-santiagohernandez20s-projects.vercel.app',
       'https://pre-deploy.artemodular.site',
       'http://localhost:4174'
@@ -169,8 +165,6 @@ app.get('/', (req, res) => {
         'http://localhost:9001',
         'http://localhost:9000',
         'http://localhost:9002',
-        'https://accounts.google.com',
-        'https://oauth2.googleapis.com',
         'https://pre-deploy.artemodular.site'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -184,12 +178,7 @@ app.get('/', (req, res) => {
       contact: 'POST /api/contact',
       health: 'GET /api/health',
       testEmail: 'GET /api/test-email',
-      testimonials: 'GET/POST /api/testimonials',
-      auth: {
-        status: 'GET /api/auth/status',
-        verify: 'POST /api/auth/verify',
-        me: 'GET /api/auth/me'
-      }
+      testimonials: 'GET/POST /api/testimonials'
     }
   })
 })
@@ -211,8 +200,6 @@ app.get('/api/health', (req, res) => {
         'http://localhost:9001',
         'http://localhost:9000',
         'http://localhost:9002',
-        'https://accounts.google.com',
-        'https://oauth2.googleapis.com',
         'https://pre-deploy.artemodular.site'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -299,64 +286,6 @@ app.use('/api/testimonials', testimonialRoutes)
 // 🔍 Endpoint para ver tu IP actual (útil para configurar ipconfig.js)
 app.get('/api/auth/my-ip', getMyIP);
 
-// 🔐 RUTAS DE AUTENTICACIÓN
-
-// Verificar estado de autenticación
-app.get('/api/auth/status', optionalAuth, (req, res) => {
-  if (req.user) {
-    res.json({
-      success: true,
-      authenticated: true,
-      user: {
-        uid: req.user.uid,
-        email: req.user.email,
-        emailVerified: req.user.emailVerified,
-        name: req.user.name,
-        picture: req.user.picture,
-        provider: req.user.provider
-      }
-    });
-  } else {
-    res.json({
-      success: true,
-      authenticated: false,
-      message: 'Usuario no autenticado'
-    });
-  }
-});
-
-// Endpoint protegido para verificar token
-app.post('/api/auth/verify', authenticateUser, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Token válido',
-    user: {
-      uid: req.user.uid,
-      email: req.user.email,
-      emailVerified: req.user.emailVerified,
-      name: req.user.name,
-      picture: req.user.picture,
-      provider: req.user.provider
-    },
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Endpoint para obtener información del usuario actual
-app.get('/api/auth/me', authenticateUser, (req, res) => {
-  res.json({
-    success: true,
-    user: {
-      uid: req.user.uid,
-      email: req.user.email,
-      emailVerified: req.user.emailVerified,
-      name: req.user.name,
-      picture: req.user.picture,
-      provider: req.user.provider
-    }
-  });
-});
-
 // ❌ Manejo de rutas no encontradas
 app.use('*', (req, res) => {
   res.status(404).json({
@@ -369,9 +298,7 @@ app.use('*', (req, res) => {
       'GET /api/test-email',
       'GET /api/testimonials',
       'POST /api/testimonials',
-      'GET /api/auth/status',
-      'POST /api/auth/verify',
-      'GET /api/auth/me'
+      'GET /api/auth/my-ip'
     ]
   })
 })
@@ -397,7 +324,7 @@ app.listen(PORT, () => {
 💊 Health: http://localhost:${PORT}/api/health
 🔧 Test Email: http://localhost:${PORT}/api/test-email
 📝 Testimonials: http://localhost:${PORT}/api/testimonials
-🔐 Auth Status: http://localhost:${PORT}/api/auth/status
+🔍 My IP: http://localhost:${PORT}/api/auth/my-ip
 
 📝 Environment: ${process.env.NODE_ENV || 'development'}
 🔐 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:9001'}
@@ -412,7 +339,6 @@ app.listen(PORT, () => {
    - Frontend (dev): 9001
    - Frontend (alt): 9000, 9002
    - Frontend (prod): artemodular.site
-   - Google OAuth: habilitado
   `)
 })
 
