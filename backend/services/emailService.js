@@ -208,7 +208,7 @@ const generateClientConfirmationHTML = (contactData) => {
         
         <div class="footer">
           <p><strong>${process.env.BUSINESS_NAME || 'ArteModular'}</strong> - Transformamos tus ideas en realidad</p>
-          <p>📧 ${process.env.BUSINESS_EMAIL || 'info@artemodular.com'} | 📱 313 358-9795 | 📍 Medellín, Colombia</p>
+          <p>📧 ${process.env.BUSINESS_EMAIL || 'info@artemodular.com'} | 📱 313 358-9795 | 📍 Bogotá, Colombia</p>
         </div>
       </div>
     </body>

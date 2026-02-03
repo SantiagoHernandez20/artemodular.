@@ -225,7 +225,7 @@ app.get('/api/health', (req, res) => {
       helmet: 'enabled'
     },
     backend: {
-      url: `https://artemodular.onrender.com`,
+      url: `https://artemodular-1.onrender.com`,
       endpoints: {
         contact: `/api/contact`,
         health: `/api/health`,

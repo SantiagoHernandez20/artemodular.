@@ -1,5 +1,5 @@
 // backend/controllers/TestimonialController.js
-const { supabase } = require('../middleware/supabase-auth');
+const Testimonial = require('../models/TestimonialModel');
 
 class TestimonialController {
   // Obtener todos los testimonios
@@ -7,31 +7,19 @@ class TestimonialController {
     try {
       const { approved_only } = req.query;
       
-      let query = supabase
-        .from('testimonials')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (approved_only === 'true') {
-        query = query.eq('is_approved', true);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('❌ Error obteniendo testimonios:', error);
-        return res.status(500).json({
-          success: false,
-          message: 'Error interno del servidor'
-        });
-      }
+      const filterApproved = approved_only === 'true';
+      const testimonials = await Testimonial.findAll(filterApproved);
+      
+      console.log('📊 Testimonios encontrados:', testimonials.length);
+      console.log('📋 Testimonios:', JSON.stringify(testimonials, null, 2));
 
       res.json({
         success: true,
-        data: data || []
+        data: testimonials
       });
     } catch (error) {
       console.error('❌ Error obteniendo testimonios:', error);
+      console.error('❌ Stack:', error.stack);
       res.status(500).json({
         success: false,
         message: 'Error interno del servidor'
@@ -70,29 +58,12 @@ class TestimonialController {
         role,
         service,
         content,
-        rating: parseInt(rating),
-        avatar: TestimonialController.generateAvatar(name),
-        is_approved: false,
-        is_reject: 'pending',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        rating: parseInt(rating)
       };
 
-      const { data, error } = await supabase
-        .from('testimonials')
-        .insert(testimonialData)
-        .select()
-        .single();
+      const data = await Testimonial.create(testimonialData);
 
-      if (error) {
-        console.error('❌ Error creando testimonio:', error);
-        return res.status(500).json({
-          success: false,
-          message: 'Error al crear el testimonio'
-        });
-      }
-
-      console.log('✅ Testimonio guardado en Supabase:', data.id);
+      console.log('✅ Testimonio guardado en Turso:', data.id);
 
       res.status(201).json({
         success: true,
@@ -113,24 +84,7 @@ class TestimonialController {
     try {
       const { id } = req.params;
 
-      const { data, error } = await supabase
-        .from('testimonials')
-        .update({
-          is_approved: true,
-          is_reject: 'approved',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('❌ Error al aprobar testimonio:', error);
-        return res.status(500).json({
-          success: false,
-          message: 'Error al aprobar testimonio'
-        });
-      }
+      const data = await Testimonial.approve(id);
 
       if (!data) {
         return res.status(404).json({
@@ -159,25 +113,7 @@ class TestimonialController {
       const { id } = req.params;
       const { reason } = req.body;
 
-      const { data, error } = await supabase
-        .from('testimonials')
-        .update({
-          is_approved: false,
-          is_reject: 'rejected',
-          rejection_reason: reason || 'Rechazado por administrador',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('❌ Error al rechazar testimonio:', error);
-        return res.status(500).json({
-          success: false,
-          message: 'Error al rechazar testimonio'
-        });
-      }
+      const data = await Testimonial.reject(id, reason);
 
       if (!data) {
         return res.status(404).json({
@@ -205,16 +141,12 @@ class TestimonialController {
     try {
       const { id } = req.params;
 
-      const { error } = await supabase
-        .from('testimonials')
-        .delete()
-        .eq('id', id);
+      const deleted = await Testimonial.delete(id);
 
-      if (error) {
-        console.error('❌ Error al eliminar testimonio:', error);
-        return res.status(500).json({
+      if (!deleted) {
+        return res.status(404).json({
           success: false,
-          message: 'Error al eliminar testimonio'
+          message: 'Testimonio no encontrado'
         });
       }
 
@@ -243,13 +175,9 @@ class TestimonialController {
         });
       }
 
-      const { data, error } = await supabase
-        .from('testimonials')
-        .select('*')
-        .eq('id', id)
-        .single();
+      const data = await Testimonial.findById(id);
 
-      if (error || !data) {
+      if (!data) {
         return res.status(404).json({
           success: false,
           message: 'Testimonio no encontrado'
@@ -269,43 +197,14 @@ class TestimonialController {
     }
   }
 
-  // Generar avatar a partir del nombre
-  static generateAvatar(name) {
-    const words = name.split(' ');
-    let initials = '';
-
-    words.slice(0, 2).forEach(word => {
-      initials += word.charAt(0).toUpperCase();
-    });
-
-    return initials;
-  }
-
   // Obtener estadísticas de testimonios
   static async getTestimonialsStats(req, res) {
     try {
-      const { count: total } = await supabase
-        .from('testimonials')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: approved } = await supabase
-        .from('testimonials')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_approved', true);
-
-      const { count: pending } = await supabase
-        .from('testimonials')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_approved', false);
+      const stats = await Testimonial.getStats();
 
       res.json({
         success: true,
-        data: {
-          total: total || 0,
-          approved: approved || 0,
-          pending: pending || 0,
-          rejected: (total || 0) - (approved || 0)
-        }
+        data: stats
       });
     } catch (error) {
       console.error('❌ Error obteniendo estadísticas:', error);
@@ -320,7 +219,7 @@ class TestimonialController {
   static async updateTestimonial(req, res) {
     try {
       const { id } = req.params;
-      const { name, role, service, content, rating, is_approved } = req.body;
+      const { name, role, service, content, rating, status, is_approved } = req.body;
 
       const updateData = {};
       
@@ -329,24 +228,14 @@ class TestimonialController {
       if (service) updateData.service = service;
       if (content) updateData.content = content;
       if (rating) updateData.rating = parseInt(rating);
-      if (is_approved !== undefined) updateData.is_approved = is_approved;
-
-      updateData.updated_at = new Date().toISOString();
-
-      const { data, error } = await supabase
-        .from('testimonials')
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('❌ Error actualizando testimonio:', error);
-        return res.status(500).json({
-          success: false,
-          message: 'Error al actualizar testimonio'
-        });
+      // Priorizar status si viene, sino usar is_approved para compatibilidad
+      if (status !== undefined) {
+        updateData.status = status;
+      } else if (is_approved !== undefined) {
+        updateData.is_approved = is_approved;
       }
+
+      const data = await Testimonial.update(id, updateData);
 
       if (!data) {
         return res.status(404).json({

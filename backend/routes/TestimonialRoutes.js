@@ -1,8 +1,8 @@
 const express = require('express');
 const { z } = require('zod');
 const TestimonialController = require('../controllers/TestimonialController');
+const Testimonial = require('../models/TestimonialModel');
 const { verifyIP } = require('../middleware/ipconfig');
-const { supabase } = require('../middleware/supabase-auth');
 const router = express.Router();
 
 // Schema de validación con Zod
@@ -66,14 +66,8 @@ router.get('/stream', verifyIP, async (req, res) => {
   // Función para enviar testimonios actualizados
   const sendTestimonials = async () => {
     try {
-      const { data, error } = await supabase
-        .from('testimonials')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (!error && data) {
-        res.write(`data: ${JSON.stringify(data)}\n\n`);
-      }
+      const testimonials = await Testimonial.findAll(false);
+      res.write(`data: ${JSON.stringify(testimonials)}\n\n`);
     } catch (err) {
       console.error('❌ Error en SSE:', err);
     }
