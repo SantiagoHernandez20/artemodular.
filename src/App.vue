@@ -82,37 +82,6 @@ html {
   }
 }
 
-.btn-primary {
-  background-color: #8D5524;
-  color: white;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  transition: background-color 0.2s;
-  display: inline-block;
-  text-decoration: none;
-}
-
-.btn-primary:hover {
-  background-color: #6B3F1A;
-}
-
-.btn-secondary {
-  background-color: #F5E9DA;
-  color: #8D5524;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  transition: background-color 0.2s;
-  display: inline-block;
-  text-decoration: none;
-  border: 2px solid #8D5524;
-}
-
-.btn-secondary:hover {
-  background-color: #E6D4C1;
-}
-
 /* Utilities responsive */
 @media (min-width: 768px) {
   .md\\:flex {
