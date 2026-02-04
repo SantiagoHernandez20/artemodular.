@@ -22,7 +22,7 @@
             <ContactInfo icon="LocationIcon" title="Visítanos" content="Mosquera, Cundinamarca"
               subtitle="Servicio a domicilio" href="https://www.google.com.co/search?kgmid=/g/11xvrv4x5v&hl=es-CO&q=ArteModular&shndl=30&shem=lcuae,lsptbl1&source=sh/x/loc/osrp/m1/2&kgs=b2aa79673d6769ba"/>
 
-            <ContactInfo icon="WhatsAppIcon" title="WhatsApp" content="313 358-9795"
+            <ContactInfo icon="WhatsAppIcon" title="WhatsApp" content="313-358-9795"
               subtitle="Respuesta inmediata" href="https://wa.me/573133589795" />
           </div>
 
@@ -114,7 +114,7 @@
             </button>
 
             <p class="text-sm text-center" style="color: #8D5524;">
-              Te contactaremos en menos de 24 horas para programar una visita gratuita.
+              Te contactaremos en menos de 24 horas para programar una visita.
             </p>
           </form>
         </div>
@@ -255,14 +255,6 @@ export default {
   border-color: #A66B2E;
 }
 
-/* Estilos específicos para select */
-select.form-input {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238D5524' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 0.75rem center;
-  background-repeat: no-repeat;
-  background-size: 1.25rem 1.25rem;
-  padding-right: 2.5rem;
-}
 
 select.form-input option {
   color: #8D5524;

@@ -55,12 +55,6 @@
         <!-- Showcase 3D Completo -->
         <div class="relative order-first lg:order-last mb-8 lg:mb-0">
           <ThreeDShowcase />
-
-          <!-- Elementos decorativos -->
-          <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full opacity-60" style="background-color: #8D5524;">
-          </div>
-          <div class="absolute -bottom-2 -left-2 w-12 h-12 rounded-full opacity-40" style="background-color: #6B3F1A;">
-          </div>
         </div>
       </div>
     </div>
