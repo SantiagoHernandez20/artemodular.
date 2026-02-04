@@ -25,13 +25,12 @@
                 <svg class="phone-icon" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
-                <span>313 358-9795</span>
+                <span>313-358-9795</span>
               </a>
             </div>
           </div>
 
         
-
           
         
           <!-- Estadísticas simplificadas para móvil -->
@@ -64,9 +63,9 @@
 <style scoped>
 .flex-container {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
   width: 100%;
-  max-width: 36rem;
   margin: 0 auto 2rem auto;
 }
 
@@ -74,14 +73,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 50%;
-  height: 60px;
-  padding: 0 1rem;
-  font-size: 1.125rem;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
-  border-radius: 10px;
+  border-radius: 8px;
+  white-space: nowrap;
 }
 
 .button-primary {
@@ -89,6 +88,7 @@
   color: white;
   border: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: auto;
 }
 
 .button-primary:hover {
@@ -96,14 +96,24 @@
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
+.button-primary:active {
+  transform: translateY(0);
+}
+
 .button-secondary {
   background-color: transparent;
   color: #1a1a1a;
   border: 2px solid #8D5524;
+  height: auto;
 }
 
 .button-secondary:hover {
   background-color: rgba(141, 85, 36, 0.1);
+  transform: translateY(-2px);
+}
+
+.button-secondary:active {
+  transform: translateY(0);
 }
 
 .phone-icon {
@@ -113,6 +123,22 @@
   flex-shrink: 0;
 }
 
+/* Tablet y superior */
+@media (min-width: 768px) {
+  .flex-container {
+    flex-direction: row;
+    gap: 1rem;
+    max-width: 36rem;
+  }
+
+  .button {
+    width: 50%;
+    padding: 1rem;
+    font-size: 1.125rem;
+  }
+}
+
+/* Desktop */
 @media (min-width: 1024px) {
   .flex-container {
     margin: 0 0 2rem 0;
