@@ -1,8 +1,10 @@
 // 📧 Servicio de Email para ArteModular
 // Maneja el envío de emails usando Nodemailer
 
+
 const nodemailer = require('nodemailer')
 const path = require('path')
+const dotenv = require('dotenv')
 
 // 🔧 Cargar variables de entorno según el entorno
 if (process.env.NODE_ENV === 'production') {
@@ -206,7 +208,7 @@ const generateClientConfirmationHTML = (contactData) => {
         
         <div class="footer">
           <p><strong>${process.env.BUSINESS_NAME || 'ArteModular'}</strong> - Transformamos tus ideas en realidad</p>
-          <p>📧 ${process.env.BUSINESS_EMAIL || 'info@artemodular.com'} | 📱 313 358-9795 | 📍 Medellín, Colombia</p>
+          <p>📧 ${process.env.BUSINESS_EMAIL || 'info@artemodular.com'} | 📱 313 358-9795 | 📍 Bogotá, Colombia</p>
         </div>
       </div>
     </body>
@@ -223,7 +225,7 @@ const sendContactEmail = async (contactData) => {
     // Email al negocio (principal)
     const businessMailOptions = {
       from: `"${name} - ${process.env.BUSINESS_NAME || 'ArteModular'} Web" <${process.env.EMAIL_USER}>`,
-      to: process.env.BUSINESS_EMAIL || 'jairsantiagomh@gmail.com',
+      to: process.env.BUSINESS_EMAIL || 'artemodular2022@gmail.com',
       subject: `🏡 Nueva Solicitud: ${PROJECT_TYPES[projectType] || projectType} - ${name}`,
       html: generateBusinessEmailHTML(contactData),
       replyTo: email // Para que el negocio pueda responder directamente al cliente

@@ -257,7 +257,8 @@ export default {
       { id: 'closets', name: 'Closets' },
       { id: 'centros', name: 'centros de entretenimiento' },
       { id: 'decorativos', name: 'Decorativos' },
-      { id: 'bibliotecas', name: 'bibliotecas' }
+      { id: 'bibliotecas', name: 'Bibliotecas' },
+      { id: 'inmobiliario', name: 'Carpintería inmobiliario' }
     ])
 
     // Array que almacena todos los proyectos cargados desde el JSON

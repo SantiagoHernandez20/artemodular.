@@ -23,95 +23,15 @@
             <router-link to="/" class="nav-link">Inicio</router-link>
             <router-link to="/servicios" class="nav-link">Servicios</router-link>
             <router-link to="/proceso" class="nav-link">Proceso</router-link>
-            <router-link to="/testimonios" class="nav-link">Testimonios</router-link>
             <router-link to="/galeria" class="nav-link">Galería</router-link>
+            <router-link to="/testimonios" class="nav-link">Testimonios</router-link>
             <router-link to="/contacto" class="btn-primary">Solicitar Presupuesto</router-link>
           </div>
 
-          <!-- Sección de usuario autenticado -->
-          <div v-if="authStore.isAuthenticated" class="user-section">
-            <!-- Usuario normal -->
-            <div v-if="!authStore.isAdmin" class="user-info">
-              <div class="user-avatar">
-                {{ getInitials(authStore.user?.displayName || 'U') }}
-              </div>
-              <div class="user-details">
-                <span class="user-name">{{ authStore.user?.displayName || 'Usuario' }}</span>
-                <router-link to="/dashboard" class="user-link">Mi Cuenta</router-link>
-              </div>
-              <button @click="logout" class="logout-btn" title="Cerrar sesión">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-              </button>
-            </div>
-
-            <!-- Admin -->
-            <div v-else class="admin-info">
-              <div class="admin-avatar">
-                {{ getInitials(authStore.user?.displayName || 'A') }}
-              </div>
-              <div class="admin-details">
-                <span class="admin-name">{{ authStore.user?.displayName || 'Admin' }}</span>
-                <router-link to="/admin" class="admin-link">Panel Admin</router-link>
-              </div>
-              <button @click="logout" class="logout-btn" title="Cerrar sesión">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Google Login - Solo si no está autenticado -->
-          <div v-else class="auth-section">
-            <GoogleLogin />
-          </div>
         </div>
 
         <!-- Controles móviles -->
         <div class="mobile-controls">
-          <!-- Usuario autenticado móvil - Mismo diseño que desktop -->
-          <div v-if="authStore.isAuthenticated" class="mobile-user-section">
-            <!-- Usuario normal -->
-            <router-link v-if="!authStore.isAdmin" to="/dashboard" class="mobile-user-info">
-              <div class="mobile-user-avatar">
-                {{ getInitials(authStore.user?.displayName || 'U') }}
-              </div>
-              <div class="mobile-user-details">
-                <span class="mobile-user-name">{{ authStore.user?.displayName || 'Usuario' }}</span>
-                <span class="mobile-user-link">Mi Cuenta</span>
-              </div>
-
-              <button @click.stop="logout" class="mobile-logout-btn" title="Cerrar sesión">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-              </button>
-            </router-link>
-
-            <!-- Admin -->
-            <router-link v-else to="/admin" class="mobile-admin-info">
-              <div class="mobile-admin-avatar">
-                {{ getInitials(authStore.user?.displayName || 'A') }}
-              </div>
-              <div class="mobile-admin-details">
-                <span class="mobile-admin-name">{{ authStore.user?.displayName || 'Admin' }}</span>
-                <span class="mobile-admin-link">Panel Admin</span>
-              </div>
-              <button @click.stop="logout" class="mobile-logout-btn" title="Cerrar sesión">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-              </button>
-            </router-link>
-          </div>
-          
-          <!-- Google Login móvil - Solo si no está autenticado -->
-          <div v-else class="mobile-auth-icon">
-            <GoogleLogin />
-          </div>
-          
           <!-- Botón menú móvil -->
           <button @click="toggleMenu" class="mobile-menu-btn" aria-label="Abrir menú">
             <svg class="hamburger-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,8 +48,8 @@
           <router-link to="/" @click="closeMenu" class="mobile-nav-link">Inicio</router-link>
           <router-link to="/servicios" @click="closeMenu" class="mobile-nav-link">Servicios</router-link>
           <router-link to="/proceso" @click="closeMenu" class="mobile-nav-link">Proceso</router-link>
-          <router-link to="/testimonios" @click="closeMenu" class="mobile-nav-link">Testimonios</router-link>
           <router-link to="/galeria" @click="closeMenu" class="mobile-nav-link">Galería</router-link>
+          <router-link to="/testimonios" @click="closeMenu" class="mobile-nav-link">Testimonios</router-link>
           <router-link to="/contacto" @click="closeMenu" class="mobile-nav-link btn-primary">Solicitar Presupuesto</router-link>
         </div>
       </div>
@@ -139,17 +59,11 @@
 
 <script>
 import { ref } from 'vue'
-import { useAuthStore } from '../stores/authStore'
-import GoogleLogin from './GoogleLogin.vue'
 
 export default {
   name: 'AppHeader',
-  components: {
-    GoogleLogin
-  },
   setup() {
     const isMenuOpen = ref(false)
-    const authStore = useAuthStore()
 
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value
@@ -159,28 +73,10 @@ export default {
       isMenuOpen.value = false
     }
 
-    const getInitials = (name) => {
-      if (!name) return 'U'
-      return name
-        .split(' ')
-        .map(word => word.charAt(0))
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-    }
-
-    const logout = () => {
-      authStore.logout()
-      closeMenu()
-    }
-
     return {
       isMenuOpen,
-      authStore,
       toggleMenu,
-      closeMenu,
-      getInitials,
-      logout
+      closeMenu
     }
   }
 }

@@ -124,7 +124,7 @@ export default {
         summary: 'Visitamos tu espacio para entender tus necesidades',
         duration: '1-2 días',
         details: [
-          'Visita gratuita al lugar del proyecto',
+          'Visita al lugar del proyecto - costo de 25.000 COP',
           'Medición precisa del espacio',
           'Análisis de necesidades y preferencias',
           'Evaluación de factibilidad',

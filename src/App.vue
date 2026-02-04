@@ -6,33 +6,30 @@
     </main>
     <AppFooter />
     
+    <!-- Botón flotante de WhatsApp -->
+    <FloatingWhatsAppButton />
+
     <!-- Panel de debug (solo en desarrollo) -->
   </div>
+
+
 </template>
 
 <script>
-import { onMounted } from 'vue'
-import { useAuthStore } from './stores/authStore'
+
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
+import FloatingWhatsAppButton from './components/FloatingWhatsAppButton.vue'
 
 export default {
   name: 'App',
   components: {
     AppHeader,
-    AppFooter
+    AppFooter,
+    FloatingWhatsAppButton
   },
   setup() {
-    const authStore = useAuthStore()
 
-    onMounted(() => {
-      // Inicializar autenticación
-      authStore.initAuth()
-    })
-
-    return {
-      authStore
-    }
   }
 }
 </script>
@@ -90,7 +87,7 @@ html {
   .md\\:flex {
     display: flex !important;
   }
-  
+
   .md\\:hidden {
     display: none !important;
   }

@@ -9,39 +9,43 @@
             <span style="color: #8D5524;">diseño <span style="color: black;">y</span> fabricación</span>
             de muebles a medida
           </h1>
-          
+
           <p class="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-            Creamos muebles únicos que se adaptan perfectamente a tu espacio y estilo de vida. 
+            Creamos muebles únicos que se adaptan perfectamente a tu espacio y estilo de vida.
             Desde la idea inicial hasta la instalación final.
           </p>
 
           <!-- Botones con mejor espaciado -->
-          <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center lg:justify-start mb-8 sm:mb-12">
-            <a href="#contacto" class="btn-primary text-center px-4 sm:px-6 lg:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 w-full sm:w-auto">
-              <span class="hidden sm:inline">Solicitar Presupuesto Gratuito</span>
-              <span class="sm:hidden">Presupuesto Gratuito</span>
-            </a>
-            <a href="tel:+573133589795" class="btn-secondary flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-semibold border-2 transition-all duration-300 hover:bg-gray-50 w-full sm:w-auto">
-              <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
-              </svg>
-              <span class="truncate">313 358-9795</span>
-            </a>
+          <div class="w-full max-w-xl mx-auto lg:mx-0 mb-8 sm:mb-12">
+            <div class="flex-container">
+              <a href="#contacto" class="button button-primary">
+                <span>Solicitar Presupuesto</span>
+              </a>
+              <a href="tel:+573133589795" class="button button-secondary">
+                <svg class="phone-icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+                <span>313-358-9795</span>
+              </a>
+            </div>
           </div>
 
+        
+          
+        
           <!-- Estadísticas simplificadas para móvil -->
           <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <div class="text-center lg:text-left">
-              <div class="text-2xl sm:text-3xl font-bold text-8D5524 mb-2">25+</div>
+              <div class="text-2xl sm:text-3xl font-bold mb-2" style="color: #8D5524;">15+</div>
               <div class="text-sm sm:text-base text-gray-600 font-medium">Años de experiencia</div>
             </div>
             <div class="text-center lg:text-left">
-              <div class="text-2xl sm:text-3xl font-bold text-8D5524 mb-2">300+</div>
+              <div class="text-2xl sm:text-3xl font-bold mb-2" style="color: #8D5524;">300+</div>
               <div class="text-sm sm:text-base text-gray-600 font-medium">Proyectos realizados</div>
             </div>
             <!-- Ocultar tercera estadística en móvil -->
             <div class="text-center lg:text-left hidden lg:block">
-              <div class="text-2xl sm:text-3xl font-bold text-8D5524 mb-2">24/7</div>
+              <div class="text-2xl sm:text-3xl font-bold mb-2" style="color: #8D5524;">24/7</div>
               <div class="text-sm sm:text-base text-gray-600 font-medium">Disponibilidad</div>
             </div>
           </div>
@@ -50,15 +54,97 @@
         <!-- Showcase 3D Completo -->
         <div class="relative order-first lg:order-last mb-8 lg:mb-0">
           <ThreeDShowcase />
-          
-          <!-- Elementos decorativos -->
-          <div class="absolute -top-2 -right-2 w-8 h-8 bg-8D5524 rounded-full opacity-60"></div>
-          <div class="absolute -bottom-2 -left-2 w-12 h-12 bg-6B3F1A rounded-full opacity-40"></div>
         </div>
       </div>
     </div>
   </section>
 </template>
+
+<style scoped>
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0 auto 2rem auto;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.button-primary {
+  background-color: #8D5524;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: auto;
+}
+
+.button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button-primary:active {
+  transform: translateY(0);
+}
+
+.button-secondary {
+  background-color: transparent;
+  color: #1a1a1a;
+  border: 2px solid #8D5524;
+  height: auto;
+}
+
+.button-secondary:hover {
+  background-color: rgba(141, 85, 36, 0.1);
+  transform: translateY(-2px);
+}
+
+.button-secondary:active {
+  transform: translateY(0);
+}
+
+.phone-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Tablet y superior */
+@media (min-width: 768px) {
+  .flex-container {
+    flex-direction: row;
+    gap: 1rem;
+    max-width: 36rem;
+  }
+
+  .button {
+    width: 50%;
+    padding: 1rem;
+    font-size: 1.125rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .flex-container {
+    margin: 0 0 2rem 0;
+  }
+}
+</style>
 
 <script>
 import ThreeDShowcase from './ThreeDShowcase.vue'

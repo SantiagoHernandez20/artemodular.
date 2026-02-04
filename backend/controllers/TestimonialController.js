@@ -1,66 +1,37 @@
-const { admin } = require('../config/firebase');
+// backend/controllers/TestimonialController.js
+const Testimonial = require('../models/TestimonialModel');
 
 class TestimonialController {
-  // Obtener el siguiente ID secuencial
-  static async getNextSequentialId() {
-    try {
-      const db = admin.database();
-      const testimonialsRef = db.ref('testimonials');
-      const snapshot = await testimonialsRef.once('value');
-      
-      if (!snapshot.exists()) {
-        return 1; // Primer testimonio
-      }
-      
-      let maxId = 0;
-      snapshot.forEach((childSnapshot) => {
-        const id = parseInt(childSnapshot.key);
-        if (!isNaN(id) && id > maxId) {
-          maxId = id;
-        }
-      });
-      
-      return maxId + 1;
-    } catch (error) {
-      console.error('❌ Error obteniendo siguiente ID:', error);
-      throw error;
-    }
-  }
-
+  // Obtener todos los testimonios
   static async getAllTestimonials(req, res) {
     try {
-      const db = admin.database();
-      const testimonialsRef = db.ref('testimonials');
-      const snapshot = await testimonialsRef.once('value');
+      const { approved_only } = req.query;
       
-      let testimonials = [];
-      if (snapshot.exists()) {
-        snapshot.forEach((childSnapshot) => {
-          testimonials.push({
-            id: childSnapshot.key,
-            ...childSnapshot.val()
-          });
-        });
-        
-        // Ordenar por ID (secuencial)
-        testimonials.sort((a, b) => parseInt(a.id) - parseInt(b.id));
-      }
+      const filterApproved = approved_only === 'true';
+      const testimonials = await Testimonial.findAll(filterApproved);
       
-      res.json(testimonials);
+      console.log('📊 Testimonios encontrados:', testimonials.length);
+      console.log('📋 Testimonios:', JSON.stringify(testimonials, null, 2));
+
+      res.json({
+        success: true,
+        data: testimonials
+      });
     } catch (error) {
       console.error('❌ Error obteniendo testimonios:', error);
-      res.status(500).json({ 
+      console.error('❌ Stack:', error.stack);
+      res.status(500).json({
         success: false,
-        message: 'Error interno del servidor' 
+        message: 'Error interno del servidor'
       });
     }
   }
 
+  // Crear nuevo testimonio
   static async createTestimonial(req, res) {
     try {
       const { name, role, service, content, rating } = req.body;
 
-      // Validaciones básicas
       if (!name || !role || !service || !content || !rating) {
         return res.status(400).json({
           success: false,
@@ -82,64 +53,50 @@ class TestimonialController {
         });
       }
 
-      // Obtener siguiente ID secuencial
-      const nextId = await TestimonialController.getNextSequentialId();
-      console.log('🔢 Siguiente ID secuencial:', nextId);
-
-      // Crear objeto del testimonio
       const testimonialData = {
         name,
         role,
         service,
         content,
-        rating,
-        avatar: TestimonialController.generateAvatar(name),
-        is_approved: false, // Por defecto pendiente
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        rating: parseInt(rating)
       };
 
-      // Guardar en Firebase usando Admin SDK con ID secuencial
-      const db = admin.database();
-      const testimonialsRef = db.ref('testimonials');
-      const newTestimonialRef = testimonialsRef.child(nextId.toString());
-      await newTestimonialRef.set(testimonialData);
-      
-      console.log('✅ Testimonio guardado en Firebase con ID secuencial:', nextId);
+      const data = await Testimonial.create(testimonialData);
 
-      // Retornar respuesta exitosa
+      console.log('✅ Testimonio guardado en Turso:', data.id);
+
       res.status(201).json({
         success: true,
         message: 'Testimonio enviado exitosamente. Será revisado antes de ser publicado.',
-        data: {
-          id: nextId.toString(),
-          ...testimonialData
-        }
+        data
       });
     } catch (error) {
       console.error('❌ Error creando testimonio:', error);
-      res.status(500).json({ 
+      res.status(500).json({
         success: false,
-        message: 'Error interno del servidor' 
+        message: 'Error interno del servidor'
       });
     }
   }
 
-  // Métodos para administración
+  // Aprobar testimonio (admin)
   static async approveTestimonial(req, res) {
     try {
       const { id } = req.params;
-      const db = admin.database();
-      const testimonialRef = db.ref(`testimonials/${id}`);
-      
-      await testimonialRef.update({
-        is_approved: true,
-        updated_at: new Date().toISOString()
-      });
+
+      const data = await Testimonial.approve(id);
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
 
       res.json({
         success: true,
-        message: 'Testimonio aprobado exitosamente'
+        message: 'Testimonio aprobado exitosamente',
+        data
       });
     } catch (error) {
       console.error('❌ Error al aprobar testimonio:', error);
@@ -150,22 +107,25 @@ class TestimonialController {
     }
   }
 
+  // Rechazar testimonio (admin)
   static async rejectTestimonial(req, res) {
     try {
       const { id } = req.params;
       const { reason } = req.body;
-      const db = admin.database();
-      const testimonialRef = db.ref(`testimonials/${id}`);
-      
-      await testimonialRef.update({
-        is_approved: false,
-        rejection_reason: reason || '',
-        updated_at: new Date().toISOString()
-      });
+
+      const data = await Testimonial.reject(id, reason);
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
 
       res.json({
         success: true,
-        message: 'Testimonio rechazado exitosamente'
+        message: 'Testimonio rechazado exitosamente',
+        data
       });
     } catch (error) {
       console.error('❌ Error al rechazar testimonio:', error);
@@ -176,13 +136,19 @@ class TestimonialController {
     }
   }
 
+  // Eliminar testimonio (admin)
   static async deleteTestimonial(req, res) {
     try {
       const { id } = req.params;
-      const db = admin.database();
-      const testimonialRef = db.ref(`testimonials/${id}`);
-      
-      await testimonialRef.remove();
+
+      const deleted = await Testimonial.delete(id);
+
+      if (!deleted) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
 
       res.json({
         success: true,
@@ -197,41 +163,99 @@ class TestimonialController {
     }
   }
 
-  // Método para obtener estadísticas con IDs secuenciales
+  // Obtener testimonio por ID
+  static async getTestimonialsID(req, res) {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).json({
+          success: false,
+          message: 'El parámetro "id" es requerido'
+        });
+      }
+
+      const data = await Testimonial.findById(id);
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
+
+      res.json({
+        success: true,
+        data
+      });
+    } catch (error) {
+      console.error('❌ Error obteniendo testimonio:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor'
+      });
+    }
+  }
+
+  // Obtener estadísticas de testimonios
   static async getTestimonialsStats(req, res) {
     try {
-      const allTestimonials = await TestimonialController.getAllTestimonials(req, res);
-      
-      const stats = {
-        total: allTestimonials.length,
-        pending: allTestimonials.filter(t => !t.is_approved).length,
-        approved: allTestimonials.filter(t => t.is_approved).length,
-        rejected: 0, // Tu backend no tiene estado "rejected" separado
-        nextId: await TestimonialController.getNextSequentialId()
-      };
-      
+      const stats = await Testimonial.getStats();
+
       res.json({
         success: true,
         data: stats
       });
     } catch (error) {
-      console.error('❌ Error al obtener estadísticas:', error);
+      console.error('❌ Error obteniendo estadísticas:', error);
       res.status(500).json({
         success: false,
-        message: 'Error al obtener estadísticas'
+        message: 'Error interno del servidor'
       });
     }
   }
 
-  static generateAvatar(name) {
-    const words = name.split(' ');
-    let initials = '';
-    
-    words.slice(0, 2).forEach(word => {
-      initials += word.charAt(0).toUpperCase();
-    });
-    
-    return initials;
+  // Actualizar testimonio (admin)
+  static async updateTestimonial(req, res) {
+    try {
+      const { id } = req.params;
+      const { name, role, service, content, rating, status, is_approved } = req.body;
+
+      const updateData = {};
+      
+      if (name) updateData.name = name;
+      if (role) updateData.role = role;
+      if (service) updateData.service = service;
+      if (content) updateData.content = content;
+      if (rating) updateData.rating = parseInt(rating);
+      // Priorizar status si viene, sino usar is_approved para compatibilidad
+      if (status !== undefined) {
+        updateData.status = status;
+      } else if (is_approved !== undefined) {
+        updateData.is_approved = is_approved;
+      }
+
+      const data = await Testimonial.update(id, updateData);
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Testimonio actualizado exitosamente',
+        data
+      });
+    } catch (error) {
+      console.error('❌ Error actualizando testimonio:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor'
+      });
+    }
   }
 }
 

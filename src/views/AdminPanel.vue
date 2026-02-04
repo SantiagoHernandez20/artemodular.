@@ -8,15 +8,15 @@
             <h1 class="text-3xl font-bold text-gray-900">Panel de Administración</h1>
             <p class="text-gray-600 mt-2">Gestiona testimonios y contenido del sitio</p>
           </div>
-          
-          <!-- Información del usuario -->
+
+          <!-- Información del administrador -->
           <div class="flex items-center space-x-4">
             <div class="text-right">
-              <div class="font-medium text-gray-900">{{ authStore.user?.displayName || 'Administrador' }}</div>
-              <div class="text-sm text-gray-500">{{ authStore.user?.email }}</div>
+              <div class="font-medium text-gray-900">Administrador</div>
+              <div class="text-sm text-gray-500">Panel de Control</div>
             </div>
             <div class="w-10 h-10 bg-8D5524 rounded-full flex items-center justify-center text-white font-semibold">
-              {{ getInitials(authStore.user?.displayName || 'A') }}
+              AD
             </div>
           </div>
         </div>
@@ -31,7 +31,9 @@
           <div class="flex items-center">
             <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
               </svg>
             </div>
             <div class="ml-4">
@@ -45,7 +47,8 @@
           <div class="flex items-center">
             <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
             <div class="ml-4">
@@ -80,26 +83,25 @@
         <div class="p-6">
           <!-- Filtros -->
           <div class="flex flex-wrap gap-4 mb-6">
-            <button 
-              @click="filterStatus = 'all'"
+            <button @click="filterStatus = 'all'"
               :class="filterStatus === 'all' ? 'bg-8D5524 text-white' : 'bg-gray-200 text-gray-700'"
-              class="px-4 py-2 rounded-lg font-medium transition-colors"
-            >
+              class="px-4 py-2 rounded-lg font-medium transition-colors">
               Todos ({{ allTestimonials }})
             </button>
-            <button 
-              @click="filterStatus = 'pending'"
-              :class="filterStatus === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'"
-              class="px-4 py-2 rounded-lg font-medium transition-colors"
-            >
+            <button @click="filterStatus = 'pending'"
+              :class="filterStatus === 'pending' ? 'bg-8D5524 text-white' : 'bg-gray-200 text-gray-700'"
+              class="px-4 py-2 rounded-lg font-medium transition-colors">
               Pendientes ({{ pendingTestimonials }})
             </button>
-            <button 
-              @click="filterStatus = 'approved'"
-              :class="filterStatus === 'approved' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'"
-              class="px-4 py-2 rounded-lg font-medium transition-colors"
-            >
+            <button @click="filterStatus = 'approved'"
+              :class="filterStatus === 'approved' ? 'bg-8D5524 text-white' : 'bg-gray-200 text-gray-700'"
+              class="px-4 py-2 rounded-lg font-medium transition-colors">
               Aprobados ({{ approvedTestimonials }})
+            </button>
+            <button @click="filterStatus = 'rejected'"
+              :class="filterStatus === 'rejected' ? 'bg-8D5524 text-white' : 'bg-gray-200 text-gray-700'"
+              class="px-4 py-2 rounded-lg font-medium transition-colors">
+              Rechazados ({{ rejectedTestimonials }})
             </button>
           </div>
 
@@ -107,51 +109,93 @@
           <div class="space-y-4">
             <div v-if="filteredTestimonials.length === 0" class="text-center py-8">
               <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
               </svg>
               <h3 class="mt-2 text-sm font-medium text-gray-900">No hay testimonios</h3>
               <p class="mt-1 text-sm text-gray-500">No se encontraron testimonios con el filtro seleccionado.</p>
             </div>
 
-            <div 
-              v-for="testimonial in filteredTestimonials" 
-              :key="testimonial.id"
-              class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-            >
-              <div class="flex items-start justify-between">
+            <div v-for="testimonial in filteredTestimonials" :key="testimonial.id"
+              class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div class="flex-1">
                   <div class="flex items-center space-x-3 mb-2">
                     <h4 class="font-semibold text-gray-900">{{ testimonial.name }}</h4>
-                    <span 
-                      :class="getStatusClass(testimonial.status)"
-                      class="px-2 py-1 rounded-full text-xs font-medium"
-                    >
-                      {{ getStatusText(testimonial.status) }}
-                    </span>
+                  
+
                   </div>
                   <p class="text-gray-600 mb-2">{{ testimonial.message }}</p>
-                  <div class="flex items-center space-x-4 text-sm text-gray-500">
-                    <span>{{ testimonial.email }}</span>
-                    <span>{{ formatDate(testimonial.createdAt) }}</span>
+                  
+                  <!-- Mostrar razón de rechazo si está rechazado -->
+                  <div v-if="testimonial.status === 'rejected' && testimonial.rejection_reason" 
+                    class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div class="flex items-start">
+                      <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <div>
+                        <p class="text-sm font-semibold text-red-800 mb-1">Razón del rechazo:</p>
+                        <p class="text-sm text-red-700">{{ testimonial.rejection_reason }}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                
-                <div v-if="testimonial.status === 'pending'" class="flex space-x-2 ml-4">
-                  <button 
-                    @click="approveTestimonial(testimonial.id)"
-                    class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
-                  >
+
+                <div v-if="testimonial.status === 'pending'" class="flex flex-col sm:flex-row gap-2">
+                  <button @click="approveTestimonial(testimonial.id)"
+                    class="bg-green-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors w-full sm:w-auto">
                     Aprobar
                   </button>
-                  <button 
-                    @click="rejectTestimonial(testimonial.id)"
-                    class="bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
-                  >
+                  <button @click="openRejectModal(testimonial.id)"
+                    class="px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors w-full sm:w-auto"
+                    id="btn_reject">
                     Rechazar
                   </button>
                 </div>
+                
+                <!-- Badge de estado para aprobados y rechazados -->
+                <div v-else class="flex items-center">
+                  <span :class="['px-3 py-1 rounded-full text-sm font-medium', 
+                    testimonial.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                    {{ getStatusText(testimonial.status) }}
+                  </span>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de rechazo -->
+    <div v-if="showRejectModal" class="modal-overlay" @click="closeRejectModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-body">
+          <h3 class="modal-title">Rechazar Testimonio</h3>
+          <p class="modal-subtitle">¿Estás seguro de que quieres rechazar este testimonio?</p>
+          
+          <div class="modal-form-group">
+            <label for="rejection-reason" class="modal-label">
+              Razón del rechazo (opcional):
+            </label>
+            <textarea 
+              id="rejection-reason"
+              v-model="rejectionReason"
+              placeholder="Escribe una razón para el rechazo..."
+              rows="4"
+              class="modal-textarea"
+            ></textarea>
+          </div>
+          
+          <div class="modal-actions">
+            <button @click="closeRejectModal" class="btn-cancel">
+              Cancelar
+            </button>
+            <button @click="confirmReject" class="btn-reject-confirm">
+              Rechazar
+            </button>
           </div>
         </div>
       </div>
@@ -160,70 +204,72 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
-import { useAuthStore } from '../stores/authStore'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import config from '../config/index.js'
 
 export default {
   name: 'AdminPanel',
   setup() {
-    const authStore = useAuthStore()
     const filterStatus = ref('all')
+    const testimonials = ref([])
     
-    // Datos de ejemplo - en producción vendrían de una API
-    const testimonials = ref([
-      {
-        id: 1,
-        name: 'María González',
-        email: 'maria@email.com',
-        message: 'Excelente trabajo, muy profesional y puntual. Recomiendo totalmente sus servicios.',
-        status: 'pending',
-        createdAt: new Date('2024-01-15')
-      },
-      {
-        id: 2,
-        name: 'Carlos Rodríguez',
-        email: 'carlos@email.com',
-        message: 'La calidad del trabajo superó mis expectativas. Definitivamente volveré a contratarlos.',
-        status: 'approved',
-        createdAt: new Date('2024-01-14')
-      },
-      {
-        id: 3,
-        name: 'Ana Martínez',
-        email: 'ana@email.com',
-        message: 'Muy contenta con el resultado final. El equipo fue muy atento y profesional.',
-        status: 'approved',
-        createdAt: new Date('2024-01-13')
-      },
-      {
-        id: 4,
-        name: 'Luis Pérez',
-        email: 'luis@email.com',
-        message: 'Trabajo de mala calidad, no cumplieron con lo acordado.',
-        status: 'rejected',
-        createdAt: new Date('2024-01-12')
-      }
-    ])
-    
-    const getInitials = (name) => {
-      if (!name) return 'A'
-      return name
-        .split(' ')
-        .map(word => word.charAt(0))
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
+    // Modal de rechazo
+    const showRejectModal = ref(false)
+    const selectedTestimonialId = ref(null)
+    const rejectionReason = ref('')
+
+    // Función para mapear testimonios del backend al formato de UI
+    const mapTestimonials = (data) => {
+      return data.map(t => {
+        // El backend ahora devuelve status directamente ('pending', 'approved', 'rejected')
+        const status = t.status || 'pending'
+        
+        return {
+          id: t.id,
+          name: t.name ?? '',
+          message: t.content ?? '',
+          status,
+          rejection_reason: t.rejection_reason ?? null,
+          createdAt: t.created_at ? new Date(t.created_at) : null,
+          avatar: t.avatar ?? '',
+          rating: t.rating ?? null,
+          role: t.role ?? '',
+          service: t.service ?? '',
+          updatedAt: t.updated_at ? new Date(t.updated_at) : null
+        }
+      })
     }
+
+    onMounted(() => {
+      // Configurar el EventSource con el endpoint SSE
+      const sseUrl = config.utils.getBackendUrl('api/testimonials/stream')
+      const eventSource = new EventSource(sseUrl)
+
+      eventSource.onmessage = (event) => {
+        // Evitar el mensaje inicial de conexión
+        if(event.data.trim() === 'Conexión establecida') return
+
+        const data = JSON.parse(event.data)
+        testimonials.value = mapTestimonials(data)
+      }
+
+      eventSource.onerror = (err) => {
+        console.error('Error en SSE:', err)
+        eventSource.close()
+      }
+
+      // Opcional: limpiar la conexión al desmontar
+      onUnmounted(() => {
+        eventSource.close()
+      })
+    })
 
     const allTestimonials = computed(() => testimonials.value.length)
     const pendingTestimonials = computed(() => testimonials.value.filter(t => t.status === 'pending').length)
     const approvedTestimonials = computed(() => testimonials.value.filter(t => t.status === 'approved').length)
     const rejectedTestimonials = computed(() => testimonials.value.filter(t => t.status === 'rejected').length)
-
     const filteredTestimonials = computed(() => {
-      if (filterStatus.value === 'all') {
-        return testimonials.value
-      }
+      if (filterStatus.value === 'all') return testimonials.value
       return testimonials.value.filter(t => t.status === filterStatus.value)
     })
 
@@ -261,22 +307,76 @@ export default {
       }).format(date)
     }
 
-    const approveTestimonial = (id) => {
-      const testimonial = testimonials.value.find(t => t.id === id)
-      if (testimonial) {
-        testimonial.status = 'approved'
+    const approveTestimonial = async (id) => {
+      try {
+        const apiUrl = config.utils.getBackendUrl(`/api/testimonials/${id}/approve`)
+        const response = await fetch(apiUrl, { method: 'PUT' })
+
+        if (response.ok) {
+          console.log('✅ Testimonio aprobado')
+          // Los datos se actualizarán automáticamente vía SSE
+        } else {
+          const errorData = await response.json()
+          console.error('❌ Error al aprobar testimonio:', errorData.message)
+        }
+      } catch (error) {
+        console.error('❌ Error al aprobar testimonio:', error)
       }
     }
 
-    const rejectTestimonial = (id) => {
-      const testimonial = testimonials.value.find(t => t.id === id)
-      if (testimonial) {
-        testimonial.status = 'rejected'
+    const openRejectModal = (id) => {
+      selectedTestimonialId.value = id
+      rejectionReason.value = ''
+      showRejectModal.value = true
+    }
+
+    const closeRejectModal = () => {
+      showRejectModal.value = false
+      selectedTestimonialId.value = null
+      rejectionReason.value = ''
+    }
+
+    const confirmReject = async () => {
+      if (!selectedTestimonialId.value) return
+      
+      try {
+        const apiUrl = config.utils.getBackendUrl(`api/testimonials/${selectedTestimonialId.value}/reject`)
+        
+        // Agregamos los headers correctos y aseguramos el formato del body
+        const response = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            reason: rejectionReason.value || 'Testimonio rechazado por el administrador'
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Error al rechazar el testimonio');
+        }
+
+        const data = await response.json();
+        console.log('✅ Testimonio rechazado exitosamente:', data);
+        
+        // Actualizar el estado del testimonio en la UI
+        const testimonialIndex = testimonials.value.findIndex(t => t.id === selectedTestimonialId.value);
+        if (testimonialIndex !== -1) {
+          testimonials.value[testimonialIndex].status = 'rejected';
+          testimonials.value[testimonialIndex].rejection_reason = rejectionReason.value || 'Testimonio rechazado por el administrador';
+        }
+
+        closeRejectModal()
+      } catch (error) {
+        console.error('❌ Error al rechazar testimonio:', error);
+        alert('Error al rechazar el testimonio: ' + error.message);
       }
     }
 
     return {
-      authStore,
       filterStatus,
       testimonials,
       allTestimonials,
@@ -284,12 +384,15 @@ export default {
       approvedTestimonials,
       rejectedTestimonials,
       filteredTestimonials,
-      getInitials,
       getStatusClass,
       getStatusText,
       formatDate,
       approveTestimonial,
-      rejectTestimonial
+      openRejectModal,
+      closeRejectModal,
+      confirmReject,
+      showRejectModal,
+      rejectionReason
     }
   }
 }
@@ -304,5 +407,118 @@ export default {
 
 .bg-8D5524 {
   background-color: #8D5524;
+}
+
+#btn_reject {
+  background-color: #F52727;
+}
+
+#btn_reject {
+  color: beige;
+}
+
+/* Estilos del modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.modal-subtitle {
+  color: #4B5563;
+  margin-bottom: 1rem;
+}
+
+.modal-form-group {
+  margin-bottom: 1rem;
+}
+
+.modal-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.modal-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.modal-textarea:focus {
+  outline: none;
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn-cancel {
+  padding: 0.5rem 1rem;
+  color: #374151;
+  background-color: #F3F4F6;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #E5E7EB;
+}
+
+.btn-reject-confirm {
+  padding: 0.5rem 1rem;
+  color: white;
+  background-color: #DC2626;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-reject-confirm:hover {
+  background-color: #B91C1C;
 }
 </style>

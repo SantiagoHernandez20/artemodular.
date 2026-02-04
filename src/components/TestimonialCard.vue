@@ -1,12 +1,11 @@
 <template>
   <div class="bg-gray-50 p-8 mx-4">
     <div class="max-w-3xl mx-auto text-center">
-      <!-- Comillas decorativas -->
-      <div style="font-size: 4rem; color: #8D5524; margin-bottom: 1.5rem; opacity: 0.2;">"</div>
+     
       
       <!-- Contenido del testimonial -->
       <blockquote class="text-xl text-gray-700 leading-relaxed mb-8">
-        {{ testimonial.content }}
+        "{{ testimonial.content }}"
       </blockquote>
       
       <!-- Estrellas de rating -->

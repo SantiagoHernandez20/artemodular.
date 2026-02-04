@@ -1,36 +1,38 @@
 // 🚀 ArteModular Backend - Express + Nodemailer
 // Servidor para manejar envío de emails de contacto
-const { authenticateUser, optionalAuth } = require('./middleware/auth');
-
-const express = require('express')
-const cors = require('cors')
-const helmet = require('helmet')
-const rateLimit = require('express-rate-limit')
-const { body, validationResult } = require('express-validator')
+const dotenv = require('dotenv')
 const path = require('path')
 
-// Cargar variables de entorno desde la raíz del proyecto
-require('dotenv').config({
+// Cargar variables de entorno ANTES de importar otros módulos
+dotenv.config({
   path: path.join(__dirname, '..', '.env.local')
 })
 
 // Fallback a .env si .env.local no existe
 if (!process.env.EMAIL_USER) {
-  require('dotenv').config({
+  dotenv.config({
     path: path.join(__dirname, '..', '.env')
   })
 }
 
-const emailService = require('./services/emailService')
-const testimonialRoutes = require('./routes/TestimonialRoutes')
+// Importar middleware de IP
+const { getMyIP } = require('./middleware/ipconfig');
+const express = require('express')
+const cors = require('cors')
+const helmet = require('helmet')
+const rateLimit = require('express-rate-limit')
+const { z } = require('zod')
+const { sendContactEmail, testEmailConfiguration } = require('./services/emailService');
+const testimonialRoutes = require('./routes/TestimonialRoutes');
+
 const app = express()
 const PORT = process.env.PORT || 3001
 
 // 🛡️ Headers de seguridad COOP/COEP ANTES de helmet
 app.use((req, res, next) => {
-  // Headers específicos para Google OAuth y comunicación con frontend
+  // Headers de seguridad para comunicación con frontend
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-  res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none'); // Cambiado a unsafe-none para evitar problemas
+  res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
   
   // Headers adicionales para mejor compatibilidad
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
@@ -58,9 +60,10 @@ app.use(cors({
       'http://localhost:9001',
       'http://localhost:9000',
       'http://localhost:9002',
-      'https://accounts.google.com',
-      'https://oauth2.googleapis.com',
-      'https://www.googleapis.com'
+      'artemodular-git-dev-santiagohernandez20s-projects.vercel.app',
+      'https://pre-deploy.artemodular.site',
+      'http://localhost:4174'
+      
     ]
 
     // Verificar si el origen está permitido
@@ -105,41 +108,46 @@ const emailLimiter = rateLimit({
   legacyHeaders: false
 })
 
-// 📝 Validaciones para el formulario de contacto
-const contactValidation = [
-  body('name')
-    .notEmpty()
-    .withMessage('El nombre es requerido')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('El nombre debe tener entre 2 y 50 caracteres')
-    .trim()
-    .escape(),
+// 📝 Schema de validación con Zod para el formulario de contacto
+const contactSchema = z.object({
+  name: z.string()
+    .min(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+    .max(50, { message: 'El nombre no puede tener más de 50 caracteres' }),
+  
+  email: z.string()
+    .email({ message: 'Email inválido' }),
+  
+  phone: z.string()
+    .transform(val => val.trim().replace(/\s|-|\(|\)/g, '')) // Limpiar espacios, guiones, paréntesis
+    .pipe(z.string().regex(/^(\+57|57)?3[0-9]{9}$/, { 
+      message: 'Formato de teléfono inválido para Colombia. Use: 3195413243 o +573195413243' 
+    })),
+  
+  projectType: z.enum(['cocina', 'closet', 'muebles', 'oficina', 'obra', 'otro'], {
+    errorMap: () => ({ message: 'Tipo de proyecto inválido' })
+  }),
+  
+  message: z.string()
+    .min(10, { message: 'El mensaje debe tener al menos 10 caracteres' })
+    .max(1000, { message: 'El mensaje no puede tener más de 1000 caracteres' })
+});
 
-  body('email')
-    .isEmail()
-    .withMessage('Email inválido')
-    .normalizeEmail(),
-
-  body('phone')
-    .notEmpty()
-    .withMessage('El teléfono es requerido')
-    .isMobilePhone('es-CO')
-    .withMessage('Formato de teléfono inválido para Colombia'),
-
-  body('projectType')
-    .notEmpty()
-    .withMessage('El tipo de proyecto es requerido')
-    .isIn(['cocina', 'closet', 'muebles', 'oficina', 'obra', 'otro'])
-    .withMessage('Tipo de proyecto inválido'),
-
-  body('message')
-    .notEmpty()
-    .withMessage('El mensaje es requerido')
-    .isLength({ min: 10, max: 1000 })
-    .withMessage('El mensaje debe tener entre 10 y 1000 caracteres')
-    .trim()
-    .escape()
-]
+// Middleware de validación
+const contactValidation = async (req, res, next) => {
+  try {
+    await contactSchema.parseAsync(req.body);
+    next();
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: 'Datos de entrada inválidos',
+      errors: error.errors.map(err => ({
+        field: err.path.join('.'),
+        message: err.message
+      }))
+    });
+  }
+}
 
 // 🏠 Ruta de prueba
 app.get('/', (req, res) => {
@@ -157,8 +165,7 @@ app.get('/', (req, res) => {
         'http://localhost:9001',
         'http://localhost:9000',
         'http://localhost:9002',
-        'https://accounts.google.com',
-        'https://oauth2.googleapis.com'
+        'https://pre-deploy.artemodular.site'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
     },
@@ -171,12 +178,7 @@ app.get('/', (req, res) => {
       contact: 'POST /api/contact',
       health: 'GET /api/health',
       testEmail: 'GET /api/test-email',
-      testimonials: 'GET/POST /api/testimonials',
-      auth: {
-        status: 'GET /api/auth/status',
-        verify: 'POST /api/auth/verify',
-        me: 'GET /api/auth/me'
-      }
+      testimonials: 'GET/POST /api/testimonials'
     }
   })
 })
@@ -198,8 +200,7 @@ app.get('/api/health', (req, res) => {
         'http://localhost:9001',
         'http://localhost:9000',
         'http://localhost:9002',
-        'https://accounts.google.com',
-        'https://oauth2.googleapis.com'
+        'https://pre-deploy.artemodular.site'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       credentials: true
@@ -211,7 +212,7 @@ app.get('/api/health', (req, res) => {
       helmet: 'enabled'
     },
     backend: {
-      url: `https://artemodular.onrender.com`,
+      url: `https://artemodular-1.onrender.com`,
       endpoints: {
         contact: `/api/contact`,
         health: `/api/health`,
@@ -224,25 +225,16 @@ app.get('/api/health', (req, res) => {
 
 // 📧 Endpoint principal para envío de emails
 app.post('/api/contact', emailLimiter, contactValidation, async (req, res) => {
-  console.log('📧 BODY RECIBIDO:', req.body)
+  //console.log('📧 BODY RECIBIDO:', req.body)
   try {
-    // Verificar errores de validación
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Datos de entrada inválidos',
-        errors: errors.array()
-      })
-    }
 
     const { name, email, phone, projectType, message } = req.body
 
     // Log para debugging (sin datos sensibles)
-    console.log(`📧 Nueva solicitud de contacto de: ${name} (${projectType})`)
+   // console.log(`📧 Nueva solicitud de contacto de: ${name} (${projectType})`)
 
     // Enviar email
-    const emailResult = await emailService.sendContactEmail({
+    const emailResult = await sendContactEmail({
       name,
       email,
       phone,
@@ -273,7 +265,7 @@ app.post('/api/contact', emailLimiter, contactValidation, async (req, res) => {
 // 🔧 Endpoint para probar configuración de email
 app.get('/api/test-email', async (req, res) => {
   try {
-    const testResult = await emailService.testEmailConfiguration()
+    const testResult = await testEmailConfiguration()
     res.json({
       success: true,
       message: 'Configuración de email válida',
@@ -291,63 +283,8 @@ app.get('/api/test-email', async (req, res) => {
 // 📝 Rutas de testimonials
 app.use('/api/testimonials', testimonialRoutes)
 
-// 🔐 RUTAS DE AUTENTICACIÓN
-
-// Verificar estado de autenticación
-app.get('/api/auth/status', optionalAuth, (req, res) => {
-  if (req.user) {
-    res.json({
-      success: true,
-      authenticated: true,
-      user: {
-        uid: req.user.uid,
-        email: req.user.email,
-        emailVerified: req.user.emailVerified,
-        name: req.user.name,
-        picture: req.user.picture,
-        provider: req.user.provider
-      }
-    });
-  } else {
-    res.json({
-      success: true,
-      authenticated: false,
-      message: 'Usuario no autenticado'
-    });
-  }
-});
-
-// Endpoint protegido para verificar token
-app.post('/api/auth/verify', authenticateUser, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Token válido',
-    user: {
-      uid: req.user.uid,
-      email: req.user.email,
-      emailVerified: req.user.emailVerified,
-      name: req.user.name,
-      picture: req.user.picture,
-      provider: req.user.provider
-    },
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Endpoint para obtener información del usuario actual
-app.get('/api/auth/me', authenticateUser, (req, res) => {
-  res.json({
-    success: true,
-    user: {
-      uid: req.user.uid,
-      email: req.user.email,
-      emailVerified: req.user.emailVerified,
-      name: req.user.name,
-      picture: req.user.picture,
-      provider: req.user.provider
-    }
-  });
-});
+// 🔍 Endpoint para ver tu IP actual (útil para configurar ipconfig.js)
+app.get('/api/auth/my-ip', getMyIP);
 
 // ❌ Manejo de rutas no encontradas
 app.use('*', (req, res) => {
@@ -361,9 +298,7 @@ app.use('*', (req, res) => {
       'GET /api/test-email',
       'GET /api/testimonials',
       'POST /api/testimonials',
-      'GET /api/auth/status',
-      'POST /api/auth/verify',
-      'GET /api/auth/me'
+      'GET /api/auth/my-ip'
     ]
   })
 })
@@ -389,7 +324,7 @@ app.listen(PORT, () => {
 💊 Health: http://localhost:${PORT}/api/health
 🔧 Test Email: http://localhost:${PORT}/api/test-email
 📝 Testimonials: http://localhost:${PORT}/api/testimonials
-🔐 Auth Status: http://localhost:${PORT}/api/auth/status
+🔍 My IP: http://localhost:${PORT}/api/auth/my-ip
 
 📝 Environment: ${process.env.NODE_ENV || 'development'}
 🔐 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:9001'}
@@ -404,7 +339,6 @@ app.listen(PORT, () => {
    - Frontend (dev): 9001
    - Frontend (alt): 9000, 9002
    - Frontend (prod): artemodular.site
-   - Google OAuth: habilitado
   `)
 })
 

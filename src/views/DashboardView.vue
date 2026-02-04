@@ -121,12 +121,10 @@
 </template>
 
 <script>
-import { useAuthStore } from '../stores/authStore'
 
 export default {
   name: 'DashboardView',
   setup() {
-    const authStore = useAuthStore()
     
     const getInitials = (name) => {
       if (!name) return 'U'

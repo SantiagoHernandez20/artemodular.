@@ -49,7 +49,7 @@
         v-for="testimonial in filteredTestimonials" 
         :key="testimonial.id"
         class="testimonial-card"
-        :class="{ 'pending': !testimonial.is_approved, 'approved': testimonial.is_approved }"
+        :class="{ 'pending': testimonial.status === 'pending', 'approved': testimonial.status === 'approved', 'rejected': testimonial.status === 'rejected' }"
       >
         <!-- Header del testimonio -->
         <div class="testimonial-header">
@@ -63,8 +63,8 @@
           
           <!-- Estado del testimonio -->
           <div class="testimonial-status">
-            <span :class="['status-badge', testimonial.is_approved ? 'approved' : 'pending']">
-              {{ testimonial.is_approved ? 'Aprobado' : 'Pendiente' }}
+            <span :class="['status-badge', testimonial.status || 'pending']">
+              {{ getStatusText(testimonial.status) }}
             </span>
           </div>
         </div>
@@ -94,7 +94,7 @@
         </div>
 
         <!-- Botones de acción -->
-        <div v-if="!testimonial.is_approved" class="action-buttons">
+        <div v-if="testimonial.status === 'pending'" class="action-buttons">
           <button 
             @click="approveTestimonial(testimonial.id)"
             :disabled="processing === testimonial.id"
@@ -123,7 +123,7 @@
         </div>
 
         <!-- Razón del rechazo -->
-        <div v-if="!testimonial.is_approved && testimonial.rejection_reason" class="rejection-reason">
+        <div v-if="testimonial.status === 'rejected' && testimonial.rejection_reason" class="rejection-reason">
           <strong>Razón del rechazo:</strong> {{ testimonial.rejection_reason }}
         </div>
       </div>
@@ -191,8 +191,9 @@ export default {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         
-        const allTestimonials = await response.json()
-        testimonials.value = allTestimonials
+        const result = await response.json()
+        // El backend devuelve { success: true, data: [...] }
+        testimonials.value = result.data || result || []
         await loadStats()
       } catch (error) {
         console.error('Error al cargar testimonios:', error)
@@ -214,8 +215,8 @@ export default {
           // Calcular estadísticas localmente si falla la API
           stats.value = {
             total: testimonials.value.length,
-            pending: testimonials.value.filter(t => !t.is_approved).length,
-            approved: testimonials.value.filter(t => t.is_approved).length
+            pending: testimonials.value.filter(t => t.status === 'pending').length,
+            approved: testimonials.value.filter(t => t.status === 'approved').length
           }
         }
       } catch (error) {
@@ -223,8 +224,8 @@ export default {
         // Calcular estadísticas localmente
         stats.value = {
           total: testimonials.value.length,
-          pending: testimonials.value.filter(t => !t.is_approved).length,
-          approved: testimonials.value.filter(t => t.is_approved).length
+          pending: testimonials.value.filter(t => t.status === 'pending').length,
+          approved: testimonials.value.filter(t => t.status === 'approved').length
         }
       }
     }
@@ -233,9 +234,9 @@ export default {
     const filteredTestimonials = computed(() => {
       switch (activeTab.value) {
         case 'pending':
-          return testimonials.value.filter(t => !t.is_approved)
+          return testimonials.value.filter(t => t.status === 'pending')
         case 'approved':
-          return testimonials.value.filter(t => t.is_approved)
+          return testimonials.value.filter(t => t.status === 'approved')
         default:
           return testimonials.value
       }
@@ -273,7 +274,7 @@ export default {
         // Actualizar estado local
         const testimonial = testimonials.value.find(t => t.id === testimonialId)
         if (testimonial) {
-          testimonial.is_approved = true
+          testimonial.status = 'approved'
           testimonial.updated_at = new Date().toISOString()
         }
         
@@ -323,7 +324,7 @@ export default {
         // Actualizar estado local
         const testimonial = testimonials.value.find(t => t.id === selectedTestimonial.value.id)
         if (testimonial) {
-          testimonial.is_approved = false
+          testimonial.status = 'rejected'
           testimonial.rejection_reason = rejectionReason.value
           testimonial.updated_at = new Date().toISOString()
         }
@@ -375,6 +376,19 @@ export default {
       })
     }
 
+    // Obtener texto del estado
+    const getStatusText = (status) => {
+      switch (status) {
+        case 'approved':
+          return 'Aprobado'
+        case 'rejected':
+          return 'Rechazado'
+        case 'pending':
+        default:
+          return 'Pendiente'
+      }
+    }
+
     onMounted(() => {
       loadTestimonials()
     })
@@ -395,7 +409,8 @@ export default {
       closeRejectModal,
       confirmReject,
       deleteTestimonial,
-      formatDate
+      formatDate,
+      getStatusText
     }
   }
 }

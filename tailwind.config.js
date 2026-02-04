@@ -12,7 +12,10 @@ module.exports = {
         'primary-light': '#A66B2E',
         beige: '#F5E9DA',
         'brown-soft': '#E6D4C1',
-        'brown-medium': '#B8956F'
+        'brown-medium': '#B8956F',
+        // Colores específicos para las clases personalizadas
+        '8D5524': '#8D5524',
+        '6B3F1A': '#6B3F1A'
       }
     },
   },

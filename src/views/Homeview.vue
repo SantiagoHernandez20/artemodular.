@@ -5,7 +5,7 @@
     <ProcessSection />
     <GallerySection />
     <TestimonialsSection ref="testimonialsSection" />
-    
+
     <!-- Formulario de testimonio -->
     <section class="bg-white section-padding">
       <div class="container-custom">
@@ -17,11 +17,11 @@
             Comparte tu experiencia y ayuda a otros a conocer la calidad de nuestro trabajo
           </p>
         </div>
-        
+
         <TestimonialForm @testimonial-created="handleTestimonialCreated" />
       </div>
     </section>
-    
+
     <ContactSection />
   </div>
 </template>
@@ -53,35 +53,7 @@ export default {
     const route = useRoute()
 
     const handleTestimonialCreated = () => {
-      console.log('Testimonio creado correctamente')
-    }
-
-    const scrollToSection = (sectionId) => {
-      //console.log('🔍 Intentando scroll a:', sectionId)
-      
-      // Método 1: Usar scrollIntoView directamente
-      const element = document.getElementById(sectionId)
-      if (element) {
-        //console.log('✅ Elemento encontrado, haciendo scroll...')
-        
-        // Scroll inmediato a la posición
-        const headerHeight = 80
-        const elementPosition = element.offsetTop - headerHeight
-        
-        // Forzar scroll inmediato
-        document.documentElement.scrollTop = elementPosition
-        document.body.scrollTop = elementPosition
-        
-        // Luego scroll suave
-        setTimeout(() => {
-          window.scrollTo({
-            top: elementPosition,
-            behavior: 'smooth'
-          })
-        }, 50)
-      } else {
-        //console.log('❌ Elemento no encontrado:', sectionId)
-      }
+      //console.log('Testimonio creado correctamente')
     }
 
     // Escuchar cambios en la ruta para hacer scroll automático
@@ -91,11 +63,8 @@ export default {
         nextTick(() => {
           scrollToSection(newScrollTo)
         })
-        
-        // Segundo intento después de un pequeño delay
-        setTimeout(() => {
-          scrollToSection(newScrollTo)
-        }, 100)
+
+
       }
     }, { immediate: true })
 
@@ -109,10 +78,99 @@ export default {
       }
     })
 
+    const scrollToSection = (sectionId) => {
+      const element = document.getElementById(sectionId)
+      if (!element) return
+
+      const header = document.querySelector('header')
+      const headerHeight = header ? header.offsetHeight : 80
+
+      // 🔥 Forzar visibilidad del header
+      if (header) {
+        header.classList.remove('header-hidden', 'hide', '-translate-y-full')
+        header.classList.add('header-visible', 'show', 'translate-y-0')
+        header.style.transform = 'translateY(0)'
+        header.style.opacity = '1'
+      }
+
+      // Calcular posición
+      const elementRect = element.getBoundingClientRect()
+      const currentScrollY = window.pageYOffset
+      const targetPosition = currentScrollY + elementRect.top - headerHeight - 20
+
+      // ✅ Animación suave personalizada
+      const startTime = performance.now()
+      const duration = 800
+      const distance = targetPosition - currentScrollY
+
+      const animateScroll = (currentTime) => {
+        const elapsed = currentTime - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        const ease = 1 - Math.pow(1 - progress, 3)
+        const currentPosition = currentScrollY + distance * ease
+
+        window.scrollTo(0, currentPosition)
+
+        // 🔥 Mantener header visible durante la animación
+        if (header) {
+          header.classList.remove('header-hidden', 'hide', '-translate-y-full')
+          header.classList.add('header-visible', 'show', 'translate-y-0')
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(animateScroll)
+        } else {
+          // 🔥 Asegurar visibilidad al finalizar
+          setTimeout(() => {
+            if (header) {
+              header.classList.remove('header-hidden', 'hide', '-translate-y-full')
+              header.classList.add('header-visible', 'show', 'translate-y-0')
+            }
+          }, 100)
+        }
+      }
+
+      requestAnimationFrame(animateScroll)
+    }
+
+    // Watch y onMounted igual que arriba
+    watch(() => route.meta.scrollTo, (newScrollTo) => {
+      if (newScrollTo) {
+        nextTick(() => {
+          setTimeout(() => scrollToSection(newScrollTo), 150)
+        })
+      }
+    }, { immediate: true })
+
+    onMounted(() => {
+      if (route.meta.scrollTo) {
+        nextTick(() => {
+          setTimeout(() => scrollToSection(route.meta.scrollTo), 200)
+        })
+      }
+    })
+
     return {
       testimonialsSection,
-      handleTestimonialCreated
+      handleTestimonialCreated,
+      scrollToSection
     }
   }
 }
 </script>
+
+<style scoped>
+/* Asegurar que el scroll funcione correctamente */
+.home-page {
+  scroll-behavior: auto;
+  /* Deshabilitar scroll-behavior del CSS global */
+}
+
+/* Asegurar que el header siempre sea visible */
+:global(header) {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+  background-color: white !important;
+}
+</style>

@@ -9,9 +9,29 @@
         "/images/cocinas/cocina1.jpg",
         "/images/cocinas/cocina2.jpg",
         "/images/cocinas/cocina3.jpg"
-       
       ],
-      "features": ["Isla central", "Acabados premium", "Iluminación LED", "Electrodomésticos empotrados"]
+      "features": [
+        "Isla central",
+        "Acabados premium",
+        "Iluminación LED",
+        "Electrodomésticos empotrados"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Mueble para cocina",
+      "description": "",
+      "fullDescription": "",
+      "images": [
+        "/images/cocinas/alacena_1.png",
+        "/images/cocinas/alacena_2.png"
+      ],
+      "features": [
+        "Acabados en madera natural",
+        "Encimeras de granito",
+        "Detalles artesanales",
+        "Almacenamiento optimizado"
+      ]
     }
   ],
   "closets": [
@@ -23,9 +43,14 @@
       "images": [
         "/images/closets/closet_1.jpg",
         "/images/closets/closet_6.jpg"
-   
       ],
-      "features": ["Sistema modular personalizable", "Iluminación LED automática", "Espejos de cuerpo completo", "Isla organizadora central", "Acabados premium"]
+      "features": [
+        "Sistema modular personalizable",
+        "Iluminación LED automática",
+        "Espejos de cuerpo completo",
+        "Isla organizadora central",
+        "Acabados premium"
+      ]
     },
     {
       "id": 6,
@@ -38,7 +63,13 @@
         "/images/closets/closet_4.jpg",
         "/images/closets/closet_5.jpg"
       ],
-      "features": ["Sistema soft-close", "Barras de acero inoxidable", "Divisores ajustables", "Ventilación integrada", "Organización inteligente"]
+      "features": [
+        "Sistema soft-close",
+        "Barras de acero inoxidable",
+        "Divisores ajustables",
+        "Ventilación integrada",
+        "Organización inteligente"
+      ]
     },
     {
       "id": 7,
@@ -49,9 +80,14 @@
         "/images/closets/closet_7.jpg",
         "/images/closets/closet_9.jpg"
       ],
-      "features": ["Sistema push-to-open", "Paneles veta natural", "Compartimentos especializados", "Zapatero deslizable", "Diseño sin tiradores"]
+      "features": [
+        "Sistema push-to-open",
+        "Paneles veta natural",
+        "Compartimentos especializados",
+        "Zapatero deslizable",
+        "Diseño sin tiradores"
+      ]
     }
-   
   ],
   "centros": [
     {
@@ -63,7 +99,12 @@
         "/images/centro_entretenimiento/centro_mueble_1.jpg",
         "/images/centro_entretenimiento/centro_mueble_2.jpg"
       ],
-      "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
+      "features": [
+        "Montaje flotante",
+        "Gestión de cables oculta",
+        "Compartimentos cerrados",
+        "Ventilación integrada"
+      ]
     },
     {
       "id": 4,
@@ -75,7 +116,13 @@
         "/images/centro_entretenimiento/centro_chimenea_2.jpg",
         "/images/centro_entretenimiento/centro_chimenea_3.jpg"
       ],
-      "features": ["Iluminación LED RGB", "Módulos ajustables", "Cajones soft-close", "Panel de cables trasero", "Acabado premium"]
+      "features": [
+        "Iluminación LED RGB",
+        "Módulos ajustables",
+        "Cajones soft-close",
+        "Panel de cables trasero",
+        "Acabado premium"
+      ]
     },
     {
       "id": 5,
@@ -87,9 +134,13 @@
         "/images/centro_entretenimiento/valencia_2.jpg",
         "/images/centro_entretenimiento/valencia_3.png",
         "/images/centro_entretenimiento/valencia_4.png"
-        
       ],
-      "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
+      "features": [
+        "Montaje flotante",
+        "Gestión de cables oculta",
+        "Compartimentos cerrados",
+        "Ventilación integrada"
+      ]
     }
   ],
   "decorativos": [
@@ -102,9 +153,13 @@
         "/images/decorativos/luna1.jpg",
         "/images/decorativos/luna2.jpg",
         "/images/decorativos/luna3.jpg"
-      
       ],
-      "features": ["Luz LED", "Textura 3D", "Diseño único", "Regulable"]
+      "features": [
+        "Luz LED",
+        "Textura 3D",
+        "Diseño único",
+        "Regulable"
+      ]
     }
   ],
   "bibliotecas": [
@@ -116,10 +171,32 @@
       "images": [
         "/images/bibliotecas/valencia_1.png",
         "/images/bibliotecas/valencia_2.png"
-
       ],
-      "features": ["Montaje flotante", "Gestión de cables oculta", "Compartimentos cerrados", "Ventilación integrada"]
+      "features": [
+        "Montaje flotante",
+        "Gestión de cables oculta",
+        "Compartimentos cerrados",
+        "Ventilación integrada"
+      ]
     }
-
+  ],
+  "inmobiliario": [
+    {
+      "id": 8,
+      "title": "Barra y mueble para bares y restaurantes",
+      "description": "Diseño fijo en madera natural con iluminación integrada y acabado de alto rendimiento.",
+      "fullDescription": "Barra de atención elaborada en madera de roble con acabado semimate, diseñada para integrarse armónicamente en espacios comerciales o gastronómicos. Incluye mueble superior empotrado con compartimentos funcionales, sistema de iluminación LED cálida y gestión oculta de cableado para mantener un entorno limpio y profesional. Ideal para bares, cafés o restaurantes que buscan un equilibrio entre estética moderna y durabilidad estructural.",
+      "images": [
+        "/images/inmobiliario/bar_1.png",
+        "/images/inmobiliario/bar_2.png"
+      ],
+      "features": [
+        "Diseño empotrado con estructura reforzada",
+        "Iluminación LED cálida integrada",
+        "Gestión de cables oculta",
+        "Acabado profesional en madera natural",
+        "Optimización del espacio de servicio"
+      ]
+    }
   ]
 }

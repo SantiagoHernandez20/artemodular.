@@ -1,5 +1,5 @@
 <template>
-  <section id="contacto" style="background: linear-gradient(to bottom right, #8D5524, #6B3F1A);"
+  <section id="contacto" style="background: linear-gradient(to bottom right, #A0653D, #8D5524);"
     class="section-padding text-white">
     <div class="container-custom">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -22,7 +22,7 @@
             <ContactInfo icon="LocationIcon" title="Visítanos" content="Mosquera, Cundinamarca"
               subtitle="Servicio a domicilio" href="https://www.google.com.co/search?kgmid=/g/11xvrv4x5v&hl=es-CO&q=ArteModular&shndl=30&shem=lcuae,lsptbl1&source=sh/x/loc/osrp/m1/2&kgs=b2aa79673d6769ba"/>
 
-            <ContactInfo icon="WhatsAppIcon" title="WhatsApp" content="313 358-9795"
+            <ContactInfo icon="WhatsAppIcon" title="WhatsApp" content="313-358-9795"
               subtitle="Respuesta inmediata" href="https://wa.me/573133589795" />
           </div>
 
@@ -48,12 +48,12 @@
 
         <!-- Formulario de contacto -->
         <div class="backdrop-blur-sm rounded-2xl p-8"
-          style="background: rgba(245, 233, 218, 0.95); backdrop-filter: blur(10px);">
+          style="background: rgba(245, 233, 218, 0.98); backdrop-filter: blur(10px);">
           
           <!-- Icono decorativo que contrasta -->
           <div class="text-center mb-6">
             <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" 
-                 style="background: linear-gradient(135deg, #8D5524, #6B3F1A);">
+                 style="background: linear-gradient(135deg, #8D5524, #A0653D);">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                       d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -114,7 +114,7 @@
             </button>
 
             <p class="text-sm text-center" style="color: #8D5524;">
-              Te contactaremos en menos de 24 horas para programar una visita gratuita.
+              Te contactaremos en menos de 24 horas para programar una visita.
             </p>
           </form>
         </div>
@@ -146,103 +146,81 @@ export default {
     })
 
     const submitForm = async () => {
-      isSubmitting.value = true
+      isSubmitting.value = true;
 
       try {
         // Validar campos requeridos
         if (!form.name || !form.email || !form.phone || !form.projectType || !form.message) {
-          alert('Por favor completa todos los campos.')
-          return
+          alert('Por favor completa todos los campos.');
+          return;
         }
-
-        // Debug: Mostrar configuración centralizada
-        config.utils.debug()
 
         // URL del backend desde la configuración centralizada
-        const backendURL = config.utils.getBackendUrl(config.backend.endpoints.contact)
-        console.log('🚀 Backend URL configurada:', backendURL)
+        const backendURL = config.utils.getBackendUrl(config.backend.endpoints.contact);
 
         // Crear AbortController para timeout
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), config.backend.request.timeout)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos de timeout
 
+        const response = await fetch(backendURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...config.backend.request.headers
+          },
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            projectType: form.projectType,
+            message: form.message
+          }),
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        // Primero verifica si la respuesta es ok antes de intentar parsear el JSON
+        if (!response.ok) {
+          throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
+        }
+
+        // Intenta parsear la respuesta JSON dentro de un try/catch
+        let result;
         try {
-          // Enviar al backend usando la configuración centralizada
-          const response = await fetch(backendURL, {
-            method: 'POST',
-            headers: config.backend.request.headers,
-            body: JSON.stringify({
-              name: form.name,
-              email: form.email,
-              phone: form.phone,
-              projectType: form.projectType,
-              message: form.message
-            }),
-            signal: controller.signal
-          })
-
-          clearTimeout(timeoutId)
-
-          console.log('📡 Respuesta del servidor:', {
-            status: response.status,
-            statusText: response.statusText,
-            headers: Object.fromEntries(response.headers.entries())
-          })
-
-          const result = await response.json()
-          console.log('📨 Resultado del servidor:', result)
-          
-          if (!response.ok) {
-            if (result.errors) {
-              alert(result.errors.map(e => e.msg).join('\n'))
-            }
-            throw new Error(result.message || 'Error al enviar el formulario')
-          }
-
-          console.log('✅ Email enviado exitosamente:', result)
-
-          // Limpiar formulario
-          Object.keys(form).forEach(key => {
-            form[key] = ''
-          })
-
-          alert('¡Gracias por tu solicitud! Hemos enviado una confirmación a tu email. Te contactaremos en menos de 24 horas.')
-        } catch (fetchError) {
-          clearTimeout(timeoutId)
-          
-          if (fetchError.name === 'AbortError') {
-            throw new Error('La solicitud tardó demasiado tiempo. Verifica tu conexión a internet.')
-          }
-          
-          throw fetchError
+          result = await response.json();
+        } catch (parseError) {
+          throw new Error('Error al procesar la respuesta del servidor');
         }
+
+        // Limpiar formulario solo si todo fue exitoso
+        Object.keys(form).forEach(key => {
+          form[key] = '';
+        });
+
+        alert('¡Gracias por tu solicitud! Hemos enviado una confirmación a tu email. Te contactaremos en menos de 24 horas.');
+
       } catch (error) {
-        console.error('❌ Error al enviar email:', error)
-        console.error('🔍 Detalles del error:', {
-          name: error.name,
-          message: error.message,
-          stack: error.stack,
-          cause: error.cause
-        })
+        console.error('Error al enviar formulario:', error);
 
-        // Mensaje de error específico
-        let errorMessage = 'Hubo un error al enviar tu solicitud. '
+        // Manejo específico de errores
+        let errorMessage = 'Hubo un error al enviar tu solicitud. ';
 
-        if (error.message.includes('Failed to fetch')) {
-          errorMessage += 'No pudimos conectar con el servidor. '
-        } else if (error.message.includes('Demasiados emails')) {
-          errorMessage += 'Has enviado demasiados emails recientemente. Espera un momento. '
-        } else if (error.message.includes('tardó demasiado tiempo')) {
-          errorMessage += 'La conexión al servidor tardó demasiado. '
+        if (error.name === 'AbortError') {
+          errorMessage += 'La conexión al servidor tardó demasiado tiempo. ';
+        } else if (error.message.includes('Failed to fetch')) {
+          errorMessage += 'No se pudo conectar con el servidor. Verifica tu conexión a internet. ';
+        } else if (response && !response.ok) {
+          errorMessage += `Error del servidor: ${response.status}. `;
         } else {
-          errorMessage += 'Intenta de nuevo en unos minutos. '
+          errorMessage += 'Por favor intenta nuevamente más tarde. ';
         }
 
-        errorMessage += `O contáctanos directamente al ${config.email.contact.phone}.`
+        errorMessage += `También puedes contactarnos directamente al ${config.email.contact.phone}`;
+        alert(errorMessage);
 
-        alert(errorMessage)
       } finally {
-        isSubmitting.value = false
+        isSubmitting.value = false;
       }
     }
 
@@ -277,14 +255,6 @@ export default {
   border-color: #A66B2E;
 }
 
-/* Estilos específicos para select */
-select.form-input {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238D5524' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 0.75rem center;
-  background-repeat: no-repeat;
-  background-size: 1.25rem 1.25rem;
-  padding-right: 2.5rem;
-}
 
 select.form-input option {
   color: #8D5524;
