@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-gray-900 text-white">
+  <footer class="text-white" style="background: linear-gradient(to bottom,  #6B4423, #3D2817);">
     <!-- Contenido principal del footer -->
     <div class="container-custom py-16">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -71,7 +71,7 @@
       </div>
 
       <!-- Información adicional -->
-      <div class="border-t border-gray-800 mt-12 pt-8">
+      <div class="border-t mt-12 pt-8" style="border-color: rgba(255, 255, 255, 0.1);">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div class="text-center md:text-left">
                          <h5 style="font-weight: 600; color: #F5E9DA; margin-bottom: 0.5rem;">📞 Contacto 24/7</h5>
@@ -90,7 +90,7 @@
     </div>
 
     <!-- Copyright -->
-    <div class="bg-gray-950 py-6">
+    <div class="py-6" style="background-color: #2A1B11;">
       <div class="container-custom">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <p class="text-gray-400 text-sm">

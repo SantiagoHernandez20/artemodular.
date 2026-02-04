@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Homeview.vue'
 import Dashboard from '../views/DashboardView.vue'
 import AdminPanel from '../views/AdminPanel.vue'
-//import AuthCallback from '../views/AuthCallback.vue'
 
 const routes = [
   {

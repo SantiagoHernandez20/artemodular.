@@ -5,6 +5,9 @@
       <router-view />
     </main>
     <AppFooter />
+    
+    <!-- Botón flotante de WhatsApp -->
+    <FloatingWhatsAppButton />
 
     <!-- Panel de debug (solo en desarrollo) -->
   </div>
@@ -16,12 +19,14 @@
 
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
+import FloatingWhatsAppButton from './components/FloatingWhatsAppButton.vue'
 
 export default {
   name: 'App',
   components: {
     AppHeader,
-    AppFooter
+    AppFooter,
+    FloatingWhatsAppButton
   },
   setup() {
 
