@@ -52,7 +52,7 @@
         </div>
 
         <!-- Showcase 3D Completo -->
-        <div class="relative order-first lg:order-last mb-8 lg:mb-0">
+        <div class="mb-0">
           <ThreeDShowcase />
         </div>
       </div>
@@ -124,7 +124,7 @@
 }
 
 /* Tablet y superior */
-@media (min-width: 768px) {
+@media (min-width: 768px) { 
   .flex-container {
     flex-direction: row;
     gap: 1rem;

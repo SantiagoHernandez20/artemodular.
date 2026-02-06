@@ -13,33 +13,34 @@
       </div>
 
       <!-- Grid de servicios -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <article v-for="service in services" :key="service.id"
-          class="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300">
-          <!-- Imagen -->
-          <div class="relative h-64 overflow-hidden bg-gray-100">
-            <img :src="service.image" :alt="service.title"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-            <div class="absolute top-4 left-4 w-12 h-12 rounded-xl bg-white shadow-lg flex items-center justify-center">
-              <component :is="service.icon" class="w-6 h-6" :style="{ color: service.color }" />
-            </div>
+      <div class="services-grid">
+        <article v-for="service in services" :key="service.id" class="service-card">
+          <!-- Imagen: Wrapper con aspect-ratio determinístico -->
+          <div class="service-image-container">
+            <img 
+              :src="service.image" 
+              :alt="service.title"
+              class="service-image" 
+              loading="lazy"
+            />
           </div>
 
-          <!-- Contenido -->
-          <div class="p-6">
-            <h3 class="text-xl font-bold text-gray-900 mb-2">
+          <!-- Contenido: Flujo vertical flexbox -->
+          <div class="service-content">
+           
+
+            <!-- Textos -->
+            <h3 class="service-title">
               {{ service.title }}
             </h3>
-            <p class="text-gray-600 text-sm mb-6">
+            <p class="service-description">
               {{ service.description }}
             </p>
 
             <!-- Features -->
-            <ul class="space-y-2 mb-6">
-              <li v-for="(feature, idx) in service.features.slice(0, 4)" :key="idx"
-                class="flex items-start gap-2 text-sm text-gray-700">
-                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" :style="{ color: service.color }" fill="currentColor"
-                  viewBox="0 0 20 20">
+            <ul class="service-features">
+              <li v-for="(feature, idx) in service.features.slice(0, 4)" :key="idx" class="feature-item">
+                <svg class="feature-check" :style="{ color: service.color }" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd"
                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                     clip-rule="evenodd" />
@@ -48,9 +49,10 @@
               </li>
             </ul>
 
-            <!-- CTA -->
-            <button @click="scrollToContact"
-              class="w-full py-3 px-4 rounded-lg text-sm font-semibold text-white transition-all duration-300 hover:shadow-lg hover:scale-105"
+            <!-- CTA: Siempre al final gracias a flexbox -->
+            <button 
+              @click="scrollToContact"
+              class="service-button"
               :style="{ backgroundColor: service.color }">
               Solicitar cotización
             </button>
@@ -145,7 +147,7 @@ export default {
           'Acabados decorativos',
           'Piezas personalizadas'
         ]
-      }
+      },
     ])
 
     const scrollToContact = () => {
@@ -162,3 +164,242 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* ============================================
+   SERVICES GRID - LAYOUT DETERMINÍSTICO
+   ============================================ */
+
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* ============================================
+   SERVICE CARD - ESTRUCTURA SIN POSITION ABSOLUTE
+   ============================================ */
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: white;
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.service-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   IMAGEN - ASPECT RATIO SIN VH
+   ============================================ */
+
+.service-image-container {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  flex-shrink: 0;
+}
+
+.service-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.service-card:hover .service-image {
+  transform: scale(1.05);
+}
+
+/* ============================================
+   CONTENIDO - FLEXBOX VERTICAL
+   ============================================ */
+
+.service-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+/* ============================================
+   ICON BADGE - EN FLUJO NORMAL
+   ============================================ */
+
+.service-icon-badge {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.service-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  stroke: white;
+  fill: none;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   TEXTOS
+   ============================================ */
+
+.service-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.service-description {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   FEATURES LIST
+   ============================================ */
+
+.service-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.feature-check {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+/* ============================================
+   BUTTON CTA
+   ============================================ */
+
+.service-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.service-button:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.service-button:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   TABLET (640px+)
+   ============================================ */
+
+@media (min-width: 640px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+
+  .service-content {
+    padding: 2rem;
+  }
+
+  .service-title {
+    font-size: 1.375rem;
+  }
+}
+
+/* ============================================
+   DESKTOP (1024px+) - 3 COLUMNAS
+   ============================================ */
+
+@media (min-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .service-image-container {
+    aspect-ratio: 16 / 12;
+  }
+
+  .service-content {
+    padding: 2rem;
+  }
+
+  .service-icon-badge {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .service-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .service-card:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* ============================================
+   LARGE DESKTOP (1440px+)
+   ============================================ */
+
+@media (min-width: 1440px) {
+  .services-grid {
+    gap: 2rem;
+  }
+
+  .service-content {
+    padding: 2.5rem;
+  }
+
+  .service-title {
+    font-size: 1.5rem;
+  }
+}
+</style>
