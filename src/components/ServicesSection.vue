@@ -4,7 +4,7 @@
     <div class="container-custom">
       <!-- Header limpio -->
       <div class="max-w-3xl mx-auto text-center mb-16">
-        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Ofrecemos una amplia gama de servicios 
         </h2><BR></BR>
         <p class="text-xl text-gray-600 max-w-3xl mx-auto">

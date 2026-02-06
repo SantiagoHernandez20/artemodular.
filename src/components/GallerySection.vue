@@ -3,11 +3,11 @@
   <section id="galeria" style="background-color: white;" class="section-padding">
     <div class="container-custom">
       <!-- Encabezado de la sección con título y descripción -->
-      <div style="text-align: center; margin-bottom: 4rem;">
-        <h2 style="font-size: 2.25rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Nuestra Galería de Proyectos
         </h2>
-        <p style="font-size: 1.25rem; color: #4B5563; max-width: 48rem; margin: 0 auto;">
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
           Descubre la calidad y belleza de nuestros trabajos. Cada proyecto refleja nuestro compromiso con la excelencia
           y el diseño personalizado.
         </p>

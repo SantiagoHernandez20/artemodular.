@@ -119,7 +119,7 @@ const config = {
         return false
       }
       
-      console.log('✅ Configuración válida')
+      //console.log('✅ Configuración válida')
       return true
     },
 
