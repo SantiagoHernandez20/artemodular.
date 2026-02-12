@@ -93,7 +93,7 @@ export default {
         category: 'Etapa 1',
         title: 'Diseño Personalizado',
         description: 'Escuchamos tus ideas y transformamos tus sueños en diseños detallados. Utilizamos herramientas avanzadas de modelado 3D para visualizar cada aspecto de tu proyecto antes de iniciar la fabricación.',
-        image: '/images/proceso/diseño.jpeg',
+        image: '/images/proceso/diseño.webp',
         color: '#8D5524'
       },
       {
@@ -101,7 +101,7 @@ export default {
         category: 'Etapa 2',
         title: 'Fabricación Experta',
         description: 'Nuestro equipo de carpinteros especializados utiliza técnicas tradicionales y tecnología moderna para crear muebles de la más alta calidad, con precisión milimétrica en cada detalle.',
-        image: '/images/proceso/fabricacion.png',
+        image: '/images/proceso/fabricacion.webp',
         color: '#8D5524'
       },
       {
@@ -109,7 +109,7 @@ export default {
         category: 'Etapa 3',
         title: 'Montaje e Instalación',
         description: 'Instalamos tu mueble con el máximo cuidado, asegurando que encaje perfectamente en tu espacio. Te guiamos en el mantenimiento para garantizar que disfrutes de tu inversión por muchos años.',
-        image: '/images/proceso/instalacion.jpeg',
+        image: '/images/proceso/instalacion.webp',
         color: '#8D5524'
       }
     ])

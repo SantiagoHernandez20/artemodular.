@@ -6,11 +6,10 @@
       :class="{ 'is-expanded': isMobileExpanded }"
     >
       <!-- Imagen de fondo -->
-      <img 
-        :src="step.image" 
+      <img
+        :src="step.image"
         :alt="step.title"
         class="process-card-image"
-        loading="lazy"
       />
       
       <!-- Overlay oscuro -->
@@ -39,6 +38,7 @@ import { ref } from 'vue'
 
 export default {
   name: 'ProcessStep2',
+  components: {},
   props: {
     step: {
       type: Object,
