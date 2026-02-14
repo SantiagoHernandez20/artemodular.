@@ -3,10 +3,10 @@
     
     <!-- IMAGEN 1 (Fondo completo) -->
     <div class="before-image">
-      <img 
-        src="/images/decorativos/despues.jpg" 
-        alt="Diseño 3D en SketchUp" 
-        style="width: 100%; height: 100%; object-fit: cover;"
+      <img
+        src="/images/decorativos/despues.webp"
+        alt="Diseño 3D en SketchUp"
+        style="width: 100%; height: 100%; object-fit: cover"
       />
     </div>
 
@@ -15,12 +15,10 @@
       class="after-image" 
       :style="{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }"
     >
-      <img 
-        src="/images/decorativos/antes.jpg" 
-        width="10px"
-        height="100px"
-        alt="Mueble terminado real" 
-        style="width: 100%; height: 100%; object-fit: cover;"
+      <img
+        src="/images/decorativos/antes.webp"
+        alt="Mueble terminado real"
+        style="width: 100%; height: 100%; object-fit: cover"
       />
     </div>
 
@@ -67,6 +65,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 export default {
   name: 'ImageComparison',
+  components: {},
   props: {
     width: {
       type: String,

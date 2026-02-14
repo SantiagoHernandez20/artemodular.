@@ -3,11 +3,11 @@
   <section id="galeria" style="background-color: white;" class="section-padding">
     <div class="container-custom">
       <!-- Encabezado de la sección con título y descripción -->
-      <div style="text-align: center; margin-bottom: 4rem;">
-        <h2 style="font-size: 2.25rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Nuestra Galería de Proyectos
         </h2>
-        <p style="font-size: 1.25rem; color: #4B5563; max-width: 48rem; margin: 0 auto;">
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
           Descubre la calidad y belleza de nuestros trabajos. Cada proyecto refleja nuestro compromiso con la excelencia
           y el diseño personalizado.
         </p>
@@ -32,8 +32,11 @@
           <div style="position: relative; overflow: hidden; border-radius: 0.75rem; height: 300px; cursor: pointer;">
             <!-- Imagen principal del proyecto (primera imagen o placeholder) -->
             <template v-if="project.images && project.images.length > 0">
-              <img :src="getCurrentProjectImage(project)" :alt="project.title"
-                style="width: 100%; height: 300px; object-fit: cover; display: block;" />
+              <img
+                :src="getCurrentProjectImage(project)"
+                :alt="project.title"
+                style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block"
+              />
             </template>
             <template v-else>
               <!-- Placeholder cuando no hay imágenes -->
@@ -107,7 +110,10 @@
               }}</p>
             <p style="color: #6B7280; font-size: 0.875rem; line-height: 1.4; margin-bottom: 0.5rem;">{{
               project.description }}</p>
-            <p v-if="project.images && project.images.length > 1" style="color: #9CA3AF; font-size: 0.75rem;">
+            <p
+              v-if="project.images && project.images.length > 1"
+              style="display: inline-flex; align-items: center; gap: 0.35rem; color: #374151; font-size: 0.75rem; font-weight: 700; background-color: #F5E9DA; padding: 0.25rem 0.5rem; border-radius: 9999px;"
+            >
               {{ project.images.length }} imágenes disponibles
             </p>
           </div>
@@ -133,8 +139,11 @@
           <div
             style="height: 70vh; position: relative; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center;">
             <template v-if="currentImage?.images && currentImage.images.length > 0">
-              <img :src="getCurrentLightboxImage()" :alt="currentImage.title"
-                style="max-width: 100%; max-height: 100%; object-fit: contain; display: block;" />
+              <img
+                :src="getCurrentLightboxImage()"
+                :alt="currentImage.title"
+                style="max-width: 100%; max-height: 100%; object-fit: contain; object-position: center; display: block"
+              />
 
               <!-- Navegación de imágenes dentro del lightbox -->
               <template v-if="currentImage.images.length > 1">
@@ -236,10 +245,11 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 export default {
   name: 'GallerySection',
+  components: {},
   setup() {
     // Estados principales del componente
     const selectedCategory = ref('all') // Categoría seleccionada para filtrar
@@ -307,6 +317,13 @@ export default {
     onMounted(() => {
       loadGalleryImages()
       document.addEventListener('keydown', handleKeydown)
+    })
+
+    /**
+     * Hook de ciclo de vida - se ejecuta antes de desmontar el componente
+     */
+    onBeforeUnmount(() => {
+      document.removeEventListener('keydown', handleKeydown)
     })
 
     /**

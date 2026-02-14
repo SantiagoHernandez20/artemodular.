@@ -5,7 +5,7 @@
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Lo que dicen nuestros clientes sobre nosotros
-        </h2>
+        </h2><br>
         <p class="text-xl text-gray-600 max-w-3xl mx-auto">
           La satisfacción de nuestros clientes es nuestro mayor logro. Conoce sus experiencias trabajando con
           ArteModular.
@@ -103,7 +103,7 @@ export default {
     // Cargar testimonios aprobados desde tu backend
     const loadApprovedTestimonials = async () => {
       try {
-        console.log('🔄 Iniciando carga de testimonios aprobados...')
+        //console.log('🔄 Iniciando carga de testimonios aprobados...')
         isLoading.value = true
 
         // ✅ Usar configuración centralizada
@@ -139,11 +139,11 @@ export default {
         }
 
         const allTestimonials = result.data || []
-        console.log('📋 Testimonios recibidos (sin filtrar):', allTestimonials.length, allTestimonials)
+        //console.log('📋 Testimonios recibidos (sin filtrar):', allTestimonials.length, allTestimonials)
 
         // Filtrar solo los aprobados usando status (el backend ya filtra, pero por seguridad)
         const approvedTestimonials = allTestimonials.filter(t => t.status === 'approved')
-        console.log('✅ Testimonios aprobados (después de filtrar):', approvedTestimonials.length, approvedTestimonials)
+        //console.log('✅ Testimonios aprobados (después de filtrar):', approvedTestimonials.length, approvedTestimonials)
 
         // Ordenar por fecha de creación (más recientes primero)
         testimonials.value = approvedTestimonials.sort((a, b) => {
@@ -152,7 +152,7 @@ export default {
           return dateB - dateA
         })
 
-        console.log('📊 Total testimonios aprobados cargados:', testimonials.value.length)
+        //console.log('📊 Total testimonios aprobados cargados:', testimonials.value.length)
         //console.log('📊 Testimonios finales:', testimonials.value)
         isLoading.value = false
 

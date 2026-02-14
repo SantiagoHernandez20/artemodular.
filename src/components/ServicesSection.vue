@@ -4,7 +4,7 @@
     <div class="container-custom">
       <!-- Header limpio -->
       <div class="max-w-3xl mx-auto text-center mb-16">
-        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Ofrecemos una amplia gama de servicios 
         </h2><BR></BR>
         <p class="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -17,11 +17,10 @@
         <article v-for="service in services" :key="service.id" class="service-card">
           <!-- Imagen: Wrapper con aspect-ratio determinístico -->
           <div class="service-image-container">
-            <img 
-              :src="service.image" 
+            <img
+              :src="service.image"
               :alt="service.title"
-              class="service-image" 
-              loading="lazy"
+              class="service-image"
             />
           </div>
 
@@ -108,7 +107,7 @@ export default {
         title: 'Carpintería de Obra',
         description: 'Soluciones estructurales en madera para proyectos de construcción y remodelación con acabados de alta calidad.',
         icon: 'BuildingIcon',
-        image: '/images/puerta/puerta_2.jpg',
+        image: '/images/puerta/puerta_2.webp',
         color: '#8D5524',
         features: [
           'Puertas interiores y exteriores',
@@ -123,7 +122,7 @@ export default {
         title: 'Carpintería de Mobiliario',
         description: 'Diseño y fabricación de muebles funcionales adaptados perfectamente a las necesidades de cada espacio.',
         icon: 'HomeIcon',
-        image: '/images/closets/closet.jpeg',
+        image: '/images/closets/closet.webp',
         color: '#8D5524',
         features: [
           'Cocinas integrales',
@@ -138,7 +137,7 @@ export default {
         title: 'Carpintería Decorativa',
         description: 'Creación de piezas exclusivas que aportan carácter y personalidad a cualquier ambiente del hogar.',
         icon: 'SparklesIcon',
-        image: '/images/centro_entretenimiento/centro_chimenea_1.jpg',
+        image: '/images/centro_entretenimiento/centro_chimenea_1.webp',
         color: '#8D5524',
         features: [
           'Muebles artesanales únicos',

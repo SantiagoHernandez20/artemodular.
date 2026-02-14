@@ -6,9 +6,9 @@
       "description": "Cocina minimalista con isla central",
       "fullDescription": "Cocina integral de diseño contemporáneo que combina funcionalidad y estética. Fabricada con materiales de primera calidad, incluye isla central, electrodomésticos empotrados y sistema de iluminación LED.",
       "images": [
-        "/images/cocinas/cocina1.jpg",
-        "/images/cocinas/cocina2.jpg",
-        "/images/cocinas/cocina3.jpg"
+        "/images/cocinas/cocina1.webp",
+        "/images/cocinas/cocina2.webp",
+        "/images/cocinas/cocina3.webp"
       ],
       "features": [
         "Isla central",
@@ -23,8 +23,8 @@
       "description": "",
       "fullDescription": "",
       "images": [
-        "/images/cocinas/alacena_1.png",
-        "/images/cocinas/alacena_2.png"
+        "/images/cocinas/alacena_1.webp",
+        "/images/cocinas/alacena_2.webp"
       ],
       "features": [
         "Acabados en madera natural",
@@ -41,8 +41,8 @@
       "description": "Vestidor de lujo con iluminación perimetral integrada",
       "fullDescription": "Walk-in closet contemporáneo que redefine el concepto de vestidor moderno. Diseñado con sistema modular personalizable, iluminación LED perimetral automática, espejos de cuerpo completo y acabados en melamina de alta resistencia. Incluye isla central con cajones organizadores para accesorios y joyería.",
       "images": [
-        "/images/closets/closet_1.jpg",
-        "/images/closets/closet_6.jpg"
+        "/images/closets/closet_1.webp",
+        "/images/closets/closet_6.webp"
       ],
       "features": [
         "Sistema modular personalizable",
@@ -58,10 +58,10 @@
       "description": "Máximo aprovechamiento con tecnología soft-close",
       "fullDescription": "Closet lineal de diseño exclusivo que maximiza cada centímetro disponible. Construido con sistema de apertura soft-close en todos los cajones, barras extensibles de acero inoxidable, divisores internos ajustables y sistema de ventilación integrado. Ideal para espacios que requieren organización inteligente sin sacrificar estilo.",
       "images": [
-        "/images/closets/closet_2.jpg",
-        "/images/closets/closet_3.jpg",
-        "/images/closets/closet_4.jpg",
-        "/images/closets/closet_5.jpg"
+        "/images/closets/closet_2.webp",
+        "/images/closets/closet_3.webp",
+        "/images/closets/closet_4.webp",
+        "/images/closets/closet_5.webp"
       ],
       "features": [
         "Sistema soft-close",
@@ -77,8 +77,8 @@
       "description": "Diseño discreto con tecnología push-to-open",
       "fullDescription": "Closet ejecutivo de líneas puras y diseño minimalista. Fabricado con puertas sin tiradores y sistema push-to-open, paneles de madera con veta natural, compartimentos especializados para trajes y camisas, y zapatero deslizable con capacidad para 30 pares. Perfecto para profesionales que valoran la elegancia discreta.",
       "images": [
-        "/images/closets/closet_7.jpg",
-        "/images/closets/closet_9.jpg"
+        "/images/closets/closet_7.webp",
+        "/images/closets/closet_9.webp"
       ],
       "features": [
         "Sistema push-to-open",
@@ -96,8 +96,8 @@
       "description": "Diseño flotante con gestión de cables oculta",
       "fullDescription": "Centro de entretenimiento de diseño minimalista que combina elegancia y funcionalidad. Fabricado con acabados de madera natural y sistema de gestión de cables integrado. Perfecto para televisores de 55\" a 75\", incluye compartimentos ocultos para equipos audiovisuales y sistema de ventilación pasiva.",
       "images": [
-        "/images/centro_entretenimiento/centro_mueble_1.jpg",
-        "/images/centro_entretenimiento/centro_mueble_2.jpg"
+        "/images/centro_entretenimiento/centro_mueble_1.webp",
+        "/images/centro_entretenimiento/centro_mueble_2.webp"
       ],
       "features": [
         "Montaje flotante",
@@ -112,9 +112,9 @@
       "description": "Sistema modular con iluminación LED ambiental",
       "fullDescription": "Centro de entretenimiento premium de diseño modular que se adapta a cualquier espacio. Cuenta con sistema de iluminación LED RGB programable, chimenea, Ideal para crear el ambiente perfecto en tu sala de estar.",
       "images": [
-        "/images/centro_entretenimiento/centro_chimenea_1.jpg",
-        "/images/centro_entretenimiento/centro_chimenea_2.jpg",
-        "/images/centro_entretenimiento/centro_chimenea_3.jpg"
+        "/images/centro_entretenimiento/centro_chimenea_1.webp",
+        "/images/centro_entretenimiento/centro_chimenea_2.webp",
+        "/images/centro_entretenimiento/centro_chimenea_3.webp"
       ],
       "features": [
         "Iluminación LED RGB",
@@ -130,10 +130,10 @@
       "description": "Diseño flotante con alistonado",
       "fullDescription": "Centro de entretenimiento de diseño alistonado con mueble flotante de alto brillo. Incorpora iluminación LED cálida estratégicamente ubicada en repisas superiores e inferiores. Cuenta con sistema eléctrico integrado y diseño minimalista que elimina la contaminación visual, creando un ambiente moderno y funcional.",
       "images": [
-        "/images/centro_entretenimiento/valencia_1.jpg",
-        "/images/centro_entretenimiento/valencia_2.jpg",
-        "/images/centro_entretenimiento/valencia_3.png",
-        "/images/centro_entretenimiento/valencia_4.png"
+        "/images/centro_entretenimiento/valencia_1.webp",
+        "/images/centro_entretenimiento/valencia_2.webp",
+        "/images/centro_entretenimiento/valencia_3.webp",
+        "/images/centro_entretenimiento/valencia_4.webp"
       ],
       "features": [
         "Montaje flotante",
@@ -150,9 +150,9 @@
       "description": "Lámpara decorativa con textura lunar",
       "fullDescription": "Lámpara decorativa única con textura lunar realista. Fabricada con tecnología 3D y sistema de iluminación LED regulable que crea ambientes únicos.",
       "images": [
-        "/images/decorativos/luna1.jpg",
-        "/images/decorativos/luna2.jpg",
-        "/images/decorativos/luna3.jpg"
+        "/images/decorativos/luna1.webp",
+        "/images/decorativos/luna2.webp",
+        "/images/decorativos/luna3.webp"
       ],
       "features": [
         "Luz LED",
@@ -169,8 +169,8 @@
       "description": "Diseño semiflotante con gestión de cables oculta",
       "fullDescription": "Biblioteca moderna con panel LED acústico de listones de madera y tiras LED integradas. Incluye escritorio semiflotante de madera natural con cajones blancos, estanterías flotantes en diseño moderno y unidad alta con compartimentos iluminados. Perfecta para oficinas en casa y espacios de trabajo creativo.",
       "images": [
-        "/images/bibliotecas/valencia_1.png",
-        "/images/bibliotecas/valencia_2.png"
+        "/images/bibliotecas/valencia_1.webp",
+        "/images/bibliotecas/valencia_2.webp"
       ],
       "features": [
         "Montaje flotante",
@@ -187,8 +187,8 @@
       "description": "Diseño fijo en madera natural con iluminación integrada y acabado de alto rendimiento.",
       "fullDescription": "Barra de atención elaborada en madera de roble con acabado semimate, diseñada para integrarse armónicamente en espacios comerciales o gastronómicos. Incluye mueble superior empotrado con compartimentos funcionales, sistema de iluminación LED cálida y gestión oculta de cableado para mantener un entorno limpio y profesional. Ideal para bares, cafés o restaurantes que buscan un equilibrio entre estética moderna y durabilidad estructural.",
       "images": [
-        "/images/inmobiliario/bar_1.png",
-        "/images/inmobiliario/bar_2.png"
+        "/images/inmobiliario/bar_1.webp",
+        "/images/inmobiliario/bar_2.webp"
       ],
       "features": [
         "Diseño empotrado con estructura reforzada",

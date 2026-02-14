@@ -2,7 +2,7 @@
   <div class="home-page">
     <HeroSection />
     <ServicesSection />
-    <ProcessSection />
+    <ProcessSection2 />
     <GallerySection />
     <TestimonialsSection ref="testimonialsSection" />
 
@@ -31,7 +31,7 @@ import { ref, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import HeroSection from '../components/HeroSection.vue'
 import ServicesSection from '../components/ServicesSection.vue'
-import ProcessSection from '../components/ProcessSection.vue'
+import ProcessSection2 from '../components/ProcessSection2.vue'
 import GallerySection from '../components/GallerySection.vue'
 import TestimonialsSection from '../components/TestimonialsSection.vue'
 import TestimonialForm from '../components/TestimonialForm.vue'
@@ -42,7 +42,7 @@ export default {
   components: {
     HeroSection,
     ServicesSection,
-    ProcessSection,
+    ProcessSection2,
     GallerySection,
     TestimonialsSection,
     TestimonialForm,
