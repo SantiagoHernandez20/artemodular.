@@ -4,11 +4,11 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         <!-- Contenido principal -->
         <div class="text-center lg:text-left">
-          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4 sm:mb-6">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4 sm:mb-6">
             Tu aliado en
             <span style="color: #8D5524;">diseño <span style="color: black;">y</span> fabricación</span>
             de muebles a medida
-          </h1>
+          </h2>
 
           <p class="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
             Creamos muebles únicos que se adaptan perfectamente a tu espacio y estilo de vida.
