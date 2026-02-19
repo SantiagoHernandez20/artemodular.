@@ -5,6 +5,12 @@
     <div class="before-image">
       <img
         src="/images/decorativos/despues.webp"
+        srcset="/images/decorativos/despues-400w.webp 400w,
+                /images/decorativos/despues-640w.webp 640w,
+                /images/decorativos/despues-800w.webp 800w"
+        sizes="(max-width: 768px) 100vw, 759px"
+        width="759"
+        height="800"
         alt="Diseño 3D en SketchUp"
         style="width: 100%; height: 100%; object-fit: cover"
       />
@@ -17,6 +23,12 @@
     >
       <img
         src="/images/decorativos/antes.webp"
+        srcset="/images/decorativos/antes-400w.webp 400w,
+                /images/decorativos/antes-640w.webp 640w,
+                /images/decorativos/antes-800w.webp 800w"
+        sizes="(max-width: 768px) 100vw, 759px"
+        width="759"
+        height="800"
         alt="Mueble terminado real"
         style="width: 100%; height: 100%; object-fit: cover"
       />

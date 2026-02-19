@@ -9,6 +9,8 @@
     <!-- Botón flotante de WhatsApp -->
     <FloatingWhatsAppButton />
 
+    <SpeedInsights />
+
     <!-- Panel de debug (solo en desarrollo) -->
   </div>
 
@@ -20,13 +22,14 @@
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import FloatingWhatsAppButton from './components/FloatingWhatsAppButton.vue'
-
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 export default {
   name: 'App',
   components: {
     AppHeader,
     AppFooter,
-    FloatingWhatsAppButton
+    FloatingWhatsAppButton,
+    SpeedInsights
   },
   setup() {
 
