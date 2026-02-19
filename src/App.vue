@@ -10,10 +10,17 @@
     <FloatingWhatsAppButton />
 
     <!-- Panel de debug (solo en desarrollo) -->
+    
+    <!-- Vercel Speed Insights -->
+    <SpeedInsights />
   </div>
 
 
 </template>
+
+<script setup>
+import { SpeedInsights } from '@vercel/speed-insights/vue'
+</script>
 
 <script>
 
