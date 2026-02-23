@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Homeview.vue'
 import Dashboard from '../views/DashboardView.vue'
 import AdminPanel from '../views/AdminPanel.vue'
+import PrivacyPolicy from '../views/PrivacyPolicy.vue'
+import TermsOfService from '../views/TermsOfService.vue'
 
 const routes = [
   {
@@ -50,6 +52,16 @@ const routes = [
     name: 'Admin',
     component: AdminPanel
     // No requiere autenticación de Google, el control es por IP en el backend
+  },
+  {
+    path: '/privacidad',
+    name: 'Privacidad',
+    component: PrivacyPolicy
+  },
+  {
+    path: '/terminos-servicio',
+    name: 'Terminos',
+    component: TermsOfService
   }
 ]
 
