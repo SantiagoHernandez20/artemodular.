@@ -77,7 +77,7 @@
           </div>
           <div class="text-center md:text-left">
             <h5 class="font-semibold text-gray-900 mb-2">📧 Email</h5>
-            <p class="text-gray-700">aartemodular@gmail.com</p>
+            <p class="text-gray-700">artemodular2022@gmail.com</p>
           </div>
           <div class="text-center md:text-left">
             <h5 class="font-semibold text-gray-900 mb-2">📍 Ubicación</h5>
@@ -95,8 +95,8 @@
             © {{ new Date().getFullYear() }} ArteModular. Todos los derechos reservados.
           </p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-gray-600 text-sm hover:text-gray-900 transition-colors">Política de Privacidad</a>
-            <a href="#" class="text-gray-600 text-sm hover:text-gray-900 transition-colors">Términos de Servicio</a>
+            <a href="/privacidad" class="text-gray-600 text-sm hover:text-gray-900 transition-colors">Política de Privacidad</a>
+            <a href="/terminos-servicio" class="text-gray-600 text-sm hover:text-gray-900 transition-colors">Términos de Servicio</a>
           </div>
         </div>
       </div>
