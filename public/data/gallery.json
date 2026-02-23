@@ -87,6 +87,25 @@
         "Zapatero deslizable",
         "Diseño sin tiradores"
       ]
+    },
+    {
+      "id": 8,
+      "title": "Closet Modular con Iluminación",
+      "description": "Organización total con iluminación integrada y cajones deslizables",
+      "fullDescription": "Closet modular de diseño contemporáneo con iluminación LED integrada en la parte superior que resalta la veta natural de la madera. Cuenta con puerta corredera de perfil delgado, múltiples compartimentos abiertos para ropa doblada, cajones deslizables en la parte inferior para accesorios y una distribución vertical optimizada para maximizar el espacio. Ideal para habitaciones que buscan funcionalidad sin sacrificar estética.",
+      "images": [
+        "/images/closets/closet_10.webp",
+        "/images/closets/closet_11.webp",
+        "/images/closets/closet_12.webp",
+        "/images/closets/closet_13.webp"
+      ],
+      "features": [
+        "Iluminación LED integrada",
+        "Puerta corredera",
+        "Cajones deslizables",
+        "Compartimentos abiertos modulares",
+        "Cajón oculto"
+      ]
     }
   ],
   "centros": [
@@ -131,7 +150,6 @@
       "fullDescription": "Centro de entretenimiento de diseño alistonado con mueble flotante de alto brillo. Incorpora iluminación LED cálida estratégicamente ubicada en repisas superiores e inferiores. Cuenta con sistema eléctrico integrado y diseño minimalista que elimina la contaminación visual, creando un ambiente moderno y funcional.",
       "images": [
         "/images/centro_entretenimiento/valencia_1.webp",
-        "/images/centro_entretenimiento/valencia_2.webp",
         "/images/centro_entretenimiento/valencia_3.webp",
         "/images/centro_entretenimiento/valencia_4.webp"
       ],
@@ -178,6 +196,27 @@
         "Compartimentos cerrados",
         "Ventilación integrada"
       ]
+    },
+    {
+      "id": 9,
+      "title": "Biblioteca Modular de Pared",
+      "description": "Biblioteca a piso techo con compartimentos asimétricos y módulos inferiores con puerta",
+      "fullDescription": "Biblioteca modular de pared completa fabricada en madera con acabado nogal oscuro. Diseño de piso a techo con distribución asimétrica de compartimentos abiertos que permite organizar libros, colecciones y objetos decorativos de diferentes tamaños. Incluye módulos inferiores con puertas para almacenamiento cerrado, entrepaños escalonados en el cuerpo central y estructura robusta empotrada entre muros para aprovechar al máximo el espacio vertical. Ideal para salones, estudios o espacios de trabajo que buscan combinar funcionalidad con personalidad.",
+      "images": [
+        "/images/bibliotecas/biblioteca_1.webp",
+        "/images/bibliotecas/biblioteca_2.webp",
+        "/images/bibliotecas/biblioteca_3.webp",
+        "/images/bibliotecas/biblioteca_4.webp",
+        "/images/bibliotecas/biblioteca_5.webp"
+      ],
+      "features": [
+        "Diseño piso a techo",
+        "Compartimentos asimétricos",
+        "Módulos inferiores con puerta",
+        "Acabado nogal oscuro",
+        "Estructura empotrada entre muros",
+        "Entrepaños escalonados"
+      ]
     }
   ],
   "inmobiliario": [
@@ -196,6 +235,104 @@
         "Gestión de cables oculta",
         "Acabado profesional en madera natural",
         "Optimización del espacio de servicio"
+      ]
+    }
+  ],
+  "escritorios": [
+    {
+      "id": 10,
+      "title": "Escritorio Flotante Roble",
+      "description": "Escritorio suspendido con cajonera deslizable y acabado roble natural",
+      "fullDescription": "Escritorio flotante fabricado en madera con acabado roble natural. Diseño suspendido de líneas limpias con superficie amplia empotrada entre muros y respaldo posterior integrado para organización de cables. La cajonera lateral es completamente deslizable y reposicionable según las necesidades del usuario, con dos cajones de gran capacidad y guías metálicas de extensión total. Una solución elegante y funcional para home office o estudio.",
+      "images": [
+        "/images/escritorios/escritorio_1.webp",
+        "/images/escritorios/escritorio_2.webp"
+      ],
+      "features": [
+        "Diseño flotante suspendido",
+        "Cajonera deslizable reposicionable",
+        "Superficie empotrada entre muros",
+        "Gestión de cables integrada",
+        "Acabado roble natural",
+        "Cajones con guías de extensión total"
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Escritorio Flotante Homeoffice ",
+      "description": "Escritorio suspendido con cajonera deslizable y acabado grafito de veta fina",
+      "fullDescription": "Escritorio flotante de superficie generosa fabricado en tablero melamínico con acabado grafito de veta fina. Diseño suspendido con cajonera lateral completamente deslizable que el usuario puede reposicionar libremente bajo la superficie de trabajo. Incluye dos cajones de amplia capacidad, ideales para mantener el espacio de trabajo ordenado. Su acabado oscuro aporta sobriedad y modernidad a cualquier ambiente de trabajo o estudio.",
+      "images": [
+        "/images/escritorios/escritorio_3.webp",
+        "/images/escritorios/escritorio_4.webp"
+      ],
+      "features": [
+        "Diseño flotante suspendido",
+        "Cajonera deslizable reposicionable",
+        "Acabado grafito veta fina",
+        "Dos cajones de gran capacidad",
+        "Superficie amplia de trabajo",
+        "Diseño sobrio y moderno"
+      ]
+    }
+  ],
+  "flotantes": [
+    {
+      "id": 12,
+      "title": "Mueble Flotante con Puertas Abatibles",
+      "description": "Sistema de módulos suspendidos con puertas abatibles hacia arriba",
+      "fullDescription": "Sistema de muebles flotantes fabricado en tablero melamínico con acabado arena claro. Compuesto por dos módulos suspendidos de diferentes dimensiones con puertas abatibles hacia arriba y cierre lento, lo que permite abrirlas con un solo toque y mantenerlas en posición sin esfuerzo. Diseño limpio y funcional ideal para sala, habitación o espacio de trabajo.",
+      "images": [
+        "/images/flotantes/flotante_1.webp",
+        "/images/flotantes/flotante_2.webp",
+        "/images/flotantes/flotante_3.webp"
+
+      ],
+      "features": [
+        "Puertas abatibles hacia arriba",
+        "Bisagras con pistón de gas",
+        "Dos módulos de distintas dimensiones",
+        "Acabado arena claro",
+        "Diseño suspendido sin apoyos",
+        "Apertura con un solo toque",
+        "Cierre lento"
+      ]
+    }
+  ],
+  "puertas": [
+    {
+      "id": 13,
+      "title": "Puerta Lisa Nogal",
+      "description": "Puerta interior de tablero liso con acabado nogal y marco integrado",
+      "fullDescription": "Puerta interior de diseño sobrio fabricada en tablero melamínico con acabado nogal de veta natural. Superficie completamente lisa sin relieves, con marco perimetral del mismo acabado que genera una transición limpia y uniforme con la pared. Incluye chapa con llave en acabado negro mate. Su diseño neutro y elegante se adapta fácilmente a cualquier estilo de interior.",
+      "images": [
+        "/images/puerta/puerta_1.webp",
+        "/images/puerta/puerta_2.webp"
+
+      ],
+      "features": [
+        "Tablero liso sin relieves",
+        "Acabado nogal veta natural",
+        "Marco perimetral integrado",
+        "Chapa con llave negro mate",
+        "Diseño neutro y versátil"
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Puerta Corredera Hexagonal",
+      "description": "Puerta deslizante con diseño geométrico en relieve sobre fondo wengué",
+      "fullDescription": "Puerta corredera de diseño artesanal único fabricada en madera maciza con acabado wengué oscuro. Su cara principal presenta un patrón geométrico de hexágonos en relieve con acabado contrastante en tono arena, creando una composición visual que desciende desde la parte superior a lo largo de toda la hoja. Sistema de deslizamiento superior con riel metálico empotrado en viga. Ideal para espacios que buscan un elemento arquitectónico de alto impacto visual.",
+      "images": [
+        "/images/puerta/puerta_3.webp",
+        "/images/puerta/puerta_4.webp"
+      ],
+      "features": [
+        "Sistema corredera con riel superior",
+        "Patrón hexagonal en relieve",
+        "Madera maciza acabado wengué",
+        "Contraste bicolor wengué y arena",
+        "Diseño artesanal único"
       ]
     }
   ]
