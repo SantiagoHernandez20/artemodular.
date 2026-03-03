@@ -50,8 +50,7 @@ const createTransporter = () => {
     'Todas las variables': Object.keys(process.env).filter(key => 
       key.includes('EMAIL') || key.includes('BUSINESS')
     )
-  })
-  */
+  })*/
 
   // Validar variables de entorno requeridas
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
