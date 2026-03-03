@@ -40,7 +40,7 @@ const PROJECT_TYPES = {
 // 🔧 Configuración del transporter de Nodemailer
 const createTransporter = () => {
   // Debug: mostrar variables de entorno disponibles
-  /*
+  
   console.log('🔍 Variables de entorno disponibles en emailService:', {
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASS: process.env.EMAIL_PASS ? '***' : 'NO DEFINIDA',
@@ -51,7 +51,7 @@ const createTransporter = () => {
       key.includes('EMAIL') || key.includes('BUSINESS')
     )
   })
-  */
+  
 
   // Validar variables de entorno requeridas
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
