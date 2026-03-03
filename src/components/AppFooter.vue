@@ -8,14 +8,14 @@
           <div class="flex items-center space-x-2 mb-6">
             <div class="logo-container-footer">
               <img 
-                src="/logo.png" 
+                src="/Monograma.svg" 
                 alt="Logo ArteModular - Carpintería a medida"
                 class="logo-image-footer"
               >
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900">ArteModular</h3>
-              <p class="text-sm text-gray-600">Carpintería a medida</p>
+              <p class="text-sm text-gray-600">Diseño para el hogar</p>
             </div>
           </div>
           
