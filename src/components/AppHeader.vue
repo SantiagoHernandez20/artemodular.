@@ -6,14 +6,14 @@
         <div class="logo-section">
           <div class="logo-container">
             <img 
-              src="/logo.png" 
+              src="/Monograma.svg" 
               alt="Logo ArteModular - Carpintería a medida"
               class="logo-image"
             >
           </div>
           <div class="logo-text">
             <h1>ArteModular</h1>
-            <p>Carpintería a medida</p>
+            <p>Diseño para el hogar</p>
           </div>
         </div>
 
@@ -95,14 +95,16 @@ export default {
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
+  gap: 20px;
 }
 
 .logo-container {
-  background-color: transparent;
-  width: auto;
-  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+
 }
 
 .logo-image {
@@ -110,8 +112,6 @@ export default {
   height: 100%;
   object-fit: contain;
   object-position: center;
-  max-width: 2rem;
-  max-height: 2rem;
 }
 
 .logo-text h1 {
@@ -454,6 +454,14 @@ export default {
     max-width: 100%;
     white-space: nowrap;
   }
+  .logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+
+}
 }
 
 /* Responsive */
@@ -480,6 +488,15 @@ export default {
     max-width: 100px;
     font-size: 0.8125rem;
   }
+
+  .logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  
+}
 }
 
 @media (max-width: 768px) {
