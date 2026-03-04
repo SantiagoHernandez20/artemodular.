@@ -7,7 +7,7 @@ require('dotenv').config(); // Carga .env automáticamente
 const corsOptions = require('./config/cors');
 const contactRoutes = require('./routes/contactRoutes');
 const testimonialRoutes = require('./routes/TestimonialRoutes');
-const { getMyIP } = require('./middleware/ipconfig');
+//const { getMyIP } = require('./middleware/ipconfig');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,8 +25,15 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '1mb' })); // Suficiente para formularios de texto
 
 // --- RUTAS ---
+app.get('/', (req, res) => {
+  res.json({
+    message: '🏡 ArteModular API está en línea',
+    documentation: 'Consulta /api/health para el estado del sistema'
+  });
+});
+
 app.get('/api/health', (req, res) => res.json({ status: 'OK', uptime: process.uptime() }));
-app.get('/api/auth/my-ip', getMyIP);
+//app.get('/api/auth/my-ip', getMyIP);
 
 app.use('/api/contact', contactRoutes);
 app.use('/api/testimonials', testimonialRoutes);
