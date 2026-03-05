@@ -51,6 +51,13 @@ const routes = [
     path: '/terminos-servicio',
     name: 'Terminos',
     component: TermsOfService
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../views/not_found.vue'),
+    meta: { hideNavigation: true }
+    // redirect: '/' 
   }
 ]
 

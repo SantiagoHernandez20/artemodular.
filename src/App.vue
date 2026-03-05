@@ -1,13 +1,13 @@
 <template>
   <div id="app" class="min-h-screen bg-white">
-    <AppHeader />
+    <AppHeader v-if="!$route.meta.hideNavigation"/>
     <main>
       <router-view />
     </main>
-    <AppFooter />
+    <AppFooter v-if="!$route.meta.hideNavigation"/>
     
     <!-- Botón flotante de WhatsApp -->
-    <FloatingWhatsAppButton />
+    <FloatingWhatsAppButton v-if="!$route.meta.hideNavigation"/>
 
     <SpeedInsights />
 
