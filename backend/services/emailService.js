@@ -2,9 +2,9 @@
 // Maneja el envío de emails usando Nodemailer
 
 
-const nodemailer = require('nodemailer')
 const path = require('path')
 const dotenv = require('dotenv')
+const resend = require('resend')
 
 // 🔧 Cargar variables de entorno según el entorno
 if (process.env.NODE_ENV === 'production') {
@@ -37,51 +37,17 @@ const PROJECT_TYPES = {
   otro: 'Otro Proyecto'
 }
 
-// 🔧 Configuración del transporter de Nodemailer
-const createTransporter = () => {
-  // Debug: mostrar variables de entorno disponibles
+// 🔧 Configuración de envío de correos
+//import { Resend } from "resend";
 
-  console.log('🔍 Variables de entorno disponibles en emailService:', {
-    EMAIL_USER: process.env.EMAIL_USER,
-    EMAIL_PASS: process.env.EMAIL_PASS ? '***' : 'NO DEFINIDA',
-    BUSINESS_EMAIL: process.env.BUSINESS_EMAIL,
-    BUSINESS_NAME: process.env.BUSINESS_NAME,
-    NODE_ENV: process.env.NODE_ENV,
-    'Todas las variables': Object.keys(process.env).filter(key =>
-      key.includes('EMAIL') || key.includes('BUSINESS')
-    )
-  })
+const connect = new resend.Resend(process.env.RESEND_API_KEY);
 
-
-  // Validar variables de entorno requeridas
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error('Variables de entorno EMAIL_USER y EMAIL_PASS son requeridas')
-  }
-
-  return nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    },
-    tls: {
-      rejectUnauthorized: false
-    },
-    debug: true,
-    logger: true,
-    connectionTimeout: 20000,
-    greetingTimeout: 20000,
-    socketTimeout: 30000
-  })
-}
 
 // 📝 Generar HTML para el email al negocio
 const generateBusinessEmailHTML = (contactData) => {
   const { name, email, phone, projectType, message } = contactData
   const projectTypeName = PROJECT_TYPES[projectType] || projectType
-
+  escape(message)
   return `
     <!DOCTYPE html>
     <html>
@@ -223,42 +189,46 @@ const generateClientConfirmationHTML = (contactData) => {
 // 📧 Función principal para enviar email de contacto
 const sendContactEmail = async (contactData) => {
   try {
-    const transporter = createTransporter()
     const { name, email, projectType } = contactData
 
-    // Email al negocio (principal)
-    const businessMailOptions = {
-      from: `"${name} - ${process.env.BUSINESS_NAME || 'ArteModular'} Web" <${process.env.EMAIL_USER}>`,
-      to: process.env.BUSINESS_EMAIL || 'artemodular2022@gmail.com',
-      subject: `🏡 Nueva Solicitud: ${PROJECT_TYPES[projectType] || projectType} - ${name}`,
-      html: generateBusinessEmailHTML(contactData),
-      replyTo: email // Para que el negocio pueda responder directamente al cliente
-    }
+    // 📧 Email al negocio
+    console.log("📤 Enviando email al negocio...")
+    const [businessResult, clientResult] = await Promise.all([
 
-    // Email de confirmación al cliente (opcional)
-    const clientMailOptions = {
-      from: `"${process.env.BUSINESS_NAME || 'ArteModular'}" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: `✅ Solicitud Recibida - ${process.env.BUSINESS_NAME || 'ArteModular'} | Te contactaremos pronto`,
-      html: generateClientConfirmationHTML(contactData)
-    }
+      // 📧 Email al negocio
+      connect.emails.send({
+        from: {
+          name: process.env.BUSINESS_NAME || "ArteModular",
+          email: process.env.EMAIL_FROM
+        },
+        to: process.env.BUSINESS_EMAIL || "artemodular2022@gmail.com",
+        subject: `🏡 Nueva Solicitud: ${PROJECT_TYPES[projectType] || projectType} - ${name}`,
+        html: generateBusinessEmailHTML(contactData),
+        reply_to: email
+      }),
+      ,
 
-    // Enviar ambos emails
-    console.log('📤 Enviando email al negocio...')
-    const businessResult = await transporter.sendMail(businessMailOptions)
+      // 📧 Email al cliente
+      connect.emails.send({
+        from: `${process.env.BUSINESS_NAME || "ArteModular"} <${process.env.EMAIL_FROM}>`,
+        to: email,
+        subject: `✅ Solicitud Recibida - ${process.env.BUSINESS_NAME || "ArteModular"} | Te contactaremos pronto`,
+        html: generateClientConfirmationHTML(contactData)
+      }),
 
-    console.log('📤 Enviando confirmación al cliente...')
-    const clientResult = await transporter.sendMail(clientMailOptions)
 
-    console.log('✅ Emails enviados exitosamente')
-    console.log(`📧 Business Email ID: ${businessResult.messageId}`)
-    console.log(`📧 Client Email ID: ${clientResult.messageId}`)
+    ])
+    console.log("BUSINESS RESULT:", businessResult)
+    console.log("CLIENT RESULT:", clientResult)
+
+
+    console.log("✅ Emails enviados exitosamente")
 
     return {
       success: true,
-      businessMessageId: businessResult.messageId,
-      clientMessageId: clientResult.messageId,
-      messageId: businessResult.messageId // Para compatibilidad
+      businessMessageId: businessResult.data?.id,
+      clientMessageId: clientResult.data?.id,
+      messageId: businessResult.data?.id // Para compatibilidad
     }
 
   } catch (error) {

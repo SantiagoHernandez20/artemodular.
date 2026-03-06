@@ -6,12 +6,12 @@ class TestimonialController {
   static async getAllTestimonials(req, res) {
     try {
       const { approved_only } = req.query;
-      
+
       const filterApproved = approved_only === 'true';
       const testimonials = await Testimonial.findAll(filterApproved);
-      
+
       console.log('📊 Testimonios encontrados:', testimonials.length);
-      console.log('📋 Testimonios:', JSON.stringify(testimonials, null, 2));
+      //console.log('📋 Testimonios:', JSON.stringify(testimonials, null, 2));
 
       res.json({
         success: true,
@@ -222,7 +222,7 @@ class TestimonialController {
       const { name, role, service, content, rating, status, is_approved } = req.body;
 
       const updateData = {};
-      
+
       if (name) updateData.name = name;
       if (role) updateData.role = role;
       if (service) updateData.service = service;
