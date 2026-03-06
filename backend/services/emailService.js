@@ -13,13 +13,13 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   // En desarrollo, cargar desde archivos .env
   try {
-    require('dotenv').config({ 
-      path: path.join(__dirname, '..', '..', '.env.local') 
+    require('dotenv').config({
+      path: path.join(__dirname, '..', '..', '.env.local')
     })
-    
+
     if (!process.env.EMAIL_USER) {
-      require('dotenv').config({ 
-        path: path.join(__dirname, '..', '..', '.env') 
+      require('dotenv').config({
+        path: path.join(__dirname, '..', '..', '.env')
       })
     }
   } catch (error) {
@@ -40,18 +40,18 @@ const PROJECT_TYPES = {
 // 🔧 Configuración del transporter de Nodemailer
 const createTransporter = () => {
   // Debug: mostrar variables de entorno disponibles
-  
+
   console.log('🔍 Variables de entorno disponibles en emailService:', {
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASS: process.env.EMAIL_PASS ? '***' : 'NO DEFINIDA',
     BUSINESS_EMAIL: process.env.BUSINESS_EMAIL,
     BUSINESS_NAME: process.env.BUSINESS_NAME,
     NODE_ENV: process.env.NODE_ENV,
-    'Todas las variables': Object.keys(process.env).filter(key => 
+    'Todas las variables': Object.keys(process.env).filter(key =>
       key.includes('EMAIL') || key.includes('BUSINESS')
     )
   })
-  
+
 
   // Validar variables de entorno requeridas
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
@@ -60,15 +60,16 @@ const createTransporter = () => {
 
   return nodemailer.createTransport({
     service: 'gmail',
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.EMAIL_PORT) || 587,
-    secure: process.env.EMAIL_PORT === '465', // true para puerto 465, false para otros
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // true para puerto 465 (SSL)
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS // Para Gmail usar App Password
+      pass: process.env.EMAIL_PASS // Gmail App Password
     },
     tls: {
-      rejectUnauthorized: process.env.NODE_ENV === 'production' // true en producción, false en desarrollo
+      // No rechazar no autorizados en desarrollo, pero permitir en producción si fuera necesario
+      rejectUnauthorized: false
     }
   })
 }
@@ -130,14 +131,14 @@ const generateBusinessEmailHTML = (contactData) => {
           
           <div class="field">
             <div class="label">⏰ Fecha y Hora:</div>
-            <div class="value">${new Date().toLocaleString('es-CO', { 
-              timeZone: 'America/Bogota',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}</div>
+            <div class="value">${new Date().toLocaleString('es-CO', {
+    timeZone: 'America/Bogota',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })}</div>
           </div>
         </div>
         
@@ -242,7 +243,7 @@ const sendContactEmail = async (contactData) => {
     // Enviar ambos emails
     console.log('📤 Enviando email al negocio...')
     const businessResult = await transporter.sendMail(businessMailOptions)
-    
+
     console.log('📤 Enviando confirmación al cliente...')
     const clientResult = await transporter.sendMail(clientMailOptions)
 
@@ -267,11 +268,11 @@ const sendContactEmail = async (contactData) => {
 const testEmailConfiguration = async () => {
   try {
     const transporter = createTransporter()
-    
+
     // Verificar conexión
     console.log('🔍 Verificando configuración de email...')
     await transporter.verify()
-    
+
     console.log('✅ Configuración de email válida')
     return {
       status: 'success',

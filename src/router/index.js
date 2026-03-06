@@ -3,6 +3,7 @@ import Home from '../views/Homeview.vue'
 import Dashboard from '../views/DashboardView.vue'
 import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 import TermsOfService from '../views/TermsOfService.vue'
+import NotFound from '../views/not_found.vue'
 
 const routes = [
   {
@@ -55,7 +56,7 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('../views/not_found.vue'),
+    component: NotFound,
     meta: { hideNavigation: true }
     // redirect: '/' 
   }
@@ -73,7 +74,7 @@ const router = createRouter({
         top: 80 // Offset para header fijo
       }
     }
-    
+
     // Si es la misma ruta con hash diferente, scroll suave
     if (to.path === from.path && to.hash !== from.hash) {
       return {
@@ -82,7 +83,7 @@ const router = createRouter({
         top: 80
       }
     }
-    
+
     // Para navegación normal, ir al top
     return { top: 0 }
   }

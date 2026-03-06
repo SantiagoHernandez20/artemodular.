@@ -6,7 +6,7 @@ const { sendContactEmail, testEmailConfiguration } = require('../services/emailS
 
 const emailLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 20, // Aumentado para pruebas iniciales
   message: { error: 'Demasiados intentos. Intenta en 15 minutos.', code: 'RATE_LIMIT_EXCEEDED' },
   standardHeaders: true,
   legacyHeaders: false

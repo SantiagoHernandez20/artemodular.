@@ -45,9 +45,12 @@ app.use('*', (req, res) => {
 
 // --- MANEJADOR GLOBAL DE ERRORES ---
 app.use((err, req, res, next) => {
+  // Siempre loguear el error completo en la consola del servidor para debug en Render
   console.error(`❌ [Error]: ${err.message}`);
+  if (err.stack) console.error(err.stack);
+
   const isDev = process.env.NODE_ENV === 'development';
-  
+
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Error interno del servidor',
