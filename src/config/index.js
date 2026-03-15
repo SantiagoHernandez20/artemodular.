@@ -5,17 +5,17 @@ const config = {
   // 🌐 URLs del Backend
   backend: {
     // URL del backend (desarrollo vs producción)
-    url: import.meta.env.VITE_APP_BACKEND_URL || 
-      (import.meta.env.MODE === 'development' 
-        ? 'http://localhost:3001' 
-        : 'https://artemodular.onrender.com'),
-    
+    url: import.meta.env.VITE_APP_BACKEND_URL ||
+      (import.meta.env.MODE === 'development'
+        ? 'http://localhost:3001'
+        : 'https://artemodular-1.onrender.com'),
+
     // Endpoints del backend
     endpoints: {
       contact: '/api/contact',
       health: '/api/health',
       testEmail: '/api/test-email',
-      
+
       // ✅ Agregar endpoints de testimonios
       testimonials: '/api/testimonials',
       testimonialsStats: '/api/testimonials/stats',
@@ -23,7 +23,7 @@ const config = {
       testimonialsReject: '/api/testimonials/:id/reject',
       testimonialsDelete: '/api/testimonials/:id'
     },
-    
+
     // Configuración de requests
     request: {
       timeout: 30000, // 30 segundos
@@ -37,11 +37,11 @@ const config = {
   // 🎨 URLs del Frontend
   frontend: {
     // URL del frontend (desarrollo vs producción)
-    url: import.meta.env.VITE_APP_FRONTEND_URL || 
-      (import.meta.env.MODE === 'development' 
-        ? 'http://localhost:9001' 
+    url: import.meta.env.VITE_APP_FRONTEND_URL ||
+      (import.meta.env.MODE === 'development'
+        ? 'http://localhost:9001'
         : 'https://artemodular.site'),
-    
+
     // Configuración del servidor de desarrollo
     devServer: {
       port: 9001
@@ -53,10 +53,10 @@ const config = {
     // Tipo de entorno
     isDevelopment: import.meta.env.MODE === 'development',
     isProduction: import.meta.env.MODE === 'production',
-    
+
     // Nombre del entorno
     name: import.meta.env.MODE || 'development',
-    
+
     // Configuración de debug
     debug: import.meta.env.MODE === 'development'
   },
@@ -68,7 +68,7 @@ const config = {
       origins: [
         'http://localhost:9001',  // Desarrollo
         'http://localhost:9000',  // Alternativo
-        'https://artemodular.vercel.app'  // Producción
+        'https://artemodular-1.onrender.com'  // Producción
       ]
     }
   },
@@ -78,7 +78,7 @@ const config = {
     // Debug: mostrar toda la configuración
     debug: () => {
       if (!config.environment.debug) return
-      
+
       console.log('🔧 Configuración centralizada de ArteModular:', {
         backend: {
           url: config.backend.url,
@@ -105,20 +105,20 @@ const config = {
     // Validar configuración
     validate: () => {
       const errors = []
-      
+
       if (!config.backend.url) {
         errors.push('Backend URL no configurada')
       }
-      
+
       if (!config.frontend.url) {
         errors.push('Frontend URL no configurada')
       }
-      
+
       if (errors.length > 0) {
         console.error('❌ Errores de configuración:', errors)
         return false
       }
-      
+
       //console.log('✅ Configuración válida')
       return true
     },

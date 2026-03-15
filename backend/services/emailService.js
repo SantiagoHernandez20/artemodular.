@@ -2,9 +2,9 @@
 // Maneja el envío de emails usando Nodemailer
 
 
-const nodemailer = require('nodemailer')
 const path = require('path')
 const dotenv = require('dotenv')
+const resend = require('resend')
 
 // 🔧 Cargar variables de entorno según el entorno
 if (process.env.NODE_ENV === 'production') {
@@ -13,13 +13,13 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   // En desarrollo, cargar desde archivos .env
   try {
-    require('dotenv').config({ 
-      path: path.join(__dirname, '..', '..', '.env.local') 
+    require('dotenv').config({
+      path: path.join(__dirname, '..', '..', '.env.local')
     })
-    
+
     if (!process.env.EMAIL_USER) {
-      require('dotenv').config({ 
-        path: path.join(__dirname, '..', '..', '.env') 
+      require('dotenv').config({
+        path: path.join(__dirname, '..', '..', '.env')
       })
     }
   } catch (error) {
@@ -37,46 +37,17 @@ const PROJECT_TYPES = {
   otro: 'Otro Proyecto'
 }
 
-// 🔧 Configuración del transporter de Nodemailer
-const createTransporter = () => {
-  // Debug: mostrar variables de entorno disponibles
-  /*
-  console.log('🔍 Variables de entorno disponibles en emailService:', {
-    EMAIL_USER: process.env.EMAIL_USER,
-    EMAIL_PASS: process.env.EMAIL_PASS ? '***' : 'NO DEFINIDA',
-    BUSINESS_EMAIL: process.env.BUSINESS_EMAIL,
-    BUSINESS_NAME: process.env.BUSINESS_NAME,
-    NODE_ENV: process.env.NODE_ENV,
-    'Todas las variables': Object.keys(process.env).filter(key => 
-      key.includes('EMAIL') || key.includes('BUSINESS')
-    )
-  })*/
+// 🔧 Configuración de envío de correos
+//import { Resend } from "resend";
 
-  // Validar variables de entorno requeridas
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error('Variables de entorno EMAIL_USER y EMAIL_PASS son requeridas')
-  }
+const connect = new resend.Resend(process.env.RESEND_API_KEY);
 
-  return nodemailer.createTransport({
-    service: 'gmail',
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.EMAIL_PORT) || 587,
-    secure: process.env.EMAIL_PORT === '465', // true para puerto 465, false para otros
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS // Para Gmail usar App Password
-    },
-    tls: {
-      rejectUnauthorized: process.env.NODE_ENV === 'production' // true en producción, false en desarrollo
-    }
-  })
-}
 
 // 📝 Generar HTML para el email al negocio
 const generateBusinessEmailHTML = (contactData) => {
   const { name, email, phone, projectType, message } = contactData
   const projectTypeName = PROJECT_TYPES[projectType] || projectType
-
+  escape(message)
   return `
     <!DOCTYPE html>
     <html>
@@ -129,14 +100,14 @@ const generateBusinessEmailHTML = (contactData) => {
           
           <div class="field">
             <div class="label">⏰ Fecha y Hora:</div>
-            <div class="value">${new Date().toLocaleString('es-CO', { 
-              timeZone: 'America/Bogota',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}</div>
+            <div class="value">${new Date().toLocaleString('es-CO', {
+    timeZone: 'America/Bogota',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })}</div>
           </div>
         </div>
         
@@ -218,42 +189,46 @@ const generateClientConfirmationHTML = (contactData) => {
 // 📧 Función principal para enviar email de contacto
 const sendContactEmail = async (contactData) => {
   try {
-    const transporter = createTransporter()
     const { name, email, projectType } = contactData
 
-    // Email al negocio (principal)
-    const businessMailOptions = {
-      from: `"${name} - ${process.env.BUSINESS_NAME || 'ArteModular'} Web" <${process.env.EMAIL_USER}>`,
-      to: process.env.BUSINESS_EMAIL || 'artemodular2022@gmail.com',
-      subject: `🏡 Nueva Solicitud: ${PROJECT_TYPES[projectType] || projectType} - ${name}`,
-      html: generateBusinessEmailHTML(contactData),
-      replyTo: email // Para que el negocio pueda responder directamente al cliente
-    }
+    // 📧 Email al negocio
+    console.log("📤 Enviando email al negocio...")
+    const [businessResult, clientResult] = await Promise.all([
 
-    // Email de confirmación al cliente (opcional)
-    const clientMailOptions = {
-      from: `"${process.env.BUSINESS_NAME || 'ArteModular'}" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: `✅ Solicitud Recibida - ${process.env.BUSINESS_NAME || 'ArteModular'} | Te contactaremos pronto`,
-      html: generateClientConfirmationHTML(contactData)
-    }
+      // 📧 Email al negocio
+      connect.emails.send({
+        from: {
+          name: process.env.BUSINESS_NAME || "ArteModular",
+          email: process.env.EMAIL_FROM
+        },
+        to: process.env.BUSINESS_EMAIL || "artemodular2022@gmail.com",
+        subject: `🏡 Nueva Solicitud: ${PROJECT_TYPES[projectType] || projectType} - ${name}`,
+        html: generateBusinessEmailHTML(contactData),
+        reply_to: email
+      }),
+      ,
 
-    // Enviar ambos emails
-    console.log('📤 Enviando email al negocio...')
-    const businessResult = await transporter.sendMail(businessMailOptions)
-    
-    console.log('📤 Enviando confirmación al cliente...')
-    const clientResult = await transporter.sendMail(clientMailOptions)
+      // 📧 Email al cliente
+      connect.emails.send({
+        from: `${process.env.BUSINESS_NAME || "ArteModular"} <${process.env.EMAIL_FROM}>`,
+        to: email,
+        subject: `✅ Solicitud Recibida - ${process.env.BUSINESS_NAME || "ArteModular"} | Te contactaremos pronto`,
+        html: generateClientConfirmationHTML(contactData)
+      }),
 
-    console.log('✅ Emails enviados exitosamente')
-    console.log(`📧 Business Email ID: ${businessResult.messageId}`)
-    console.log(`📧 Client Email ID: ${clientResult.messageId}`)
+
+    ])
+    console.log("BUSINESS RESULT:", businessResult)
+    console.log("CLIENT RESULT:", clientResult)
+
+
+    console.log("✅ Emails enviados exitosamente")
 
     return {
       success: true,
-      businessMessageId: businessResult.messageId,
-      clientMessageId: clientResult.messageId,
-      messageId: businessResult.messageId // Para compatibilidad
+      businessMessageId: businessResult.data?.id,
+      clientMessageId: clientResult.data?.id,
+      messageId: businessResult.data?.id // Para compatibilidad
     }
 
   } catch (error) {
@@ -266,11 +241,11 @@ const sendContactEmail = async (contactData) => {
 const testEmailConfiguration = async () => {
   try {
     const transporter = createTransporter()
-    
+
     // Verificar conexión
     console.log('🔍 Verificando configuración de email...')
     await transporter.verify()
-    
+
     console.log('✅ Configuración de email válida')
     return {
       status: 'success',

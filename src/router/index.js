@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Homeview.vue'
 import Dashboard from '../views/DashboardView.vue'
-import AdminPanel from '../views/AdminPanel.vue'
 import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 import TermsOfService from '../views/TermsOfService.vue'
+import NotFound from '../views/not_found.vue'
 
 const routes = [
   {
@@ -42,17 +42,7 @@ const routes = [
     meta: { scrollTo: 'contacto' }
   },
 
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard
-  },
-  {
-    path: '/admin',
-    name: 'Admin',
-    component: AdminPanel
-    // No requiere autenticación de Google, el control es por IP en el backend
-  },
+
   {
     path: '/privacidad',
     name: 'Privacidad',
@@ -62,6 +52,13 @@ const routes = [
     path: '/terminos-servicio',
     name: 'Terminos',
     component: TermsOfService
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
+    meta: { hideNavigation: true }
+    // redirect: '/' 
   }
 ]
 
@@ -77,7 +74,7 @@ const router = createRouter({
         top: 80 // Offset para header fijo
       }
     }
-    
+
     // Si es la misma ruta con hash diferente, scroll suave
     if (to.path === from.path && to.hash !== from.hash) {
       return {
@@ -86,7 +83,7 @@ const router = createRouter({
         top: 80
       }
     }
-    
+
     // Para navegación normal, ir al top
     return { top: 0 }
   }

@@ -6,12 +6,12 @@ class TestimonialController {
   static async getAllTestimonials(req, res) {
     try {
       const { approved_only } = req.query;
-      
+
       const filterApproved = approved_only === 'true';
       const testimonials = await Testimonial.findAll(filterApproved);
-      
+
       console.log('📊 Testimonios encontrados:', testimonials.length);
-      console.log('📋 Testimonios:', JSON.stringify(testimonials, null, 2));
+      //console.log('📋 Testimonios:', JSON.stringify(testimonials, null, 2));
 
       res.json({
         success: true,
@@ -197,6 +197,41 @@ class TestimonialController {
     }
   }
 
+  // Obtener testimonio por status
+  static async getTestimonialsByStatus(req, res) {
+    try {
+      const { status } = req.params;
+
+      if (!status) {
+        return res.status(400).json({
+          success: false,
+          message: 'El parámetro "status" es requerido'
+        });
+      }
+
+      const data = await Testimonial.findByStatus(status);
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
+
+      res.json({
+        success: true,
+        data
+      });
+    } catch (error) {
+      console.error('❌ Error obteniendo testimonio:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor',
+        detail: error.message
+      });
+    }
+  }
+
   // Obtener estadísticas de testimonios
   static async getTestimonialsStats(req, res) {
     try {
@@ -222,7 +257,7 @@ class TestimonialController {
       const { name, role, service, content, rating, status, is_approved } = req.body;
 
       const updateData = {};
-      
+
       if (name) updateData.name = name;
       if (role) updateData.role = role;
       if (service) updateData.service = service;

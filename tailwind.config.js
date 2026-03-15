@@ -13,6 +13,11 @@ module.exports = {
         beige: '#F5E9DA',
         'brown-soft': '#E6D4C1',
         'brown-medium': '#B8956F',
+        // New Brand Colors
+        'brand-red': '#F26244',
+        'brand-orange': '#F29544',
+        'brand-beige': '#FAEBD7',
+        'brand-blue': '#72ADBA',
         // Colores específicos para las clases personalizadas
         '8D5524': '#8D5524',
         '6B3F1A': '#6B3F1A'
