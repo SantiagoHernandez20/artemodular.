@@ -40,7 +40,6 @@ const PROJECT_TYPES = {
 // 🔧 Configuración de envío de correos
 //import { Resend } from "resend";
 
-const connect = new resend.Resend(process.env.RESEND_API_KEY);
 
 
 // 📝 Generar HTML para el email al negocio
@@ -189,6 +188,8 @@ const generateClientConfirmationHTML = (contactData) => {
 // 📧 Función principal para enviar email de contacto
 const sendContactEmail = async (contactData) => {
   try {
+    const connect = new resend.Resend(process.env.RESEND_API_KEY);
+
     const { name, email, projectType } = contactData
 
     // 📧 Email al negocio
