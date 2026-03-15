@@ -3,7 +3,7 @@ const { z } = require('zod');
 const TestimonialController = require('../controllers/TestimonialController');
 const Testimonial = require('../models/TestimonialModel');
 const router = express.Router();
-const { apiKeyAuth, strictAuth } = require('../middleware/auth.js');
+const { apiKeyAuth } = require('../middleware/auth.js');
 
 
 // Schema de validación con Zod
@@ -90,8 +90,15 @@ router.get('/stream', apiKeyAuth, async (req, res) => {
   });
 });
 
+// GET /api/testimonials/status/:status - Obtener testimonio filtrado por STATUS
+//router.get('/testimonials/pending', TestimonialController.getTestimonialsByStatus);
+
+router.get('/status/:status', TestimonialController.getTestimonialsByStatus);
+
 // GET /api/testimonials/:id - Obtener testimonio por ID
 router.get('/:id', TestimonialController.getTestimonialsID);
+
+
 
 // PUT /api/testimonials/:id/approve - Aprobar testimonio (requiere IP verificada)
 router.put('/:id/approve', apiKeyAuth, TestimonialController.approveTestimonial);

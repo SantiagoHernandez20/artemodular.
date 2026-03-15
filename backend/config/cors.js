@@ -7,7 +7,8 @@ const allowedOrigins = [
   'http://localhost:9001',
   'http://localhost:9000',
   'http://localhost:3000',
-  'http://localhost:4174'
+  'http://localhost:4174',
+  'https://artemodularbackend.vercel.app'
 ];
 
 const corsOptions = {

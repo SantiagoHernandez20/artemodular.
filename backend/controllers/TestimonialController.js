@@ -197,6 +197,41 @@ class TestimonialController {
     }
   }
 
+  // Obtener testimonio por status
+  static async getTestimonialsByStatus(req, res) {
+    try {
+      const { status } = req.params;
+
+      if (!status) {
+        return res.status(400).json({
+          success: false,
+          message: 'El parámetro "status" es requerido'
+        });
+      }
+
+      const data = await Testimonial.findByStatus(status);
+
+      if (!data) {
+        return res.status(404).json({
+          success: false,
+          message: 'Testimonio no encontrado'
+        });
+      }
+
+      res.json({
+        success: true,
+        data
+      });
+    } catch (error) {
+      console.error('❌ Error obteniendo testimonio:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor',
+        detail: error.message
+      });
+    }
+  }
+
   // Obtener estadísticas de testimonios
   static async getTestimonialsStats(req, res) {
     try {

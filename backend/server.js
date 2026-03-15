@@ -7,7 +7,6 @@ require('dotenv').config(); // Carga .env automáticamente
 const corsOptions = require('./config/cors');
 const contactRoutes = require('./routes/contactRoutes');
 const testimonialRoutes = require('./routes/TestimonialRoutes');
-//const { getMyIP } = require('./middleware/ipconfig');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -33,7 +32,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/health', (req, res) => res.json({ status: 'OK', uptime: process.uptime() }));
-//app.get('/api/auth/my-ip', getMyIP);
 
 app.use('/api/contact', contactRoutes);
 app.use('/api/testimonials', testimonialRoutes);
@@ -57,16 +55,22 @@ app.use((err, req, res, next) => {
     ...(isDev && { stack: err.stack })
   });
 });
-
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 ArteModular Backend listo en puerto ${PORT}`);
+  })
+}
+module.exports = app;
 // --- INICIO DEL SERVIDOR ---
-app.listen(PORT, () => {
+/*app.listen(PORT, () => {
   console.log(`🚀 ArteModular Backend listo en puerto ${PORT} (${process.env.NODE_ENV || 'dev'})`);
-});
+});*/
 
+/*
 // Cierre graceful
 const gracefulShutdown = () => {
   console.log('🛑 Cerrando servidor...');
   process.exit(0);
 };
 process.on('SIGTERM', gracefulShutdown);
-process.on('SIGINT', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);*/
