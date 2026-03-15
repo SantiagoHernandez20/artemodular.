@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const { validateContact } = require('../middleware/validators.js');
-const { sendContactEmail, testEmailConfiguration } = require('../services/emailService');
+const { sendContactEmail } = require('../services/emailService');
 
 const emailLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -27,13 +27,13 @@ router.post('/', emailLimiter, validateContact, async (req, res, next) => {
 });
 
 // GET /api/contact/test (Antes era /api/test-email)
-router.get('/test', async (req, res) => {
-  try {
-    const testResult = await testEmailConfiguration();
-    res.json({ success: true, details: testResult });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+// router.get('/test', async (req, res) => {
+//   try {
+//     const testResult = await testEmailConfiguration();
+//     res.json({ success: true, details: testResult });
+//   } catch (error) {
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// });
 
 module.exports = router;

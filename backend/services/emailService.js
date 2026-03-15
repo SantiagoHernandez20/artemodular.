@@ -238,32 +238,32 @@ const sendContactEmail = async (contactData) => {
 }
 
 // 🔧 Función para probar la configuración de email
-const testEmailConfiguration = async () => {
-  try {
-    const transporter = createTransporter()
+// const testEmailConfiguration = async () => {
+//   try {
+//     const transporter = createTransporter()
 
-    // Verificar conexión
-    console.log('🔍 Verificando configuración de email...')
-    await transporter.verify()
+//     // Verificar conexión
+//     console.log('🔍 Verificando configuración de email...')
+//     await transporter.verify()
 
-    console.log('✅ Configuración de email válida')
-    return {
-      status: 'success',
-      message: 'Configuración de email verificada correctamente',
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: process.env.EMAIL_PORT || 587,
-      user: process.env.EMAIL_USER,
-      businessEmail: process.env.BUSINESS_EMAIL,
-      businessName: process.env.BUSINESS_NAME,
-      timestamp: new Date().toISOString()
-    }
-  } catch (error) {
-    console.error('❌ Error en configuración de email:', error)
-    throw new Error(`Configuración de email inválida: ${error.message}`)
-  }
-}
+//     console.log('✅ Configuración de email válida')
+//     return {
+//       status: 'success',
+//       message: 'Configuración de email verificada correctamente',
+//       host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+//       port: process.env.EMAIL_PORT || 587,
+//       user: process.env.EMAIL_USER,
+//       businessEmail: process.env.BUSINESS_EMAIL,
+//       businessName: process.env.BUSINESS_NAME,
+//       timestamp: new Date().toISOString()
+//     }
+//   } catch (error) {
+//     console.error('❌ Error en configuración de email:', error)
+//     throw new Error(`Configuración de email inválida: ${error.message}`)
+//   }
+// }
 
 module.exports = {
-  sendContactEmail,
-  testEmailConfiguration
+  sendContactEmail
+  //|testEmailConfiguration
 }
